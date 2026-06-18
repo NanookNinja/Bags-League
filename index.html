@@ -1068,21 +1068,7 @@ function renderEverythingSafe() {
   try { renderWeekStandings(); } catch(e) {}
   try { renderSeasonStandings(); } catch(e) {}
   try { renderBaggers(); } catch(e) {}
-  try { renderLeagueHighlights(); } catch(e) {}
   try { renderPlayoffs(); } catch(e) {}
-}
-function getCurrentWeekAuto(){
-  for (var w = WEEKS; w >= 1; w--) {
-    if (results[w] && Object.keys(results[w]).length) return w;
-  }
-  return 1;
-}
-
-function renderLeagueHighlights(){
-  var sub = document.getElementById('league-sub');
-  if (sub) {
-    sub.innerHTML = '👥 ' + TEAMS.length + ' Teams • 📅 Week ' + getCurrentWeekAuto() + ' of ' + WEEKS;
-  }
 
   var top = document.getElementById('top-bagger');
   if (top) {
