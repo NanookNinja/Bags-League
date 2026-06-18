@@ -1068,7 +1068,55 @@ function renderEverythingSafe() {
   try { renderWeekStandings(); } catch(e) {}
   try { renderSeasonStandings(); } catch(e) {}
   try { renderBaggers(); } catch(e) {}
+  try { renderLeagueHighlights(); } catch(e) {}
   try { renderPlayoffs(); } catch(e) {}
+}
+function getCurrentWeekAuto(){
+  for (var w = WEEKS; w >= 1; w--) {
+    if (results[w] && Object.keys(results[w]).length) return w;
+  }
+  return 1;
+}
+
+function renderLeagueHighlights(){
+  var sub = document.getElementById('league-sub');
+  if (sub) {
+    sub.innerHTML = '👥 ' + TEAMS.length + ' Teams • 📅 Week ' + getCurrentWeekAuto() + ' of ' + WEEKS;
+  }
+
+  var top = document.getElementById('top-bagger');
+  if (top) {
+    var totals = {};
+    for (var w = 1; w <= WEEKS; w++) {
+      (baggers[w] || []).forEach(function(b){
+        totals[b.name] = (totals[b.name] || 0) + b.count;
+      });
+    }
+
+    var leaders = Object.keys(totals).sort(function(a,b){
+      return totals[b] - totals[a];
+    });
+
+    if (!leaders.length) {
+      top.textContent = '🎯 Top 4-Bagger: Loading...';
+    } else {
+      var best = leaders[0];
+      top.textContent = '🎯 Top 4-Bagger: ' + best + ' - ' + totals[best];
+    }
+  }
+
+  var hl = document.getElementById('league-highlight-text');
+  if (hl) {
+    var seasonTotals = calcSeasonTotals(null);
+    var sorted = TEAMS.slice().sort(function(a,b){
+      return seasonTotals[b].wins - seasonTotals[a].wins;
+    });
+
+    if (sorted.length) {
+      hl.textContent = '🔥 Current #1 Team: ' + sorted[0] + ' with ' + seasonTotals[sorted[0]].wins + ' wins';
+    }
+  }
+}
 }
 function resetForNewSeason(settings) {
   applyLeagueSettings(settings);
