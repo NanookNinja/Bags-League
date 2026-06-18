@@ -992,7 +992,7 @@ function updateLeagueHeader() {
   document.title = leagueName;
   var sub = document.getElementById('league-sub');
   if (sub) {
-    var seasonLabel = leagueSettings && leagueSettings.seasonName ? ('Season: ' + leagueSettings.seasonName + ' &nbsp;|&nbsp; ') : '';
+    var seasonLabel = '';
     sub.innerHTML = seasonLabel + TEAMS.length + ' Teams &nbsp;|&nbsp; ' + WEEKS + ' Weeks &nbsp;|&nbsp; ' + (viewingArchive ? 'Archived: ' + viewingArchive : 'Live Scoring');
   }
 }
