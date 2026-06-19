@@ -159,6 +159,16 @@ input[type=text]:focus{border-color:#7B2D8B;background:#fff}
 .mode-status{background:#E8F0FE;color:#1F3864;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px}
 .mode-status.admin{background:#FCE4D6;color:#843C0C}
 .view-only .wbtn{cursor:default}
+.admin-login{display:none;background:#fff;border:1.5px solid #B5D4F4;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.admin-login.show{display:block}
+.admin-login h3{font-size:15px;color:#1F3864;margin-bottom:4px}
+.admin-login p{font-size:11px;color:#666;line-height:1.4;margin-bottom:10px}
+.admin-login input{width:100%;font-size:14px;padding:10px 12px;border-radius:10px;border:1.5px solid #ddd;background:#fff;color:#1a1a1a;margin-bottom:8px;outline:none}
+.admin-login input:focus{border-color:#2E75B6}
+.admin-login button{width:100%;padding:11px;border:0;border-radius:10px;background:#1F3864;color:#fff;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:7px}
+.admin-login .auth-message{font-size:11px;color:#843C0C;min-height:15px;text-align:center}
+.admin-session{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;padding:8px 10px;border-radius:10px;background:#E8F4F0;color:#276221;font-size:11px;font-weight:700}
+.admin-session button{border:0;border-radius:8px;padding:7px 9px;background:#1F3864;color:#fff;font-weight:700;cursor:pointer}
 
 
 /* ── Modern compact refresh ─────────────────────────────────────────────── */
@@ -267,9 +277,18 @@ body::before{
   <div class="cloud-status off" id="cloud-status">Cloud sync not configured yet</div>
   <div class="mode-status" id="mode-status">Public view-only mode</div>
   <select id="season-view-sel" style="display:none;margin-bottom:10px"></select>
+  <div class="admin-login" id="admin-login">
+    <h3>Administrator Sign In</h3>
+    <p>Sign in with the administrator account created in Firebase.</p>
+    <input id="admin-email" type="email" autocomplete="username" placeholder="Administrator email">
+    <input id="admin-password" type="password" autocomplete="current-password" placeholder="Password">
+    <button id="admin-sign-in-btn" type="button">Sign In</button>
+    <div class="auth-message" id="auth-message"></div>
+  </div>
   <div class="admin-panel" id="admin-panel">
     <h3>Admin Panel</h3>
-    <div class="admin-note">Only visible from your private admin link. The public link stays view-only.</div>
+    <div class="admin-session"><span id="admin-session-email">Signed in securely</span><button id="admin-sign-out-btn" type="button">Sign Out</button></div>
+    <div class="admin-note">Only the approved Firebase administrator can edit live league data.</div>
 
     <div class="league-name-box">
       <label for="admin-league-name">League Name</label>
@@ -321,7 +340,7 @@ Tim/Rick"></textarea>
     <textarea id="import-data" placeholder='Paste import JSON here. It can contain bags26_r and bags26_b, or results and baggers.'></textarea>
     <button class="import-btn" id="import-data-btn">Import Data</button>
     <button class="admin-action-btn" id="export-season-btn">Export Current Season</button>
-    <div class="admin-note">Tip: share only the normal link with everyone else. Keep <strong>?admin=score</strong> private.</div>
+    <div class="admin-note">Share the normal link with everyone else. Use <strong>?admin=score</strong> when you need to sign in and edit.</div>
   </div>
 
   <div class="nav">
@@ -510,18 +529,35 @@ var playoffState = { locked:false, generated:false, topTitle:'Championship Brack
 var leagueSettings = { leagueName: 'Bags League 2026', seasonName: '2026', weeks: 11, playoffsStart: '', teams: TEAMS.slice() };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
 
-// Admin mode: public link is view-only. Private link with ?admin=score can edit/import.
-var ADMIN_MODE = (new URLSearchParams(window.location.search).get('admin') === 'score' || new URLSearchParams(window.location.search).get('admin') === 'import' || window.location.hash === '#admin');
+// Admin mode is enabled only after Firebase Authentication verifies the approved user.
+var ADMIN_REQUESTED = (new URLSearchParams(window.location.search).has('admin') || window.location.hash === '#admin');
+var ADMIN_MODE = false;
 var PUBLIC_VIEW_ONLY = !ADMIN_MODE;
 window.ADMIN_MODE = ADMIN_MODE;
 window.PUBLIC_VIEW_ONLY = PUBLIC_VIEW_ONLY;
 document.body.classList.toggle('view-only', PUBLIC_VIEW_ONLY);
-(function setModeStatus(){
+window.setAdminMode = function(enabled, email){
+  ADMIN_MODE = !!enabled;
+  PUBLIC_VIEW_ONLY = !ADMIN_MODE;
+  window.ADMIN_MODE = ADMIN_MODE;
+  window.PUBLIC_VIEW_ONLY = PUBLIC_VIEW_ONLY;
+  document.body.classList.toggle('view-only', PUBLIC_VIEW_ONLY);
   var el = document.getElementById('mode-status');
-  if (!el) return;
-  if (ADMIN_MODE) { el.textContent = 'Admin scoring mode — edits save to the live public page'; el.className = 'mode-status admin'; }
-  else { el.textContent = 'Public view-only mode — live updates only'; el.className = 'mode-status'; }
-})();
+  if (el) {
+    if (ADMIN_MODE) { el.textContent = 'Admin scoring mode — signed in securely'; el.className = 'mode-status admin'; }
+    else { el.textContent = 'Public view-only mode — live updates only'; el.className = 'mode-status'; }
+  }
+  var login = document.getElementById('admin-login');
+  var panel = document.getElementById('admin-panel');
+  if (login) login.classList.toggle('show', ADMIN_REQUESTED && !ADMIN_MODE);
+  if (panel) panel.classList.toggle('show', ADMIN_MODE);
+  var sessionEmail = document.getElementById('admin-session-email');
+  if (sessionEmail) sessionEmail.textContent = email ? 'Signed in as ' + email : 'Signed in securely';
+  try { renderMatchups(); } catch(e) {}
+  try { renderBaggers(); } catch(e) {}
+  try { renderPlayoffs(); } catch(e) {}
+};
+window.setAdminMode(false, '');
 
 function getMatch(w, s, mi) {
   if (!results[w]) results[w] = {};
@@ -1237,6 +1273,7 @@ const FIREBASE_CONFIG = {
 
 // Change this only if you want multiple separate leagues in the same Firebase project.
 const LEAGUE_ID = "bags-league-2026";
+const ADMIN_UID = "0S1R2NqQ7PW9X9O05fDrDvin1bS2";
 const configured = FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.includes("PASTE_");
 const statusEl = document.getElementById('cloud-status');
 function cloudStatus(msg, cls) {
@@ -1268,10 +1305,61 @@ async function startCloudSync() {
   try {
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
     const { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
+    const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
 
     const app = initializeApp(FIREBASE_CONFIG);
+    const auth = getAuth(app);
     db = getFirestore(app);
     const ref = doc(db, 'leagues', LEAGUE_ID);
+
+    const emailInput = document.getElementById('admin-email');
+    const passwordInput = document.getElementById('admin-password');
+    const signInButton = document.getElementById('admin-sign-in-btn');
+    const signOutButton = document.getElementById('admin-sign-out-btn');
+    const authMessage = document.getElementById('auth-message');
+
+    async function submitAdminSignIn() {
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+      if (!email || !password) {
+        if (authMessage) authMessage.textContent = 'Enter your administrator email and password.';
+        return;
+      }
+      if (signInButton) signInButton.disabled = true;
+      if (authMessage) authMessage.textContent = 'Signing in…';
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        if (passwordInput) passwordInput.value = '';
+        if (authMessage) authMessage.textContent = '';
+      } catch (error) {
+        console.error(error);
+        if (authMessage) authMessage.textContent = 'Sign-in failed. Check your email and password.';
+      } finally {
+        if (signInButton) signInButton.disabled = false;
+      }
+    }
+
+    if (signInButton) signInButton.addEventListener('click', submitAdminSignIn);
+    if (passwordInput) passwordInput.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') submitAdminSignIn();
+    });
+    if (signOutButton) signOutButton.addEventListener('click', async function() {
+      await signOut(auth);
+      if (authMessage) authMessage.textContent = 'Signed out.';
+    });
+
+    onAuthStateChanged(auth, async function(user) {
+      if (user && user.uid === ADMIN_UID) {
+        window.setAdminMode(ADMIN_REQUESTED, user.email || '');
+        return;
+      }
+      window.setAdminMode(false, '');
+      if (user) {
+        if (authMessage) authMessage.textContent = 'This account is not an approved administrator.';
+        await signOut(auth);
+      }
+    });
+
     cloudReady = true;
     cloudStatus('Cloud sync connected', 'ok');
 
@@ -1338,14 +1426,10 @@ startCloudSync();
 
 
 <script>
-// Hidden admin import panel. To show it, open the app with ?admin=import at the end of the URL.
+// Admin import tools become visible only after Firebase verifies the approved user.
 (function setupAdminImport() {
-  var params = new URLSearchParams(window.location.search);
-  var isAdmin = params.get('admin') === 'score' || params.get('admin') === 'import' || window.location.hash === '#admin';
-  var panel = document.getElementById('admin-panel');
   var btn = document.getElementById('import-data-btn');
   var box = document.getElementById('import-data');
-  if (panel && isAdmin) panel.classList.add('show');
   if (!btn || !box) return;
 
   btn.addEventListener('click', function() {
