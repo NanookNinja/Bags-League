@@ -128,6 +128,8 @@ input[type=text]:focus{border-color:#7B2D8B;background:#fff}
 .bename{flex:1;font-size:14px;font-weight:600}
 .bewk{font-size:11px;color:#999}
 .bedel{background:none;border:none;color:#ccc;cursor:pointer;font-size:22px;padding:0 4px;line-height:1}
+.bagger-week-note{background:#fff;border:1px dashed #c4b5fd;border-radius:13px;color:#6d28d9;font-size:12px;font-weight:900;padding:12px;text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.bagger-rank-detail{background:#f8fafc;border:1px solid #dbe3ef;border-radius:10px;overflow:hidden}.bagger-rank-detail summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;padding:8px 10px;list-style:none;font-weight:1000;color:#172033}.bagger-rank-detail summary::-webkit-details-marker{display:none}.bagger-rank-detail[open] summary{background:linear-gradient(135deg,#eef2ff,#f5f3ff);color:#5b21b6}.bagger-rank-weeks{padding:8px 10px;border-top:1px solid #e2e8f0;color:#64748b;font-size:11px;font-weight:900;line-height:1.55}.bagger-rank-weeks span{display:block}.rank-caret{color:#7c3aed;font-size:14px}
 /* Share */
 .share-hdr{background:linear-gradient(135deg,#1F3864,#2E75B6);border-radius:14px;padding:14px 16px;margin-bottom:12px;text-align:center}
 .share-hdr h2{color:#fff;font-size:16px;font-weight:700;margin-bottom:3px}
@@ -568,7 +570,7 @@ Tim/Rick"></textarea>
         <span class="csub">All-time 4 baggers</span>
       </div>
       <table>
-        <thead><tr><th>#</th><th>Player</th><th>Total</th><th>Best week</th></tr></thead>
+        <thead><tr><th>#</th><th>Player</th><th>Total</th></tr></thead>
         <tbody id="bagger-lb-body"></tbody>
       </table>
     </div>
@@ -1204,30 +1206,38 @@ document.getElementById('bagger-list').addEventListener('click', function(e) {
 
 function renderBaggers() {
   var lb = document.getElementById('bagger-lb'), list = document.getElementById('bagger-list');
-  if (!baggerWeek) { list.innerHTML = ''; lb.style.display = 'none'; return; }
-  var entries = baggers[baggerWeek] || [];
-  list.innerHTML = entries.length ? entries.map(function(b) {
-    return '<div class="bagger-entry">'
-      + '<div style="flex:1"><div class="bename">' + b.name + '</div><div class="bewk">Week ' + baggerWeek + '</div></div>'
-      + '<span class="pill orange">' + b.count + 'x</span>'
-      + (ADMIN_MODE ? '<button class="bedel" data-week="' + baggerWeek + '" data-id="' + b.id + '">&#215;</button>' : '')
-      + '</div>';
-  }).join('') : '<div style="text-align:center;color:#999;font-size:13px;padding:14px;background:#fff;border-radius:10px;margin-bottom:8px">No 4 baggers for Week ' + baggerWeek + ' yet</div>';
+  var entries = baggerWeek ? (baggers[baggerWeek] || []) : [];
+  if (baggerWeek) {
+    list.innerHTML = entries.length ? entries.map(function(b) {
+      return '<div class="bagger-entry">'
+        + '<div style="flex:1"><div class="bename">' + b.name + '</div><div class="bewk">Week ' + baggerWeek + '</div></div>'
+        + '<span class="pill orange">' + b.count + 'x</span>'
+        + (ADMIN_MODE ? '<button class="bedel" data-week="' + baggerWeek + '" data-id="' + b.id + '">&#215;</button>' : '')
+        + '</div>';
+    }).join('') : '<div style="text-align:center;color:#999;font-size:13px;padding:14px;background:#fff;border-radius:10px;margin-bottom:8px">No 4 baggers for Week ' + baggerWeek + ' yet</div>';
+  } else {
+    list.innerHTML = '<div class="bagger-week-note">Select a week to see that week\'s 4 baggers.</div>';
+  }
 
-  var totals = {}, bestWeek = {};
+  var totals = {}, weekDetails = {};
   for (var w = 1; w <= WEEKS; w++) {
     (baggers[w] || []).forEach(function(b) {
       totals[b.name] = (totals[b.name] || 0) + b.count;
-      if (!bestWeek[b.name] || b.count > bestWeek[b.name].count) bestWeek[b.name] = { count: b.count, week: w };
+      if (!weekDetails[b.name]) weekDetails[b.name] = [];
+      weekDetails[b.name].push({week:w,count:b.count});
     });
   }
   var names = Object.keys(totals).sort(function(a, b) { return totals[b] - totals[a]; });
-  if (!names.length) { lb.style.display = 'none'; return; }
+  if (!names.length) {
+    lb.style.display = 'block';
+    document.getElementById('bagger-lb-body').innerHTML = '<tr><td colspan="3" style="color:#999;padding:14px;text-align:center">No 4 baggers recorded yet</td></tr>';
+    return;
+  }
   lb.style.display = 'block';
   document.getElementById('bagger-lb-body').innerHTML = names.map(function(n, i) {
-    return '<tr><td>' + rankCell(i) + '</td><td>' + n + '</td>'
-      + '<td><span class="pill purple">' + totals[n] + '</span></td>'
-      + '<td style="color:#999;font-size:12px">' + bestWeek[n].count + 'x (Wk ' + bestWeek[n].week + ')</td></tr>';
+    var details = (weekDetails[n] || []).map(function(item){ return '<span>Week ' + item.week + ' — ' + item.count + 'x</span>'; }).join('');
+    return '<tr><td>' + rankCell(i) + '</td><td><details class="bagger-rank-detail"><summary><span>' + n + '</span><span class="rank-caret">⌄</span></summary><div class="bagger-rank-weeks">' + details + '</div></details></td>'
+      + '<td><span class="pill purple">' + totals[n] + 'x</span></td></tr>';
   }).join('');
 }
 
