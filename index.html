@@ -174,8 +174,8 @@ body.admin-tools-page .admin-panel.show{display:block}
 .admin-panel textarea{width:100%;min-height:120px;border:1.5px solid #ddd;border-radius:10px;padding:10px;font-family:monospace;font-size:11px;margin-bottom:8px}
 .import-btn{width:100%;padding:11px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;background:#7B2D8B;color:#fff;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .admin-note{font-size:11px;color:#666;line-height:1.4}
-.mode-status{background:#E8F0FE;color:#1F3864;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;text-align:center;margin-bottom:10px}
-.mode-status.admin{background:#FCE4D6;color:#843C0C}
+.mode-status{background:linear-gradient(135deg,#e0f2fe,#dbeafe);color:#1e3a8a;border:1px solid #bfdbfe;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:1000;text-align:center;margin-bottom:10px;box-shadow:0 2px 8px rgba(30,64,175,.12)}
+.mode-status.admin{background:linear-gradient(135deg,#ffedd5,#fef3c7);color:#9a3412;border-color:#fdba74}
 .view-only .wbtn{cursor:default}
 .admin-login{display:none;background:#fff;border:1.5px solid #B5D4F4;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .admin-login.show{display:block}
@@ -213,7 +213,7 @@ body{background:linear-gradient(180deg,#eaf2fb 0%,#f7f9fc 100%);color:var(--ink)
 .app{max-width:560px;padding:10px 10px 26px}
 .hdr{background:linear-gradient(135deg,#14284b,#285a95);border-radius:18px;padding:16px 14px;margin-bottom:10px;box-shadow:0 8px 22px rgba(31,56,100,.22)}
 .hdr h1{font-size:20px;letter-spacing:.2px}.hdr .sub{font-size:12px;color:#d7e9ff}
-.mode-status,.save-bar{border:none;border-radius:999px;padding:7px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(15,23,42,.08)}
+.save-bar{border:none;border-radius:999px;padding:7px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(15,23,42,.08)}
 .nav{position:sticky;top:0;z-index:5;background:rgba(238,244,251,.92);backdrop-filter:blur(10px);padding:6px 0;margin-bottom:10px}
 .nvbtn{border-radius:999px;padding:10px 4px;font-size:11px;box-shadow:none;border:1px solid var(--line);transition:.15s transform,.15s background}
 .nvbtn:active,.wfbtn:active,.wbtn:active,.share-btn:active,.admin-action-btn:active,.import-btn:active,.add-btn:active{transform:scale(.98)}
@@ -379,7 +379,7 @@ body::before{
 
   <div class="save-bar" id="save-bar">&#10003; &nbsp;All data saved</div>
   <div class="cloud-status off" id="cloud-status">Sync Offline</div>
-  <div class="mode-status" id="mode-status">Public view-only mode</div>
+  <div class="mode-status" id="mode-status">Team View Mode</div>
   <div class="admin-page-switch" id="admin-page-switch" aria-label="Admin pages">
     <button type="button" class="active" data-admin-page="scoring">Page 1 · Scoring</button>
     <button type="button" data-admin-page="tools">Page 2 · Admin Tools</button>
@@ -718,8 +718,8 @@ window.setAdminMode = function(enabled, email){
   document.body.classList.toggle('admin-auth-gate', ADMIN_REQUESTED && !ADMIN_MODE);
   var el = document.getElementById('mode-status');
   if (el) {
-    if (ADMIN_MODE) { el.textContent = 'Admin scoring mode — signed in securely'; el.className = 'mode-status admin'; }
-    else { el.textContent = 'Public view-only mode — live updates only'; el.className = 'mode-status'; }
+    if (ADMIN_MODE) { el.textContent = 'Admin Mode'; el.className = 'mode-status admin'; }
+    else { el.textContent = 'Team View Mode'; el.className = 'mode-status'; }
   }
   var login = document.getElementById('admin-login');
   var panel = document.getElementById('admin-panel');
