@@ -154,7 +154,7 @@ input[type=text]:focus{border-color:#7B2D8B;background:#fff}
 .team-page-link{border:0;background:none;padding:0;color:#1F3864;font:inherit;font-weight:700;text-align:left;cursor:pointer;text-decoration:underline;text-decoration-color:#bfdbfe;text-underline-offset:2px}
 .week-start-row{display:none;align-items:center;justify-content:space-between;gap:8px;margin:-3px 0 9px;padding:8px 10px;border-radius:11px;background:#eef6ff;border:1px solid #bfdbfe}.week-date-status{font-size:11px;font-weight:800;color:#1e40af}.week-action-buttons{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.week-action-pair{display:flex;gap:5px;align-items:center}.week-start-btn,.week-rainout-btn,.week-undo-rainout-btn,.week-reset-start-btn,.week-makeup-btn{border:0;border-radius:9px;padding:8px 10px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}.week-start-btn{background:#16a34a}.week-rainout-btn{background:#2563eb}.week-undo-rainout-btn{background:#64748b}.week-reset-start-btn{background:#d97706}.makeup-date-control{display:none;align-items:center;gap:5px;padding:4px;border:1px solid #93c5fd;border-radius:9px;background:#fff}.makeup-date-control input{width:124px;border:0;padding:4px;color:#1e3a8a;font-size:11px;font-weight:800;outline:none}.week-makeup-btn{background:#7c3aed}
 .forfeit-control{display:none;grid-template-columns:1fr auto auto;gap:6px;align-items:center;margin:-3px 0 9px;padding:8px;border:1px solid #fca5a5;border-radius:11px;background:#fff1f2}.forfeit-control select{margin:0}.forfeit-btn,.forfeit-undo-btn{border:0;border-radius:9px;padding:9px 10px;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}.forfeit-btn{background:#dc2626;color:#fff}.forfeit-undo-btn{background:#e2e8f0;color:#475569}.team-result.forfeit{font-size:9px;letter-spacing:.03em}
-.forfeit-note{padding:7px 10px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:.03em}
+.forfeit-note{padding:7px 10px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:.03em}.sub-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.sub-admin-list{display:grid;gap:6px;margin-bottom:8px}.sub-admin-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #93c5fd;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:11px;font-weight:900}.sub-note{display:block;margin-top:3px;color:#7c3aed!important;font-size:9px!important;font-weight:1000!important;text-transform:uppercase;letter-spacing:.04em}.sub-remove-btn{border:0;border-radius:8px;padding:6px 8px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;cursor:pointer}
 .team-collapse{background:#fff;border:1px solid #dbe3ef;border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 3px 10px rgba(15,23,42,.07)}.team-collapse summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:linear-gradient(135deg,#183153,#2563eb);color:#fff;cursor:pointer;list-style:none;font-size:13px;font-weight:900}.team-collapse summary::-webkit-details-marker{display:none}.team-collapse summary small{font-size:10px;font-weight:700;opacity:.75;margin-left:auto}.team-collapse-arrow{font-size:17px;transition:transform .18s}.team-collapse[open] .team-collapse-arrow{transform:rotate(180deg)}.team-collapse-content{padding:10px}
 
 /* Cloud sync status */
@@ -432,6 +432,18 @@ Tim/Rick"></textarea>
     <button class="admin-action-btn orange" id="add-holiday-btn">🎆 Add Holiday / Day Off</button>
     <div class="holiday-admin-list" id="holiday-admin-list"></div>
 
+    <h4>Subs</h4>
+    <div class="sub-admin-grid">
+      <select id="sub-week-select"><option value="">Select week...</option></select>
+      <select id="sub-team-select"><option value="">Select team...</option></select>
+    </div>
+    <div class="sub-admin-grid">
+      <select id="sub-round-select"><option value="">Whole week</option><option value="1">Round 1 only</option><option value="2">Round 2 only</option><option value="3">Round 3 only</option></select>
+      <input id="sub-player-name" type="text" placeholder="Sub name">
+    </div>
+    <button class="admin-action-btn green" id="add-sub-btn">Add Sub</button>
+    <div class="sub-admin-list" id="sub-admin-list"></div>
+
 
 
     <h4>Tier Playoff Setup</h4>
@@ -648,9 +660,9 @@ function getMatchups(week0, slot) {
   var sourceWeek = leagueSettings && leagueSettings.scheduleWeekMap && leagueSettings.scheduleWeekMap[displayWeek] ? Number(leagueSettings.scheduleWeekMap[displayWeek]) : displayWeek;
   var sourceWeek0 = sourceWeek - 1;
   var round = RR[(sourceWeek0 * GPW + slot) % RR.length];
-  var boards = seededShuffle([1,2,3,4,5,6,7,8], sourceWeek0 * 999 + 42);
+  var boards = seededShuffle([1,2,3,4,5,6,7,8,9,10], sourceWeek0 * 999 + 42);
   return round.map(function(pair, gi) {
-    return { a: pair[0], b: pair[1], board: slot === 0 ? (gi < 8 ? 'Board ' + boards[gi] : 'Board TBD') : 'Players choose board' };
+    return { a: pair[0], b: pair[1], board: slot === 0 ? 'Board ' + boards[gi % boards.length] : 'Players choose board' };
   });
 }
 
@@ -667,7 +679,7 @@ var DEFAULT_CALENDAR_NOTES = [
   {date:'2026-07-02',status:'Off',note:'4th of July break'}
 ];
 var DEFAULT_RAINOUTS = [{week:3,date:'2026-06-11'}];
-var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
+var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
 
 // Admin mode is enabled only after Firebase Authentication verifies the approved user.
@@ -1035,13 +1047,14 @@ function getTeamSchedule(team){
         var opponent = side === 'a' ? mu.b : mu.a;
         var teamForfeit = (leagueSettings.forfeits || []).some(function(item){ return Number(item.week) === w && item.team === team; });
         var opponentForfeit = (leagueSettings.forfeits || []).some(function(item){ return Number(item.week) === w && item.team === opponent; });
+        var subNote = (leagueSettings.subs || []).filter(function(item){ return Number(item.week) === w && item.team === team && (!item.round || Number(item.round) === s + 1); }).map(function(item){ return item.name; }).join(', ');
         var match = getMatch(w,s,mi), wins = 0, losses = 0;
         [match.g1,match.g2,match.g3].forEach(function(winner){
           if (winner === side) wins++;
           else if (winner === 'a' || winner === 'b') losses++;
         });
         var played = wins + losses, complete = played === 3;
-        schedule.push({week:w,date:getWeekDate(w),round:s+1,opponent:opponent,board:mu.board,wins:wins,losses:losses,played:played,complete:complete,teamForfeit:teamForfeit,opponentForfeit:opponentForfeit});
+        schedule.push({week:w,date:getWeekDate(w),round:s+1,opponent:opponent,board:mu.board,wins:wins,losses:losses,played:played,complete:complete,teamForfeit:teamForfeit,opponentForfeit:opponentForfeit,subNote:subNote});
         if (!opponents[opponent]) opponents[opponent] = {scheduled:0,completed:0,wins:0,losses:0,matchWins:0,matchLosses:0};
         var history = opponents[opponent];
         history.scheduled++; history.wins += wins; history.losses += losses;
@@ -1085,7 +1098,7 @@ function renderTeamPage(){
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekRainouts.forEach(function(rainout){
       html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon">🌧️ RAINED OUT · ' + formatLeagueDate(rainout.date,true) + '</div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-rounds">';
-      html += weekGames.map(function(game){ return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + game.opponent + '<small>' + game.board + '</small></div><span class="team-result">Postponed</span></div>'; }).join('');
+      html += weekGames.map(function(game){ return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + game.opponent + '<small>' + game.board + '</small>' + (game.subNote ? '<small class="sub-note">Sub: ' + game.subNote + '</small>' : '') + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
       var makeupText = makeupDate ? 'MAKE UP DAY - ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
       html += '</div><div class="makeup-ribbon">' + makeupText + '</div></div>';
@@ -1098,7 +1111,7 @@ function renderTeamPage(){
       else if (game.opponentForfeit) { resultText = 'FORFEIT W 3-0'; resultClass = ' win forfeit'; }
       else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
       else if (game.played) { resultText = game.wins + '-' + game.losses; resultClass = ' progress'; }
-      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + game.opponent + '<small>' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + game.opponent + '<small>' + game.board + '</small>' + (game.subNote ? '<small class="sub-note">Sub: ' + game.subNote + '</small>' : '') + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
     }).join('');
     html += '</div></div>';
   }
@@ -1370,6 +1383,7 @@ function applyLeagueSettings(settings) {
     calendarNotes: (settings.calendarNotes || leagueSettings.calendarNotes || DEFAULT_CALENDAR_NOTES).slice(),
     rainouts: (settings.rainouts || leagueSettings.rainouts || DEFAULT_RAINOUTS).slice(),
     forfeits: (settings.forfeits || leagueSettings.forfeits || []).slice(),
+    subs: (settings.subs || leagueSettings.subs || []).slice(),
     scheduleWeekMap: Object.assign({},settings.scheduleWeekMap || {}),
     week3MakeupRotationApplied: !!settings.week3MakeupRotationApplied,
     regularSeasonEnd: Object.prototype.hasOwnProperty.call(settings,'regularSeasonEnd') ? settings.regularSeasonEnd : leagueSettings.regularSeasonEnd
@@ -1383,6 +1397,7 @@ function applyLeagueSettings(settings) {
   updateLeagueHeader();
   fillAdminSeasonForm();
   updateWeekStartControl();
+  renderSubAdmin();
 }
 function isInternalBackupArchive(key, archive) {
   archive = archive || {};
@@ -1744,6 +1759,48 @@ function addHolidayDayOff(){
   if (nameInput) nameInput.value = '';
   rebuildWeekControls(); renderTeamPage(); renderHolidayAdmin(); save();
 }
+
+function renderSubAdmin(){
+  var weekSel = document.getElementById('sub-week-select'), teamSel = document.getElementById('sub-team-select'), list = document.getElementById('sub-admin-list');
+  if (weekSel && weekSel.options.length <= 1) {
+    for (var w=1; w<=WEEKS; w++) { var o=document.createElement('option'); o.value=w; o.textContent='Week ' + w + (getWeekDate(w) ? ' - ' + formatLeagueDate(getWeekDate(w),false) : ''); weekSel.appendChild(o); }
+  }
+  if (teamSel) {
+    var current = teamSel.value;
+    teamSel.innerHTML = '<option value="">Select team...</option>';
+    TEAMS.forEach(function(team){ var o=document.createElement('option'); o.value=team; o.textContent=team; teamSel.appendChild(o); });
+    teamSel.value = TEAMS.indexOf(current) >= 0 ? current : '';
+  }
+  if (!list) return;
+  var subs = (leagueSettings.subs || []).map(function(item,index){ var copy = Object.assign({},item); copy._index = index; return copy; }).sort(function(a,b){ return Number(a.week)-Number(b.week) || (a.team || '').localeCompare(b.team || '') || Number(a.round || 0)-Number(b.round || 0); });
+  list.innerHTML = '';
+  subs.forEach(function(item,index){
+    var row = document.createElement('div'); row.className = 'sub-admin-item';
+    var label = document.createElement('span'); label.textContent = 'WEEK ' + item.week + ' · ' + item.team + ' · ' + (item.round ? 'ROUND ' + item.round : 'WHOLE WEEK') + ' · SUB: ' + item.name;
+    var button = document.createElement('button'); button.type = 'button'; button.className = 'sub-remove-btn'; button.textContent = 'Remove'; button.setAttribute('data-sub-index',item._index);
+    row.appendChild(label); row.appendChild(button); list.appendChild(row);
+  });
+  if (!subs.length) list.innerHTML = '<div class="admin-note">No subs entered yet.</div>';
+}
+function addSubRecord(){
+  if (!ADMIN_MODE) return;
+  var week = parseInt((document.getElementById('sub-week-select') || {}).value || '');
+  var team = (document.getElementById('sub-team-select') || {}).value || '';
+  var round = (document.getElementById('sub-round-select') || {}).value || '';
+  var name = ((document.getElementById('sub-player-name') || {}).value || '').trim();
+  if (!week || !team || !name) { alert('Choose the week, team, and sub name.'); return; }
+  leagueSettings.subs = leagueSettings.subs || [];
+  leagueSettings.subs.push({week:week,team:team,round:round ? Number(round) : '',name:name});
+  var input = document.getElementById('sub-player-name'); if (input) input.value = '';
+  renderSubAdmin(); renderTeamPage(); save();
+}
+function removeSubRecord(index){
+  if (!ADMIN_MODE) return;
+  leagueSettings.subs = leagueSettings.subs || [];
+  if (index < 0 || index >= leagueSettings.subs.length) return;
+  leagueSettings.subs.splice(index,1);
+  renderSubAdmin(); renderTeamPage(); save();
+}
 function removeHolidayDayOff(date){
   if (!ADMIN_MODE) return;
   var notes = leagueSettings.calendarNotes || [], index = notes.findIndex(function(item){ return item.status === 'Off' && item.date === date; });
@@ -1766,6 +1823,7 @@ function fillAdminSeasonForm() {
   if (p) p.value = leagueSettings.playoffsStart || '';
   if (t) t.value = (leagueSettings.teams || TEAMS).join('\n');
   renderHolidayAdmin();
+  renderSubAdmin();
   try { fillPlayoffAdminForm(); } catch(e) {}
 }
 function populateSeasonViewSelector() {
@@ -1803,6 +1861,7 @@ function renderEverythingSafe() {
   try { renderTeamPage(); } catch(e) {}
   try { renderBaggers(); } catch(e) {}
   try { renderPlayoffs(); } catch(e) {}
+  try { renderSubAdmin(); } catch(e) {}
 }
   
 function resetForNewSeason(settings) {
@@ -1815,6 +1874,7 @@ function resetForNewSeason(settings) {
     calendarNotes: [],
     rainouts: [],
     forfeits: [],
+    subs: [],
     scheduleWeekMap: {},
     week3MakeupRotationApplied: true,
     regularSeasonEnd: ''
@@ -2530,6 +2590,13 @@ startCloudSync();
   if (holidayList) holidayList.addEventListener('click',function(event){
     var button = event.target.closest('.holiday-remove-btn');
     if (button) removeHolidayDayOff(button.getAttribute('data-holiday-date'));
+  });
+  var addSubBtn = document.getElementById('add-sub-btn');
+  if (addSubBtn) addSubBtn.addEventListener('click',addSubRecord);
+  var subList = document.getElementById('sub-admin-list');
+  if (subList) subList.addEventListener('click',function(event){
+    var button = event.target.closest('.sub-remove-btn');
+    if (button) removeSubRecord(parseInt(button.getAttribute('data-sub-index')));
   });
 
   var saveBtn = document.getElementById('save-season-settings-btn');
