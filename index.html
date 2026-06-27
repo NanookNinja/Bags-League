@@ -196,11 +196,13 @@ body.admin-auth-gate{overflow:hidden;background:#07152b}body.admin-auth-gate .lo
 .score-lock-control.unlocked{background:#FFF2CC;border-color:#FFD966}
 .score-lock-control.unlocked button{background:#B45309}
 .score-lock-note{font-size:10px;color:#666;margin-top:6px}
+.admin-authenticated .score-lock-control.show{position:sticky;top:58px;z-index:38;box-shadow:0 5px 16px rgba(15,23,42,.16);backdrop-filter:blur(10px)}
+.admin-authenticated #scoring-page-content .nav{top:126px}
 .admin-page-switch{display:none;gap:6px;margin-bottom:10px;padding:5px;border-radius:13px;background:#DCE7F5;position:sticky;top:6px;z-index:40;box-shadow:0 3px 10px rgba(15,23,42,.10)}
 .admin-page-switch.show{display:flex}
 .admin-page-switch button{flex:1;border:0;border-radius:9px;padding:10px 8px;background:transparent;color:#52657D;font-size:12px;font-weight:800;cursor:pointer}
 .admin-page-switch button.active{background:#1F3864;color:#fff;box-shadow:0 2px 7px rgba(31,56,100,.24)}
-.admin-authenticated #scoring-page-content .nav{top:56px;z-index:35}
+.admin-authenticated #scoring-page-content .nav{z-index:35}
 body.admin-tools-page #scoring-page-content,body.admin-tools-page #score-lock-control,body.admin-tools-page #season-view-sel{display:none!important}
 #scoring-page-content{animation:pageSlideIn .18s ease-out}
 body.admin-tools-page .admin-panel.show{animation:pageSlideIn .18s ease-out}
@@ -1772,8 +1774,18 @@ function addHolidayDayOff(){
 
 function renderSubAdmin(){
   var weekSel = document.getElementById('sub-week-select'), teamSel = document.getElementById('sub-team-select'), list = document.getElementById('sub-admin-list');
-  if (weekSel && weekSel.options.length <= 1) {
-    for (var w=1; w<=WEEKS; w++) { var o=document.createElement('option'); o.value=w; o.textContent='Week ' + w + (getWeekDate(w) ? ' - ' + formatLeagueDate(getWeekDate(w),false) : ''); weekSel.appendChild(o); }
+  if (weekSel) {
+    var currentWeek = weekSel.value;
+    weekSel.innerHTML = '<option value="">Select week...</option>';
+    for (var w=1; w<=WEEKS; w++) {
+      var date = getWeekDate(w);
+      var hadRainout = (leagueSettings.rainouts || []).some(function(item){ return Number(item.week) === w; });
+      var o=document.createElement('option');
+      o.value=w;
+      o.textContent='Week ' + w + (hadRainout ? ' (Makeup)' : '') + (date ? ' - ' + formatLeagueDate(date,false) : ' - Date TBD');
+      weekSel.appendChild(o);
+    }
+    weekSel.value = currentWeek && Number(currentWeek) <= WEEKS ? currentWeek : '';
   }
   if (teamSel) {
     var current = teamSel.value;
