@@ -225,8 +225,8 @@ body{background:linear-gradient(180deg,#eaf2fb 0%,#f7f9fc 100%);color:var(--ink)
 .nvbtn{border-radius:999px;padding:10px 4px;font-size:11px;box-shadow:none;border:1px solid var(--line);transition:.15s transform,.15s background}
 .nvbtn:active,.wfbtn:active,.wbtn:active,.share-btn:active,.admin-action-btn:active,.import-btn:active,.add-btn:active{transform:scale(.98)}
 .nvbtn.active{background:var(--navy);color:white;border-color:var(--navy)}
-select,input[type=text],input[type=number],textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(15,23,42,.04);outline:none}
-select{font-size:14px;padding:9px 34px 9px 12px;margin-bottom:8px} input[type=text],input[type=number]{font-size:14px;padding:10px 12px;margin-bottom:8px}.admin-panel textarea{min-height:84px}
+select,input[type=text],input[type=number],input[type=url],textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(15,23,42,.04);outline:none}
+select{font-size:14px;padding:9px 34px 9px 12px;margin-bottom:8px} input[type=text],input[type=number],input[type=url]{font-size:14px;padding:10px 12px;margin-bottom:8px}.admin-panel textarea{min-height:84px}
 select:not(#team-page-select){min-height:44px;border:2px solid #bfdbfe;border-radius:14px;background-color:#eff6ff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' stroke='%23ffffff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),linear-gradient(135deg,#1F3864 0%,#2563eb 56%,#7c3aed 100%);background-repeat:no-repeat,no-repeat;background-position:right 15px center,center;background-size:16px 10px,100% 100%;color:#fff;font-weight:900;box-shadow:0 5px 14px rgba(37,99,235,.22)}
 select:not(#team-page-select):focus{border-color:#fbbf24;outline:3px solid rgba(251,191,36,.26);outline-offset:1px}
 select:not(#team-page-select) option{background:#fff;color:#172033;font-weight:800}
@@ -241,6 +241,7 @@ th{padding:7px 9px;font-size:10px}td{padding:7px 9px;font-size:12px}.pill{border
 .share-btn,.add-btn,.import-btn,.admin-action-btn{border-radius:12px;padding:11px 12px;font-size:14px;box-shadow:0 2px 8px rgba(15,23,42,.10)}
 .admin-panel{padding:12px;margin-bottom:10px;background:linear-gradient(180deg,#fff,#f8fbff)}.admin-panel h3{font-size:15px;margin-bottom:4px}.admin-panel h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 0 7px}.admin-note{font-size:11px;color:var(--muted);margin-bottom:8px}.admin-grid{display:grid;grid-template-columns:1fr 96px;gap:8px}.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-action-btn{width:100%;border:none;margin-bottom:7px;background:#e8f0fe;color:#1f3864;font-weight:800;cursor:pointer}.admin-action-btn.green{background:#dcfce7;color:#166534}.admin-action-btn.orange{background:#ffedd5;color:#9a3412}.admin-action-btn.red{background:#fee2e2;color:#991b1b}.import-btn{background:linear-gradient(135deg,#7c3aed,#a855f7)}
 .holiday-admin-grid{display:grid;grid-template-columns:130px 1fr;gap:7px}.holiday-admin-grid input{width:100%;border:1.5px solid #dbe3ef;border-radius:10px;padding:10px;margin-bottom:7px;font-size:13px}.holiday-admin-list{display:grid;gap:6px;margin-bottom:8px}.holiday-admin-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #fbbf24;border-radius:10px;background:#fffbeb;color:#92400e;font-size:11px;font-weight:800}.holiday-remove-btn{border:0;border-radius:8px;padding:6px 8px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;cursor:pointer}
+.background-preview{height:92px;border:2px solid #bfdbfe;border-radius:14px;background:#eef4fb url("bags-logo.png") center/contain no-repeat;margin:6px 0 8px;box-shadow:inset 0 0 0 999px rgba(255,255,255,.25)}.background-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .league-name-box{background:#eef6ff;border:1px solid #bfdbfe;border-radius:14px;padding:10px;margin:10px 0}.league-name-box label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1e40af;margin-bottom:6px}.mini-btn{width:100%;border:none;border-radius:11px;background:#1f3864;color:#fff;font-weight:800;padding:10px 12px;margin-bottom:8px;cursor:pointer}
 @media(max-width:420px){.app{padding:8px}.hdr{padding:14px 12px}.hdr h1{font-size:18px}.admin-grid,.admin-row{grid-template-columns:1fr}.nav{gap:3px}.nvbtn{font-size:10px;padding:9px 2px}.team-side .tname{font-size:10.5px}.wbtn{font-size:9px}}
 
@@ -359,12 +360,12 @@ body::before{
   width:100%;
   height:100%;
 
-  background-image:url("bags-logo.png");
-  background-repeat:no-repeat;
-  background-position:center center;
-  background-size:min(70vw,700px);
+  background-image:var(--app-bg-image,url("bags-logo.png"));
+  background-repeat:var(--app-bg-repeat,no-repeat);
+  background-position:var(--app-bg-position,center center);
+  background-size:var(--app-bg-size,min(70vw,700px));
 
-  opacity:.05;
+  opacity:var(--app-bg-opacity,.05);
 
   pointer-events:none;
   z-index:-1;
@@ -413,6 +414,15 @@ body::before{
       <label for="admin-league-name">League Name</label>
       <input id="admin-league-name" type="text" placeholder="Bags League Summer 2026">
       <button class="mini-btn" id="save-league-name-btn">Save League Name</button>
+    </div>
+
+    <h4>Background Theme</h4>
+    <div class="admin-note">Paste an image link to change the app background for everyone. Restore Default goes back to the Bags logo watermark.</div>
+    <input id="admin-background-url" type="url" placeholder="Paste background image URL here">
+    <div class="background-preview" id="background-preview"></div>
+    <div class="background-actions">
+      <button class="admin-action-btn green" id="save-background-btn" type="button">Save Background</button>
+      <button class="admin-action-btn" id="restore-background-btn" type="button">Restore Default</button>
     </div>
 
     <h4>Season Setup</h4>
@@ -706,7 +716,7 @@ var DEFAULT_CALENDAR_NOTES = [
   {date:'2026-07-02',status:'Off',note:'4th of July break'}
 ];
 var DEFAULT_RAINOUTS = [{week:3,date:'2026-06-11'}];
-var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
+var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], backgroundUrl:'', scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
 
 // Admin mode is enabled only after Firebase Authentication verifies the approved user.
@@ -1483,10 +1493,12 @@ function applyLeagueSettings(settings) {
     rainouts: (settings.rainouts || leagueSettings.rainouts || DEFAULT_RAINOUTS).slice(),
     forfeits: (settings.forfeits || leagueSettings.forfeits || []).slice(),
     subs: (settings.subs || leagueSettings.subs || []).slice(),
+    backgroundUrl: Object.prototype.hasOwnProperty.call(settings,'backgroundUrl') ? settings.backgroundUrl : (leagueSettings.backgroundUrl || ''),
     scheduleWeekMap: Object.assign({},settings.scheduleWeekMap || {}),
     week3MakeupRotationApplied: !!settings.week3MakeupRotationApplied,
     regularSeasonEnd: Object.prototype.hasOwnProperty.call(settings,'regularSeasonEnd') ? settings.regularSeasonEnd : leagueSettings.regularSeasonEnd
   };
+  applyBackgroundTheme();
   enforceSeasonDeadline();
   WEEKS = leagueSettings.weeks;
   TEAMS = leagueSettings.teams.slice();
@@ -1497,6 +1509,56 @@ function applyLeagueSettings(settings) {
   fillAdminSeasonForm();
   updateWeekStartControl();
   renderSubAdmin();
+}
+function safeCssUrl(url){
+  return String(url || '').trim().replace(/["\\\n\r]/g,'');
+}
+function applyBackgroundTheme(){
+  var url = safeCssUrl(leagueSettings && leagueSettings.backgroundUrl);
+  if (url) {
+    document.documentElement.style.setProperty('--app-bg-image','url("' + url + '")');
+    document.documentElement.style.setProperty('--app-bg-size','cover');
+    document.documentElement.style.setProperty('--app-bg-position','center center');
+    document.documentElement.style.setProperty('--app-bg-repeat','no-repeat');
+    document.documentElement.style.setProperty('--app-bg-opacity','.26');
+  } else {
+    document.documentElement.style.setProperty('--app-bg-image','url("bags-logo.png")');
+    document.documentElement.style.setProperty('--app-bg-size','min(70vw,700px)');
+    document.documentElement.style.setProperty('--app-bg-position','center center');
+    document.documentElement.style.setProperty('--app-bg-repeat','no-repeat');
+    document.documentElement.style.setProperty('--app-bg-opacity','.05');
+  }
+  renderBackgroundAdmin();
+}
+function renderBackgroundAdmin(){
+  var input = document.getElementById('admin-background-url');
+  var preview = document.getElementById('background-preview');
+  var url = safeCssUrl(leagueSettings && leagueSettings.backgroundUrl);
+  if (input) input.value = url;
+  if (preview) {
+    preview.style.backgroundImage = 'url("' + (url || 'bags-logo.png') + '")';
+    preview.style.backgroundSize = url ? 'cover' : 'contain';
+  }
+}
+function saveBackgroundTheme(){
+  if (!ADMIN_MODE) return;
+  var input = document.getElementById('admin-background-url');
+  var url = safeCssUrl(input && input.value);
+  if (url && !/^https?:\/\//i.test(url) && !/^data:image\//i.test(url) && !/^\.?\//.test(url)) {
+    alert('Paste a full image link that starts with http:// or https://.');
+    return;
+  }
+  leagueSettings.backgroundUrl = url;
+  applyBackgroundTheme();
+  save();
+  alert(url ? 'Background saved.' : 'Background restored to default.');
+}
+function restoreDefaultBackground(){
+  if (!ADMIN_MODE) return;
+  leagueSettings.backgroundUrl = '';
+  applyBackgroundTheme();
+  save();
+  alert('Default background restored.');
 }
 function isInternalBackupArchive(key, archive) {
   archive = archive || {};
@@ -1969,6 +2031,7 @@ function fillAdminSeasonForm() {
   if (w) w.value = leagueSettings.weeks || WEEKS;
   if (p) p.value = leagueSettings.playoffsStart || '';
   if (t) t.value = (leagueSettings.teams || TEAMS).join('\n');
+  renderBackgroundAdmin();
   renderHolidayAdmin();
   renderSubAdmin();
   try { fillPlayoffAdminForm(); } catch(e) {}
@@ -2002,6 +2065,7 @@ function viewSeason(key) {
   renderEverythingSafe();
 }
 function renderEverythingSafe() {
+  try { applyBackgroundTheme(); } catch(e) {}
   try { renderMatchups(); } catch(e) {}
   try { renderWeekStandings(); } catch(e) {}
   try { renderSeasonStandings(); } catch(e) {}
@@ -2744,6 +2808,19 @@ startCloudSync();
   if (subList) subList.addEventListener('click',function(event){
     var button = event.target.closest('.sub-remove-btn');
     if (button) removeSubRecord(parseInt(button.getAttribute('data-sub-index')));
+  });
+  var saveBackgroundBtn = document.getElementById('save-background-btn');
+  if (saveBackgroundBtn) saveBackgroundBtn.addEventListener('click',saveBackgroundTheme);
+  var restoreBackgroundBtn = document.getElementById('restore-background-btn');
+  if (restoreBackgroundBtn) restoreBackgroundBtn.addEventListener('click',restoreDefaultBackground);
+  var backgroundInput = document.getElementById('admin-background-url');
+  if (backgroundInput) backgroundInput.addEventListener('input',function(){
+    var preview = document.getElementById('background-preview');
+    var url = safeCssUrl(this.value);
+    if (preview) {
+      preview.style.backgroundImage = 'url("' + (url || 'bags-logo.png') + '")';
+      preview.style.backgroundSize = url ? 'cover' : 'contain';
+    }
   });
 
   var saveBtn = document.getElementById('save-season-settings-btn');
