@@ -1081,9 +1081,14 @@ function applySubToTeamName(team, subRecord){
   });
   return changed ? parts.join('/') : team;
 }
+function subAppliesToRound(subRecord, round){
+  if (!subRecord) return false;
+  if (subRecord.round === undefined || subRecord.round === null || subRecord.round === '' || subRecord.round === 'all') return true;
+  return Number(subRecord.round) === Number(round);
+}
 function teamNameForSchedule(team, week, round){
   var matchSubs = (leagueSettings.subs || []).filter(function(item){
-    return Number(item.week) === Number(week) && item.team === team && (!item.round || Number(item.round) === Number(round));
+    return Number(item.week) === Number(week) && item.team === team && subAppliesToRound(item, round);
   });
   return matchSubs.reduce(function(name,item){ return applySubToTeamName(name,item); }, team);
 }
@@ -1099,7 +1104,7 @@ function getTeamSchedule(team){
         var opponentDisplay = teamNameForSchedule(opponent,w,s+1);
         var teamForfeit = (leagueSettings.forfeits || []).some(function(item){ return Number(item.week) === w && item.team === team; });
         var opponentForfeit = (leagueSettings.forfeits || []).some(function(item){ return Number(item.week) === w && item.team === opponent; });
-        var subNote = (leagueSettings.subs || []).filter(function(item){ return Number(item.week) === w && item.team === team && (!item.round || Number(item.round) === s + 1); }).map(function(item){ return item.name + (item.forPlayer ? ' for ' + item.forPlayer : ''); }).join(', ');
+        var subNote = (leagueSettings.subs || []).filter(function(item){ return Number(item.week) === w && item.team === team && subAppliesToRound(item, s + 1); }).map(function(item){ return item.name + (item.forPlayer ? ' for ' + item.forPlayer : ''); }).join(', ');
         var match = getMatch(w,s,mi), wins = 0, losses = 0;
         [match.g1,match.g2,match.g3].forEach(function(winner){
           if (winner === side) wins++;
@@ -1150,7 +1155,7 @@ function renderTeamPage(){
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekRainouts.forEach(function(rainout){
       html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon">🌧️ RAINED OUT · ' + formatLeagueDate(rainout.date,true) + '</div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-rounds">';
-      html += weekGames.map(function(game){ return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplay || game.opponent) + '<small>' + game.board + '</small>' + (game.subNote ? '<small class="sub-note">Sub: ' + game.subNote + '</small>' : '') + '</div><span class="team-result">Postponed</span></div>'; }).join('');
+      html += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-note">Playing as: ' + game.teamDisplay + '</small>' : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplay || game.opponent) + '<small>' + game.board + '</small>' + ownSubLine + (game.subNote ? '<small class="sub-note">Sub: ' + game.subNote + '</small>' : '') + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
       var makeupText = makeupDate ? 'MAKE UP DAY - ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
       html += '</div><div class="makeup-ribbon">' + makeupText + '</div></div>';
@@ -1163,7 +1168,8 @@ function renderTeamPage(){
       else if (game.opponentForfeit) { resultText = 'FORFEIT W 3-0'; resultClass = ' win forfeit'; }
       else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
       else if (game.played) { resultText = game.wins + '-' + game.losses; resultClass = ' progress'; }
-      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplay || game.opponent) + '<small>' + game.board + '</small>' + (game.subNote ? '<small class="sub-note">Sub: ' + game.subNote + '</small>' : '') + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+      var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-note">Playing as: ' + game.teamDisplay + '</small>' : '';
+      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplay || game.opponent) + '<small>' + game.board + '</small>' + ownSubLine + (game.subNote ? '<small class="sub-note">Sub: ' + game.subNote + '</small>' : '') + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
     }).join('');
     html += '</div></div>';
   }
