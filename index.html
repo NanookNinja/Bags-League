@@ -721,6 +721,7 @@ var DEFAULT_CALENDAR_NOTES = [
 var DEFAULT_RAINOUTS = [{week:3,date:'2026-06-11'}];
 var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], backgroundUrl:'', scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
+window.pendingWeekDateRepair = false;
 
 // Admin mode is enabled only after Firebase Authentication verifies the approved user.
 var ADMIN_REQUESTED = (new URLSearchParams(window.location.search).has('admin') || window.location.hash === '#admin');
@@ -839,9 +840,6 @@ function recordGame(w, s, mi, game, winner) {
   if (!ADMIN_MODE) { return; }
   if (!SCORE_EDIT_UNLOCKED) { return; }
   if (playoffState && playoffState.locked) { alert('Regular season is locked. Unlock by starting a new season or restoring a backup.'); return; }
-  ensureWeekStarted(w);
-  rebuildWeekControls();
-  updateWeekStartControl();
   var m = getMatch(w, s, mi);
   // Keep score entry stable on phones: tapping the already-selected winner should not unclick it.
   if (m[game] === winner) return;
@@ -1563,6 +1561,15 @@ function applyLeagueSettings(settings) {
     week3MakeupRotationApplied: !!settings.week3MakeupRotationApplied,
     regularSeasonEnd: Object.prototype.hasOwnProperty.call(settings,'regularSeasonEnd') ? settings.regularSeasonEnd : leagueSettings.regularSeasonEnd
   };
+  if ((leagueSettings.actualWeekDates && (leagueSettings.actualWeekDates[1] === '2026-07-05' || leagueSettings.actualWeekDates['1'] === '2026-07-05')) || (leagueSettings.weekDates && (leagueSettings.weekDates[1] === '2026-07-05' || leagueSettings.weekDates['1'] === '2026-07-05'))) {
+    leagueSettings.actualWeekDates = leagueSettings.actualWeekDates || {};
+    leagueSettings.weekDates = leagueSettings.weekDates || {};
+    delete leagueSettings.actualWeekDates[1];
+    delete leagueSettings.actualWeekDates['1'];
+    leagueSettings.weekDates[1] = DEFAULT_WEEK_DATES[1];
+    leagueSettings.weekDates['1'] = DEFAULT_WEEK_DATES[1];
+    window.pendingWeekDateRepair = true;
+  }
   applyBackgroundTheme();
   enforceSeasonDeadline();
   WEEKS = leagueSettings.weeks;
@@ -1803,13 +1810,15 @@ function resetWeekStartDate(week){
   leagueSettings.actualWeekDates = leagueSettings.actualWeekDates || {};
   leagueSettings.weekDates = leagueSettings.weekDates || {};
   var actualDate = leagueSettings.actualWeekDates[week];
+  if (!actualDate && leagueSettings.actualWeekDates[String(week)]) actualDate = leagueSettings.actualWeekDates[String(week)];
   var scheduledDate = leagueSettings.weekDates[week];
   var defaultDate = DEFAULT_WEEK_DATES[week] || scheduledDate || '';
   if (!actualDate && scheduledDate === defaultDate) return;
-  var currentText = actualDate || scheduledDate;
   if (!confirm('Reset Week ' + week + ' back to ' + (defaultDate ? formatLeagueDate(defaultDate,false) : 'Date TBD') + '? Scores will not be changed.')) return;
   delete leagueSettings.actualWeekDates[week];
+  delete leagueSettings.actualWeekDates[String(week)];
   leagueSettings.weekDates[week] = defaultDate;
+  leagueSettings.weekDates[String(week)] = defaultDate;
   rebuildWeekControls();
   updateWeekStartControl();
   renderTeamPage();
@@ -2005,15 +2014,27 @@ function renderSubAdmin(){
   var weekSel = document.getElementById('sub-week-select'), teamSel = document.getElementById('sub-team-select'), list = document.getElementById('sub-admin-list');
   if (weekSel) {
     var currentWeek = weekSel.value;
+    var subCalendar = [];
     weekSel.innerHTML = '<option value="">Select week...</option>';
     for (var w=1; w<=WEEKS; w++) {
       var date = getWeekDate(w);
       var hadRainout = (leagueSettings.rainouts || []).some(function(item){ return Number(item.week) === w; });
-      var o=document.createElement('option');
-      o.value=w;
-      o.textContent='Week ' + w + (hadRainout ? ' (Makeup)' : '') + (date ? ' - ' + formatLeagueDate(date,false) : ' - Date TBD');
-      weekSel.appendChild(o);
+      (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === w; }).forEach(function(item){
+        subCalendar.push({date:item.date,order:0,label:'🌧 ' + formatLeagueDate(item.date,false) + ' — Week ' + w + ' RAINED OUT',disabled:true});
+      });
+      subCalendar.push({date:date || '9999-12-31',order:1,label:'Week ' + w + (hadRainout ? ' (Makeup)' : '') + (date ? ' — ' + formatLeagueDate(date,false) : ' — Date TBD'),value:w});
     }
+    (leagueSettings.calendarNotes || []).filter(function(item){ return item.status === 'Off'; }).forEach(function(item){
+      subCalendar.push({date:item.date,order:0,label:'🎆 ' + formatLeagueDate(item.date,false) + ' — ' + (item.note || 'HOLIDAY / DAY OFF').toUpperCase(),disabled:true});
+    });
+    subCalendar.sort(function(a,b){ return String(a.date || '9999-12-31').localeCompare(String(b.date || '9999-12-31')) || a.order-b.order; });
+    subCalendar.forEach(function(item){
+      var o=document.createElement('option');
+      o.value=item.disabled ? '' : item.value;
+      o.textContent=item.label;
+      o.disabled=!!item.disabled;
+      weekSel.appendChild(o);
+    });
     weekSel.value = currentWeek && Number(currentWeek) <= WEEKS ? currentWeek : '';
   }
   if (teamSel) {
@@ -2783,8 +2804,9 @@ async function startCloudSync() {
       renderEverything();
       applyingRemote = false;
       cloudStatus('Cloud sync live', 'ok');
-      if ((needsTenWeekMigration || makeupRotationApplied || movedInternalBackups) && ADMIN_MODE) {
+      if ((needsTenWeekMigration || makeupRotationApplied || movedInternalBackups || window.pendingWeekDateRepair) && ADMIN_MODE) {
         pendingWeekMigration = false;
+        window.pendingWeekDateRepair = false;
         setTimeout(function(){ window.save(); }, 50);
       }
     }, function(error) {
