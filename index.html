@@ -1067,6 +1067,57 @@ function renderWeekStandings() {
   }).join('');
 }
 
+function renderBaggers() {
+  var lb = document.getElementById('bagger-lb'), list = document.getElementById('bagger-list'), body = document.getElementById('bagger-lb-body');
+  if (!lb || !list || !body) return;
+  var openPlayers = {};
+  body.querySelectorAll('details.bagger-rank-detail[open]').forEach(function(detail){
+    var player = detail.getAttribute('data-bagger-player');
+    if (player) openPlayers[player] = true;
+  });
+  var keepScrollY = window.scrollY || window.pageYOffset || 0;
+  var entries = baggerWeek ? (baggers[baggerWeek] || []) : [];
+  if (baggerWeek) {
+    list.innerHTML = entries.length ? entries.map(function(b) {
+      return '<div class="bagger-entry">'
+        + '<div style="flex:1"><div class="bename">' + escapeHtml(b.name) + '</div><div class="bewk">Week ' + baggerWeek + '</div></div>'
+        + '<span class="pill orange">' + b.count + 'x</span>'
+        + (ADMIN_MODE ? '<button class="bedel" data-week="' + baggerWeek + '" data-id="' + b.id + '">&#215;</button>' : '')
+        + '</div>';
+    }).join('') : '<div style="text-align:center;color:#999;font-size:13px;padding:14px;background:#fff;border-radius:10px;margin-bottom:8px">No 4 baggers for Week ' + baggerWeek + ' yet</div>';
+  } else {
+    list.innerHTML = '<div class="bagger-week-note">Select a week to see that week\'s 4 baggers.</div>';
+  }
+
+  var totals = {}, weekDetails = {};
+  for (var w = 1; w <= WEEKS; w++) {
+    (baggers[w] || []).forEach(function(b) {
+      var name = (b.name || '').trim();
+      if (!name) return;
+      var count = Number(b.count) || 1;
+      totals[name] = (totals[name] || 0) + count;
+      if (!weekDetails[name]) weekDetails[name] = {};
+      weekDetails[name][w] = (weekDetails[name][w] || 0) + count;
+    });
+  }
+  var names = Object.keys(totals).sort(function(a, b) { return totals[b] - totals[a] || a.localeCompare(b); });
+  lb.style.display = 'block';
+  if (!names.length) {
+    body.innerHTML = '<tr><td colspan="3" style="color:#999;padding:14px;text-align:center">No 4 baggers recorded yet</td></tr>';
+    return;
+  }
+  body.innerHTML = names.map(function(n, i) {
+    var key = encodeURIComponent(n);
+    var weekly = weekDetails[n] || {};
+    var details = Object.keys(weekly).sort(function(a,b){ return Number(a)-Number(b); }).map(function(w){
+      return '<span>Week ' + w + ' — ' + weekly[w] + 'x</span>';
+    }).join('');
+    return '<tr><td>' + rankCell(i) + '</td><td><details class="bagger-rank-detail" data-bagger-player="' + key + '"' + (openPlayers[key] ? ' open' : '') + '><summary><span>' + escapeHtml(n) + '</span><span class="rank-caret">⌄</span></summary><div class="bagger-rank-weeks">' + details + '</div></details></td>'
+      + '<td><span class="pill purple">' + totals[n] + 'x</span></td></tr>';
+  }).join('');
+  if (Object.keys(openPlayers).length) requestAnimationFrame(function(){ window.scrollTo(0, keepScrollY); });
+}
+
 function renderSeasonStandings() {
   var tot = calcSeasonTotals(seasonFilter);
   var sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
@@ -1412,6 +1463,57 @@ function renderBaggers() {
 }
 
 // ── Share ─────────────────────────────────────────────────────────────────────
+function renderBaggers() {
+  var lb = document.getElementById('bagger-lb'), list = document.getElementById('bagger-list'), body = document.getElementById('bagger-lb-body');
+  if (!lb || !list || !body) return;
+  var openPlayers = {};
+  body.querySelectorAll('details.bagger-rank-detail[open]').forEach(function(detail){
+    var player = detail.getAttribute('data-bagger-player');
+    if (player) openPlayers[player] = true;
+  });
+  var keepScrollY = window.scrollY || window.pageYOffset || 0;
+  var entries = baggerWeek ? (baggers[baggerWeek] || []) : [];
+  if (baggerWeek) {
+    list.innerHTML = entries.length ? entries.map(function(b) {
+      return '<div class="bagger-entry">'
+        + '<div style="flex:1"><div class="bename">' + escapeHtml(b.name) + '</div><div class="bewk">Week ' + baggerWeek + '</div></div>'
+        + '<span class="pill orange">' + b.count + 'x</span>'
+        + (ADMIN_MODE ? '<button class="bedel" data-week="' + baggerWeek + '" data-id="' + b.id + '">&#215;</button>' : '')
+        + '</div>';
+    }).join('') : '<div style="text-align:center;color:#999;font-size:13px;padding:14px;background:#fff;border-radius:10px;margin-bottom:8px">No 4 baggers for Week ' + baggerWeek + ' yet</div>';
+  } else {
+    list.innerHTML = '<div class="bagger-week-note">Select a week to see that week\'s 4 baggers.</div>';
+  }
+
+  var totals = {}, weekDetails = {};
+  for (var w = 1; w <= WEEKS; w++) {
+    (baggers[w] || []).forEach(function(b) {
+      var name = (b.name || '').trim();
+      if (!name) return;
+      var count = Number(b.count) || 1;
+      totals[name] = (totals[name] || 0) + count;
+      if (!weekDetails[name]) weekDetails[name] = {};
+      weekDetails[name][w] = (weekDetails[name][w] || 0) + count;
+    });
+  }
+  var names = Object.keys(totals).sort(function(a, b) { return totals[b] - totals[a] || a.localeCompare(b); });
+  lb.style.display = 'block';
+  if (!names.length) {
+    body.innerHTML = '<tr><td colspan="3" style="color:#999;padding:14px;text-align:center">No 4 baggers recorded yet</td></tr>';
+    return;
+  }
+  body.innerHTML = names.map(function(n, i) {
+    var key = encodeURIComponent(n);
+    var weekly = weekDetails[n] || {};
+    var details = Object.keys(weekly).sort(function(a,b){ return Number(a)-Number(b); }).map(function(w){
+      return '<span>Week ' + w + ' — ' + weekly[w] + 'x</span>';
+    }).join('');
+    return '<tr><td>' + rankCell(i) + '</td><td><details class="bagger-rank-detail" data-bagger-player="' + key + '"' + (openPlayers[key] ? ' open' : '') + '><summary><span>' + escapeHtml(n) + '</span><span class="rank-caret">⌄</span></summary><div class="bagger-rank-weeks">' + details + '</div></details></td>'
+      + '<td><span class="pill purple">' + totals[n] + 'x</span></td></tr>';
+  }).join('');
+  if (Object.keys(openPlayers).length) requestAnimationFrame(function(){ window.scrollTo(0, keepScrollY); });
+}
+
 var TODAY = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
 function buildWeekText(w) {
