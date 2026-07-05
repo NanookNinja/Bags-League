@@ -592,13 +592,13 @@ Tim/Rick"></textarea>
         <input type="text" id="bagger-name" placeholder="Enter player name...">
         <div class="form-lbl">How many 4 baggers this week?</div>
         <div class="cnt-btns" id="cnt-btns">
-          <button class="cbtn sel" data-cnt="1">1</button>
-          <button class="cbtn" data-cnt="2">2</button>
-          <button class="cbtn" data-cnt="3">3</button>
-          <button class="cbtn" data-cnt="4">4</button>
-          <button class="cbtn" data-cnt="5">5+</button>
+          <button type="button" class="cbtn sel" data-cnt="1">1</button>
+          <button type="button" class="cbtn" data-cnt="2">2</button>
+          <button type="button" class="cbtn" data-cnt="3">3</button>
+          <button type="button" class="cbtn" data-cnt="4">4</button>
+          <button type="button" class="cbtn" data-cnt="5">5+</button>
         </div>
-        <button class="add-btn" id="add-bagger-btn">Add 4 Bagger</button>
+        <button type="button" class="add-btn" id="add-bagger-btn">Add 4 Bagger</button>
       </div>
     </div>
     <div id="bagger-list"></div>
@@ -874,6 +874,12 @@ function save() {
 function load() {
   try { results = JSON.parse(localStorage.getItem('bags26_r') || '{}'); } catch(e) { results = {}; }
   try { baggers = JSON.parse(localStorage.getItem('bags26_b') || '{}'); } catch(e) { baggers = {}; }
+}
+function saveBaggersNow() {
+  try { localStorage.setItem('bags26_b', JSON.stringify(baggers)); } catch(e) {}
+  if (typeof window.forceCloudSave === 'function') window.forceCloudSave();
+  else if (typeof window.save === 'function') window.save();
+  else save();
 }
 
 // ── Render matchups ───────────────────────────────────────────────────────────
@@ -1409,11 +1415,11 @@ function addBagger() {
   var name = document.getElementById('bagger-name').value.trim();
   if (!name || !baggerWeek) return;
   if (!baggers[baggerWeek]) baggers[baggerWeek] = [];
-  baggers[baggerWeek].push({ name: name, count: baggerCnt, id: Date.now() });
+  baggers[baggerWeek].push({ name: name, count: baggerCnt, id: Date.now() + Math.floor(Math.random() * 1000) });
   document.getElementById('bagger-name').value = '';
   baggerCnt = 1;
   document.querySelectorAll('.cbtn').forEach(function(b, i) { b.classList.toggle('sel', i === 0); });
-  save(); renderBaggers();
+  saveBaggersNow(); renderBaggers();
 }
 
 document.getElementById('bagger-list').addEventListener('click', function(e) {
@@ -1422,7 +1428,7 @@ document.getElementById('bagger-list').addEventListener('click', function(e) {
   var week = parseInt(btn.getAttribute('data-week'));
   var id = parseInt(btn.getAttribute('data-id'));
   baggers[week] = (baggers[week] || []).filter(function(b) { return b.id !== id; });
-  save(); renderBaggers();
+  saveBaggersNow(); renderBaggers();
 });
 
 function renderBaggers() {
@@ -2879,6 +2885,26 @@ async function startCloudSync() {
           cloudStatus('Cloud sync error — local backup saved', 'err');
         }
       }, 350);
+    };
+    window.forceCloudSave = async function() {
+      if (ADMIN_MODE && typeof localSave === 'function') localSave();
+      if (!ADMIN_MODE || !cloudReady || applyingRemote) return;
+      clearTimeout(saveTimer);
+      try {
+        await setDoc(ref, {
+          settings: leagueSettings || {},
+          results: results || {},
+          baggers: baggers || {},
+          archives: archives || {},
+          internalBackups: internalBackups || {},
+          playoffs: playoffState || {},
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        cloudStatus('Sync Online', 'ok');
+      } catch (e) {
+        console.error(e);
+        cloudStatus('Sync Issue', 'err');
+      }
     };
 
     // Listen for changes from other phones and update this screen live.
