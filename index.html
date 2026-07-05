@@ -1742,11 +1742,17 @@ function undoRainOutWeek(week){
 window.undoRainOutWeek = undoRainOutWeek;
 function resetWeekStartDate(week){
   week = Number(week);
-  if (!ADMIN_MODE || !week || !isActualWeekDate(week)) return;
+  if (!ADMIN_MODE || !week) return;
+  leagueSettings.actualWeekDates = leagueSettings.actualWeekDates || {};
+  leagueSettings.weekDates = leagueSettings.weekDates || {};
   var actualDate = leagueSettings.actualWeekDates[week];
-  var scheduledDate = leagueSettings.weekDates && leagueSettings.weekDates[week];
-  if (!confirm('Remove the accidental ' + formatLeagueDate(actualDate,false) + ' start date for Week ' + week + '? It will return to ' + (scheduledDate ? formatLeagueDate(scheduledDate,false) : 'its scheduled date') + '. Scores will not be changed.')) return;
+  var scheduledDate = leagueSettings.weekDates[week];
+  var defaultDate = DEFAULT_WEEK_DATES[week] || scheduledDate || '';
+  if (!actualDate && scheduledDate === defaultDate) return;
+  var currentText = actualDate || scheduledDate;
+  if (!confirm('Reset Week ' + week + ' back to ' + (defaultDate ? formatLeagueDate(defaultDate,false) : 'Date TBD') + '? Scores will not be changed.')) return;
   delete leagueSettings.actualWeekDates[week];
+  leagueSettings.weekDates[week] = defaultDate;
   rebuildWeekControls();
   updateWeekStartControl();
   renderTeamPage();
@@ -1845,12 +1851,17 @@ function updateWeekStartControl(){
   button.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) ? 'block' : 'none';
   rainButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) ? 'block' : 'none';
   undoButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && hasRainout ? 'block' : 'none';
-  resetButton.style.display = ADMIN_MODE && isActualWeekDate(curWeek) ? 'block' : 'none';
+  var defaultDate = DEFAULT_WEEK_DATES[curWeek] || '';
+  var scheduledDateChanged = !!defaultDate && !!(leagueSettings.weekDates && leagueSettings.weekDates[curWeek]) && leagueSettings.weekDates[curWeek] !== defaultDate;
+  resetButton.style.display = ADMIN_MODE && (isActualWeekDate(curWeek) || scheduledDateChanged) ? 'block' : 'none';
   makeupControl.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && hasRainout ? 'flex' : 'none';
   makeupInput.value = !isActualWeekDate(curWeek) && date ? date : '';
 }
 function startWeekToday(){
   if (!ADMIN_MODE || !curWeek) return;
+  var today = localISODate();
+  var scheduledDate = leagueSettings.weekDates && leagueSettings.weekDates[curWeek];
+  if (scheduledDate && scheduledDate !== today && !confirm('Start Week ' + curWeek + ' as today, ' + formatLeagueDate(today,false) + '? The scheduled date is ' + formatLeagueDate(scheduledDate,false) + '.')) return;
   ensureWeekStarted(curWeek);
   rebuildWeekControls();
   updateWeekStartControl();
