@@ -2850,7 +2850,6 @@ async function startCloudSync() {
     onAuthStateChanged(auth, async function(user) {
       if (user && user.uid === ADMIN_UID) {
         window.setAdminMode(ADMIN_REQUESTED, user.email || '');
-        if (pendingWeekMigration) setTimeout(function(){ if (ADMIN_MODE && typeof window.save === 'function') window.save(); }, 500);
         return;
       }
       window.setAdminMode(false, '');
@@ -2943,7 +2942,6 @@ async function startCloudSync() {
       if ((needsTenWeekMigration || makeupRotationApplied || movedInternalBackups || window.pendingWeekDateRepair) && ADMIN_MODE) {
         pendingWeekMigration = false;
         window.pendingWeekDateRepair = false;
-        setTimeout(function(){ window.save(); }, 50);
       }
     }, function(error) {
       console.error(error);
