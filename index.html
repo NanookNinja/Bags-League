@@ -442,6 +442,8 @@ Tim/Rick"></textarea>
       <button class="admin-action-btn orange" id="archive-season-btn">Archive Season</button>
       <button class="admin-action-btn red" id="new-season-btn">New Blank Season</button>
     </div>
+    <button class="admin-action-btn orange" id="repair-week4-scores-btn">Move Week 3 Scores to Week 4</button>
+    <div class="admin-note">Use only if Week 4 scores accidentally appear under Week 3 after the rainout.</div>
 
     <h4>Holidays / Days Off</h4>
     <div class="holiday-admin-grid"><input id="holiday-date" type="date"><input id="holiday-name" type="text" placeholder="Holiday name, e.g. Labor Day"></div>
@@ -1578,8 +1580,55 @@ function moveInternalBackupsOutOfArchives() {
   });
   return moved;
 }
+function bucketHasScores(bucket){
+  if (!bucket) return false;
+  return Object.keys(bucket).some(function(slotKey){
+    var slot = bucket[slotKey] || {};
+    return Object.keys(slot).some(function(matchKey){
+      var match = slot[matchKey] || {};
+      return match.g1 === 'a' || match.g1 === 'b' || match.g2 === 'a' || match.g2 === 'b' || match.g3 === 'a' || match.g3 === 'b';
+    });
+  });
+}
+function repairWeek4ScoresFromWeek3(){
+  if (!ADMIN_MODE) { alert('This repair is only available in admin mode.'); return; }
+  if (viewingArchive) { alert('Switch back to the current season before repairing scores.'); return; }
+  var week3HasScores = bucketHasScores(results && results[3]);
+  var week4HasScores = bucketHasScores(results && results[4]);
+  if (!week3HasScores) { alert('No scores were found under Week 3 to move.'); return; }
+  if (week4HasScores && !confirm('Week 4 already has scores. Move Week 3 scores into Week 4 anyway and replace the current Week 4 score bucket?')) return;
+  if (!confirm('Move the score bucket currently under Week 3 into Week 4, then clear Week 3? A backup will be saved first.')) return;
+  var backupName = 'Repair Backup Before Moving Week 3 Scores to Week 4 - ' + new Date().toISOString();
+  internalBackups = internalBackups || {};
+  internalBackups[backupName] = {
+    settings: JSON.parse(JSON.stringify(leagueSettings || {})),
+    results: JSON.parse(JSON.stringify(results || {})),
+    baggers: JSON.parse(JSON.stringify(baggers || {})),
+    playoffs: JSON.parse(JSON.stringify(playoffState || {})),
+    archivedAt: new Date().toISOString(),
+    note: 'Automatic backup before moving mistaken Week 3 score bucket to Week 4.'
+  };
+  results[4] = JSON.parse(JSON.stringify(results[3] || {}));
+  results[3] = {};
+  if ((baggers[3] || []).length && !(baggers[4] || []).length) { baggers[4] = baggers[3]; baggers[3] = []; }
+  leagueSettings.rainouts = leagueSettings.rainouts || [];
+  if (!leagueSettings.rainouts.some(function(item){ return Number(item.week) === 3; })) leagueSettings.rainouts.push({week:3,date:'2026-06-11'});
+  leagueSettings.week3MakeupRotationApplied = true;
+  renderEverythingSafe();
+  save();
+  alert('Done. Week 3 is cleared as the rainout, and those scores are now under Week 4.');
+}
 function applyWeek3MakeupRotation(){
   if (leagueSettings.week3MakeupRotationApplied) return false;
+  var currentMap = leagueSettings.scheduleWeekMap || {};
+  if (Number(currentMap[3]) === 5 && Number(currentMap[4]) === 3 && Number(currentMap[5]) === 4) {
+    leagueSettings.week3MakeupRotationApplied = true;
+    return false;
+  }
+  if (results && results[3] && bucketHasScores(results[3])) {
+    leagueSettings.week3MakeupRotationApplied = true;
+    return false;
+  }
   var backupName = 'Pre-Live-Update Backup 2026-06-23';
   internalBackups = internalBackups || {};
   if (!internalBackups[backupName]) {
@@ -2813,6 +2862,8 @@ startCloudSync();
   if (saveBackgroundBtn) saveBackgroundBtn.addEventListener('click',saveBackgroundTheme);
   var restoreBackgroundBtn = document.getElementById('restore-background-btn');
   if (restoreBackgroundBtn) restoreBackgroundBtn.addEventListener('click',restoreDefaultBackground);
+  var repairWeek4Btn = document.getElementById('repair-week4-scores-btn');
+  if (repairWeek4Btn) repairWeek4Btn.addEventListener('click',repairWeek4ScoresFromWeek3);
   var backgroundInput = document.getElementById('admin-background-url');
   if (backgroundInput) backgroundInput.addEventListener('input',function(){
     var preview = document.getElementById('background-preview');
