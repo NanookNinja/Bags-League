@@ -1234,6 +1234,63 @@ function renderTeamPage(){
   html += '</div></details>';
   content.innerHTML = html;
 }
+function renderTeamPage(){
+  var select = document.getElementById('team-page-select'), content = document.getElementById('team-page-content'), teamNumber = document.getElementById('team-picker-number');
+  if (!select || !content) return;
+  if (select.options.length <= 1) populateTeamPageSelect();
+  var team = select.value;
+  if (teamNumber) teamNumber.textContent = team ? 'Team ' + tnum(team) : '';
+  if (!team) { content.innerHTML = ''; return; }
+  select.value = team;
+  var totals = calcSeasonTotals(null)[team] || {wins:0,losses:0,played:0};
+  var pct = totals.played ? Math.round(totals.wins / totals.played * 100) + '%' : '--';
+  var detail = getTeamSchedule(team), opponentNames = Object.keys(detail.opponents).sort(function(a,b){
+    return detail.opponents[b].scheduled - detail.opponents[a].scheduled || a.localeCompare(b);
+  });
+  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totals.wins + '-' + totals.losses + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  var notes = leagueSettings.calendarNotes || [];
+  var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
+  if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
+  html += '<details class="team-collapse"><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
+  var scheduleEvents = [];
+  notes.filter(function(item){ return item.status === 'Off'; }).forEach(function(day){
+    scheduleEvents.push({date:day.date || '9999-12-31',order:0,html:'<div class="team-week-block holiday-day"><div class="holiday-stamp">🎆 ' + (day.note || 'HOLIDAY / DAY OFF').toUpperCase() + ' 🎇<small>' + formatLeagueDate(day.date,false) + ' · No league games</small></div></div>'});
+  });
+  for (var weekNumber = 1; weekNumber <= WEEKS; weekNumber++) {
+    var weekGames = detail.schedule.filter(function(game){ return game.week === weekNumber; });
+    if (!weekGames.length) continue;
+    var weekRainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
+    var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
+    weekRainouts.forEach(function(rainout){
+      var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon">🌧️ RAINED OUT · ' + formatLeagueDate(rainout.date,true) + '</div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-rounds">';
+      rainHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
+      var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
+      var makeupText = makeupDate ? 'MAKE UP DAY - ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
+      rainHtml += '</div><div class="makeup-ribbon">' + makeupText + '</div></div>';
+      scheduleEvents.push({date:rainout.date || '9999-12-31',order:1,html:rainHtml});
+    });
+    if (weekRainouts.length) continue;
+    var weekHtml = '<div class="team-week-block"><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong>' + (weekDate ? '<span class="team-week-date">' + weekDate + '</span>' : '') + '</div><div class="team-week-rounds">';
+    weekHtml += weekGames.map(function(game){
+      var resultText = 'Upcoming', resultClass = '';
+      if (game.teamForfeit) { resultText = 'FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
+      else if (game.opponentForfeit) { resultText = 'FORFEIT W 3-0'; resultClass = ' win forfeit'; }
+      else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
+      else if (game.played) { resultText = game.wins + '-' + game.losses; resultClass = ' progress'; }
+      var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : '';
+      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+    }).join('');
+    weekHtml += '</div></div>';
+    scheduleEvents.push({date:weekGames[0].date || '9999-12-31',order:2,html:weekHtml});
+  }
+  scheduleEvents.sort(function(a,b){ return String(a.date || '9999-12-31').localeCompare(String(b.date || '9999-12-31')) || a.order - b.order; });
+  html += scheduleEvents.map(function(item){ return item.html; }).join('');
+  html += '</div></details>';
+  html += '<details class="team-collapse"><summary><span>Opponent History</span><small>Meetings and game record</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content opponent-history">';
+  html += opponentNames.map(function(opponent){ var h = detail.opponents[opponent]; return '<div class="opponent-card"><strong>' + opponent + '</strong><span>Met ' + h.scheduled + 'x · ' + h.completed + ' completed</span><span class="opponent-record">' + h.wins + '-' + h.losses + '</span></div>'; }).join('') || '<div style="text-align:center;color:#999;padding:12px">No opponents scheduled.</div>';
+  html += '</div></details>';
+  content.innerHTML = html;
+}
 function openTeamPage(team){
   var select = document.getElementById('team-page-select'); if (select) select.value = team;
   var button = document.querySelector('[data-nav="teams"]'); if (button) button.click();
