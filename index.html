@@ -81,6 +81,7 @@ select{width:100%;font-size:15px;padding:10px 12px;border-radius:10px;border:1.5
 .games-row{display:flex;gap:6px;margin-top:10px}
 .gbg{flex:1;background:#F5F7FA;border-radius:10px;padding:8px;text-align:center}
 .gbg.auto-g{background:#FEF3C7}
+.auto-win-label{display:flex;align-items:center;justify-content:center;min-height:35px;border-radius:8px;background:#fff7ed;border:1.5px solid #f59e0b;color:#92400e;font-size:10px;font-weight:1000;line-height:1.25;padding:7px 4px;word-break:break-word}
 .glabel{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 .auto-g .glabel{color:#92400E}
 .wbtns{display:flex;gap:5px}
@@ -230,6 +231,8 @@ select{font-size:14px;padding:9px 34px 9px 12px;margin-bottom:8px} input[type=te
 select:not(#team-page-select){min-height:44px;border:2px solid #bfdbfe;border-radius:14px;background-color:#eff6ff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' stroke='%23ffffff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),linear-gradient(135deg,#1F3864 0%,#2563eb 56%,#7c3aed 100%);background-repeat:no-repeat,no-repeat;background-position:right 15px center,center;background-size:16px 10px,100% 100%;color:#fff;font-weight:900;box-shadow:0 5px 14px rgba(37,99,235,.22)}
 select:not(#team-page-select):focus{border-color:#fbbf24;outline:3px solid rgba(251,191,36,.26);outline-offset:1px}
 select:not(#team-page-select) option{background:#fff;color:#172033;font-weight:800}
+#slot-sel{position:sticky;top:58px;z-index:34;margin-bottom:10px;box-shadow:0 6px 16px rgba(15,23,42,.18)}
+.admin-authenticated #slot-sel{top:202px;z-index:34}
 .admin-panel select:not(#team-page-select),.forfeit-control select:not(#team-page-select),.makeup-date-control select:not(#team-page-select){min-height:40px;border-color:#d8b4fe;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' stroke='%23ffffff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),linear-gradient(135deg,#0f766e 0%,#2563eb 52%,#7c3aed 100%);box-shadow:0 4px 12px rgba(15,118,110,.18)}
 .card,.match-card,.share-box,.bagger-form-box,.bagger-entry,.admin-panel{border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.08);border:1px solid rgba(219,227,239,.85)}
 .card-hdr{padding:10px 12px}.card-hdr.navy{background:linear-gradient(135deg,#183153,#2563eb)}.card-hdr.purple{background:linear-gradient(135deg,#6d28d9,#9333ea)}
@@ -840,8 +843,8 @@ function recordGame(w, s, mi, game, winner) {
   rebuildWeekControls();
   updateWeekStartControl();
   var m = getMatch(w, s, mi);
-  // Toggle off if same value clicked again
-  if (m[game] === winner) winner = null;
+  // Keep score entry stable on phones: tapping the already-selected winner should not unclick it.
+  if (m[game] === winner) return;
   m[game] = winner;
   // Auto-sweep: if g1 and g2 same winner, auto-award g3
   if (game === 'g1' || game === 'g2') {
@@ -919,7 +922,8 @@ function renderMatchups() {
     html += '<div class="games-row">';
     html += makeGB(mi, 'g1', m.g1, mu.a, mu.b, false, false);
     html += makeGB(mi, 'g2', m.g2, mu.a, mu.b, m.g1 === null, false);
-    html += makeGB(mi, 'g3', m.g3, mu.a, mu.b, !m.swept && (m.g1 === null || m.g2 === null), m.swept);
+    if (m.swept) html += makeAutoGB(m.g3, aDisplay, bDisplay);
+    else html += makeGB(mi, 'g3', m.g3, mu.a, mu.b, (m.g1 === null || m.g2 === null), false);
     html += '</div>';
     var forfeitingTeam = (leagueSettings.forfeits || []).find(function(item){ return Number(item.week) === Number(curWeek) && (item.team === mu.a || item.team === mu.b); });
     if (forfeitingTeam) {
@@ -952,6 +956,10 @@ function makeGB(mi, game, winner, teamA, teamB, locked, isAuto) {
       + ' data-game="' + game + '" data-mi="' + mi + '" data-side="b"'
       + '>' + teamBDisplay + '</button>'
     + '</div></div>';
+}
+function makeAutoGB(winner, teamADisplay, teamBDisplay) {
+  var display = winner === 'a' ? teamADisplay : winner === 'b' ? teamBDisplay : 'Auto Winner';
+  return '<div class="gbg auto-g"><div class="glabel">Game 3 (Auto)</div><div class="auto-win-label">' + display + '</div></div>';
 }
 
 // Single delegated click listener for all game buttons
