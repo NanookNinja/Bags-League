@@ -1174,6 +1174,8 @@ function renderTeamPage(){
   var select = document.getElementById('team-page-select'), content = document.getElementById('team-page-content'), teamNumber = document.getElementById('team-picker-number');
   if (!select || !content) return;
   if (select.options.length <= 1) populateTeamPageSelect();
+  var keepSeasonOpen = !!content.querySelector('details[data-team-section="season"][open]');
+  var keepHistoryOpen = !!content.querySelector('details[data-team-section="history"][open]');
   var team = select.value;
   if (teamNumber) teamNumber.textContent = team ? 'Team ' + tnum(team) : '';
   if (!team) { content.innerHTML = ''; return; }
@@ -1187,7 +1189,7 @@ function renderTeamPage(){
   var notes = leagueSettings.calendarNotes || [];
   var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
   if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
-  html += '<details class="team-collapse"><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
+  html += '<details class="team-collapse" data-team-section="season"' + (keepSeasonOpen ? ' open' : '') + '><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
   var offDays = notes.filter(function(item){ return item.status === 'Off'; }).sort(function(a,b){ return a.date.localeCompare(b.date); });
   var shownOffDays = {};
   for (var weekNumber = 1; weekNumber <= WEEKS; weekNumber++) {
@@ -1224,18 +1226,22 @@ function renderTeamPage(){
   }
   offDays.forEach(function(day){ if (!shownOffDays[day.date]) html += '<div class="team-week-block holiday-day"><div class="holiday-stamp">🎆 ' + (day.note || 'HOLIDAY / DAY OFF').toUpperCase() + ' 🎇<small>' + formatLeagueDate(day.date,false) + ' · No league games</small></div></div>'; });
   html += '</div></details>';
-  html += '<details class="team-collapse"><summary><span>Opponent History</span><small>Meetings and game record</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content opponent-history">';
+  html += '<details class="team-collapse" data-team-section="history"' + (keepHistoryOpen ? ' open' : '') + '><summary><span>Opponent History</span><small>Meetings and game record</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content opponent-history">';
   html += opponentNames.map(function(opponent){
     var h = detail.opponents[opponent];
     return '<div class="opponent-card"><strong>' + opponent + '</strong><span>Met ' + h.scheduled + 'x · ' + h.completed + ' completed</span><span class="opponent-record">' + h.wins + '-' + h.losses + '</span></div>';
   }).join('') || '<div style="text-align:center;color:#999;padding:12px">No opponents scheduled.</div>';
   html += '</div></details>';
+  var keepScrollY = window.scrollY || window.pageYOffset || 0;
   content.innerHTML = html;
+  if (keepSeasonOpen || keepHistoryOpen) requestAnimationFrame(function(){ window.scrollTo(0, keepScrollY); });
 }
 function renderTeamPage(){
   var select = document.getElementById('team-page-select'), content = document.getElementById('team-page-content'), teamNumber = document.getElementById('team-picker-number');
   if (!select || !content) return;
   if (select.options.length <= 1) populateTeamPageSelect();
+  var keepSeasonOpen = !!content.querySelector('details[data-team-section="season"][open]');
+  var keepHistoryOpen = !!content.querySelector('details[data-team-section="history"][open]');
   var team = select.value;
   if (teamNumber) teamNumber.textContent = team ? 'Team ' + tnum(team) : '';
   if (!team) { content.innerHTML = ''; return; }
@@ -1249,7 +1255,7 @@ function renderTeamPage(){
   var notes = leagueSettings.calendarNotes || [];
   var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
   if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
-  html += '<details class="team-collapse"><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
+  html += '<details class="team-collapse" data-team-section="season"' + (keepSeasonOpen ? ' open' : '') + '><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
   var scheduleEvents = [];
   notes.filter(function(item){ return item.status === 'Off'; }).forEach(function(day){
     scheduleEvents.push({date:day.date || '9999-12-31',order:0,html:'<div class="team-week-block holiday-day"><div class="holiday-stamp">🎆 ' + (day.note || 'HOLIDAY / DAY OFF').toUpperCase() + ' 🎇<small>' + formatLeagueDate(day.date,false) + ' · No league games</small></div></div>'});
@@ -1284,10 +1290,12 @@ function renderTeamPage(){
   scheduleEvents.sort(function(a,b){ return String(a.date || '9999-12-31').localeCompare(String(b.date || '9999-12-31')) || a.order - b.order; });
   html += scheduleEvents.map(function(item){ return item.html; }).join('');
   html += '</div></details>';
-  html += '<details class="team-collapse"><summary><span>Opponent History</span><small>Meetings and game record</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content opponent-history">';
+  html += '<details class="team-collapse" data-team-section="history"' + (keepHistoryOpen ? ' open' : '') + '><summary><span>Opponent History</span><small>Meetings and game record</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content opponent-history">';
   html += opponentNames.map(function(opponent){ var h = detail.opponents[opponent]; return '<div class="opponent-card"><strong>' + opponent + '</strong><span>Met ' + h.scheduled + 'x · ' + h.completed + ' completed</span><span class="opponent-record">' + h.wins + '-' + h.losses + '</span></div>'; }).join('') || '<div style="text-align:center;color:#999;padding:12px">No opponents scheduled.</div>';
   html += '</div></details>';
+  var keepScrollY = window.scrollY || window.pageYOffset || 0;
   content.innerHTML = html;
+  if (keepSeasonOpen || keepHistoryOpen) requestAnimationFrame(function(){ window.scrollTo(0, keepScrollY); });
 }
 function openTeamPage(team){
   var select = document.getElementById('team-page-select'); if (select) select.value = team;
