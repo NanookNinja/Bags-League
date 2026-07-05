@@ -236,8 +236,9 @@ select:not(#team-page-select) option{background:#fff;color:#172033;font-weight:8
 .admin-panel select:not(#team-page-select),.forfeit-control select:not(#team-page-select),.makeup-date-control select:not(#team-page-select){min-height:40px;border-color:#d8b4fe;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M2 2l6 6 6-6' stroke='%23ffffff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),linear-gradient(135deg,#0f766e 0%,#2563eb 52%,#7c3aed 100%);box-shadow:0 4px 12px rgba(15,118,110,.18)}
 .card,.match-card,.share-box,.bagger-form-box,.bagger-entry,.admin-panel{border-radius:16px;box-shadow:0 4px 14px rgba(15,23,42,.08);border:1px solid rgba(219,227,239,.85)}
 .card-hdr{padding:10px 12px}.card-hdr.navy{background:linear-gradient(135deg,#183153,#2563eb)}.card-hdr.purple{background:linear-gradient(135deg,#6d28d9,#9333ea)}
-.standings-waiting{opacity:.45;filter:grayscale(.35)}
-.standings-waiting .card-hdr.navy{background:linear-gradient(135deg,#64748b,#94a3b8)}
+.standings-waiting{opacity:1;filter:none;border:2px solid #fbbf24;box-shadow:0 6px 18px rgba(251,191,36,.22)}
+.standings-waiting .card-hdr.navy{background:linear-gradient(135deg,#183153,#2563eb 55%,#7c3aed)}
+.select-week-first-msg{padding:22px 12px!important;text-align:center!important;color:#1e3a8a!important;background:linear-gradient(135deg,#eff6ff,#f5f3ff);font-size:18px!important;font-weight:1000!important;letter-spacing:.08em;text-transform:uppercase}
 th{padding:7px 9px;font-size:10px}td{padding:7px 9px;font-size:12px}.pill{border-radius:999px;padding:2px 7px;font-size:11px}
 .match-list{gap:8px}.mc-hdr{padding:7px 10px;font-size:10px}.mc-body{padding:10px}.match-teams{border-radius:12px}.team-side{padding:8px 6px;gap:3px}.team-side .tname{font-size:11px}.team-side .tnum{font-size:9px}.team-side .tscore{font-size:24px;min-height:30px}.games-row{gap:5px;margin-top:8px}.gbg{padding:6px;border-radius:11px}.glabel{font-size:9px;margin-bottom:5px}.wbtn{padding:7px 3px;font-size:9.5px;border-radius:9px}
 .wk-filter{gap:5px;margin-bottom:8px}.wfbtn{padding:6px 10px;border-radius:999px;box-shadow:none;border:1px solid var(--line)}.wfbtn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
@@ -1053,9 +1054,9 @@ function renderWeekStandings() {
   var weekCard = document.getElementById('week-standings-card');
   if (!curWeek) {
     if (weekCard) weekCard.classList.add('standings-waiting');
-    document.getElementById('week-title').textContent = 'Week Selected Standings';
-    document.getElementById('week-sub').textContent = 'Select a week';
-    document.getElementById('week-body').innerHTML = '<tr><td colspan="5" style="color:#999;padding:14px;text-align:center">Select a week first</td></tr>';
+    document.getElementById('week-title').textContent = 'SELECT A WEEK FIRST';
+    document.getElementById('week-sub').textContent = 'Choose a week to show standings';
+    document.getElementById('week-body').innerHTML = '<tr><td colspan="5" class="select-week-first-msg">SELECT A WEEK FIRST</td></tr>';
     return;
   }
   if (weekCard) weekCard.classList.remove('standings-waiting');
