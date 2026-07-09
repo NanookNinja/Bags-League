@@ -428,6 +428,10 @@ select:not(#team-page-select){padding-right:54px!important;background-image:url(
 .rainout-ribbon{left:112px!important;right:0!important;top:0!important;bottom:0!important;min-height:0!important;padding:0!important;border:0!important;border-radius:0 18px 18px 0!important;background:#020617!important;box-shadow:inset 0 0 0 2px rgba(125,211,252,.65),inset 0 0 28px rgba(30,64,175,.45)!important;transform:none!important}
 .rainout-stamp-img{inset:0!important;width:100%!important;height:100%!important;border-radius:0 18px 18px 0!important;object-fit:cover!important;object-position:center!important;filter:brightness(1.14) contrast(1.1) saturate(1.12)!important}
 .rainout-ribbon:after{border-radius:0 18px 18px 0!important;background:linear-gradient(90deg,rgba(2,6,23,.28),transparent 16%,transparent 84%,rgba(2,6,23,.30)),linear-gradient(180deg,rgba(255,255,255,.12),transparent 28%,rgba(15,23,42,.20))!important}
+.team-week-block.rainout-day{grid-template-columns:112px 1fr!important;background:#020617!important;border-color:#7c3aed!important}
+.rainout-day .team-week-rounds{opacity:0!important;filter:none!important;background:#020617!important}
+.rainout-makeup-info{display:block;margin-top:8px;padding:4px 5px;border-radius:8px;background:rgba(255,255,255,.95);color:#dc2626!important;font-size:8.5px!important;font-weight:1000!important;line-height:1.15;text-align:center;letter-spacing:.03em;text-transform:uppercase;box-shadow:0 2px 7px rgba(0,0,0,.18)}
+.rainout-day .makeup-ribbon{display:none!important}
 </style>
 </head>
 <body>
@@ -1303,11 +1307,11 @@ function renderTeamPage(){
     });
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekRainouts.forEach(function(rainout){
-      html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="rained-out-stamp.png" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-rounds">';
-      html += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
-      var makeupText = makeupDate ? 'MAKE UP DAY - ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
-      html += '</div><div class="makeup-ribbon">' + makeupText + '</div></div>';
+      var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
+      html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="rained-out-stamp.png" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
+      html += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
+      html += '</div></div>';
     });
     if (weekRainouts.length) continue;
     html += '<div class="team-week-block"><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong>' + (weekDate ? '<span class="team-week-date">' + weekDate + '</span>' : '') + '</div><div class="team-week-rounds">';
@@ -1364,11 +1368,11 @@ function renderTeamPage(){
     var weekRainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekRainouts.forEach(function(rainout){
-      var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="rained-out-stamp.png" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-rounds">';
-      rainHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
-      var makeupText = makeupDate ? 'MAKE-UP WEEK SCHEDULED - ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
-      rainHtml += '</div><div class="makeup-ribbon">' + makeupText + '</div></div>';
+      var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
+      var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="rained-out-stamp.png" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
+      rainHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
+      rainHtml += '</div></div>';
       scheduleEvents.push({date:rainout.date || '9999-12-31',order:1,html:rainHtml});
       if (makeupDate) {
         var originalDateText = rainout.date ? '(' + formatLeagueDate(rainout.date,true) + ')' : '';
