@@ -1813,7 +1813,7 @@ function applyMediaAssets(){
     img.src = getMediaAssetUrl(key, './' + fallback + '?v=nav6');
   });
   document.querySelectorAll('.bagger-hdr').forEach(function(el){
-    el.style.backgroundImage = 'url("' + getMediaAssetUrl('fourBaggersBanner','four-baggers-banner-worded.png') + '")';
+    el.style.setProperty('background-image','url("' + getMediaAssetUrl('fourBaggersBanner','four-baggers-banner-worded.png') + '")','important');
   });
   renderMediaManager();
 }
