@@ -379,14 +379,8 @@ body::before{
 /* Polished app navigation + standings refresh */
 .nav{display:grid;grid-template-columns:repeat(4,minmax(74px,1fr));gap:7px;padding:8px;margin:0 0 12px;border:1px solid rgba(191,219,254,.85);border-radius:18px;background:rgba(239,246,255,.9);box-shadow:0 8px 20px rgba(15,23,42,.10)}
 .nvbtn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;padding:8px 5px!important;border:1.5px solid rgba(191,219,254,.95)!important;border-radius:15px!important;background:linear-gradient(180deg,#ffffff,#eef6ff)!important;color:#1e3a8a!important;font-size:9.5px!important;font-weight:1000!important;line-height:1.08;box-shadow:0 4px 10px rgba(15,23,42,.08)!important}
-.nvbtn:before{display:block;font-size:17px;line-height:1;margin-bottom:1px;filter:drop-shadow(0 1px 1px rgba(15,23,42,.12))}
-.nvbtn[data-nav="score"]:before{content:"🏟️"}
-.nvbtn[data-nav="week"]:before{content:"📅"}
-.nvbtn[data-nav="season"]:before{content:"🏆"}
-.nvbtn[data-nav="teams"]:before{content:"👥"}
-.nvbtn[data-nav="baggers"]:before{content:"🎯"}
-.nvbtn[data-nav="playoffs"]:before{content:"🏁"}
-.nvbtn[data-nav="share"]:before{content:"📣"}
+.nav-icon{width:68px;height:54px;object-fit:contain;display:block;margin:0 auto 6px auto;filter:drop-shadow(0 2px 3px rgba(15,23,42,.18));transition:.15s transform,.15s filter}
+.nvbtn.active .nav-icon{filter:drop-shadow(0 3px 5px rgba(0,0,0,.35)) saturate(1.12) brightness(1.08);transform:translateY(-1px)}
 .nvbtn.active{background:linear-gradient(135deg,#183153,#2563eb 52%,#7c3aed)!important;color:#fff!important;border-color:#fbbf24!important;box-shadow:0 8px 18px rgba(37,99,235,.32),inset 0 0 0 1px rgba(255,255,255,.22)!important;transform:translateY(-1px)}
 .nvbtn.active:after{content:"";position:absolute;left:18%;right:18%;bottom:-5px;height:4px;border-radius:999px;background:#fbbf24;box-shadow:0 2px 8px rgba(251,191,36,.65)}
 .tab.active{animation:softTabIn .18s ease-out}
@@ -409,7 +403,8 @@ td:first-child,th:first-child{text-align:center}
 .bagger-hdr{position:relative;min-height:172px!important;align-items:flex-end!important;overflow:hidden!important;background-image:url('four-baggers-banner-worded.png')!important;background-size:cover!important;background-position:center!important;border:3px solid #7e22ce!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 10px 28px rgba(15,23,42,.28),inset 0 0 0 2px rgba(255,255,255,.20)!important}
 .bagger-hdr:after{content:none!important}
 .bagger-hdr .ico,.bagger-hdr>div{display:none!important}
-@media(max-width:420px){.nav{grid-template-columns:repeat(4,minmax(66px,1fr));gap:5px;padding:6px}.nvbtn{min-width:0!important;min-height:50px;font-size:8.5px!important}.nvbtn:before{font-size:15px}}
+@media(max-width:600px){.nav-icon{width:54px;height:44px;margin-bottom:5px}}
+@media(max-width:420px){.nav{grid-template-columns:repeat(4,minmax(66px,1fr));gap:5px;padding:6px}.nvbtn{min-width:0!important;min-height:50px;font-size:8.5px!important}.nav-icon{width:48px;height:38px;margin-bottom:4px}}
 #slot-sel{top:146px!important;z-index:34;border-color:#fbbf24!important;box-shadow:0 8px 20px rgba(15,23,42,.22)!important}
 #slot-sel{text-align:center!important;text-align-last:center!important}
 .admin-authenticated #slot-sel{top:292px!important}
@@ -541,13 +536,13 @@ Tim/Rick"></textarea>
 
   <div id="scoring-page-content">
   <div class="nav">
-    <button class="nvbtn active" data-nav="score">Scoreboard</button>
-    <button class="nvbtn" data-nav="week">Week Standings</button>
-    <button class="nvbtn" data-nav="season">Season Standings</button>
-    <button class="nvbtn" data-nav="teams">Teams / Schedules</button>
-    <button class="nvbtn" data-nav="baggers">4 Baggers</button>
-    <button class="nvbtn" data-nav="playoffs">Playoffs</button>
-    <button class="nvbtn" data-nav="share">Share</button>
+      <button class="nvbtn active" data-nav="score"><img class="nav-icon" src="assets/nav/scoreboard.png" alt="" aria-hidden="true" onerror="this.style.display='none'">Scoreboard</button>
+      <button class="nvbtn" data-nav="week"><img class="nav-icon" src="assets/nav/week-standings.png" alt="" aria-hidden="true" onerror="this.style.display='none'">Week Standings</button>
+      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="assets/nav/season-standings.png" alt="" aria-hidden="true" onerror="this.style.display='none'">Season Standings</button>
+      <button class="nvbtn" data-nav="teams"><img class="nav-icon" src="assets/nav/teams-schedules.png" alt="" aria-hidden="true" onerror="this.style.display='none'">Teams / Schedules</button>
+      <button class="nvbtn" data-nav="baggers"><img class="nav-icon" src="assets/nav/four-baggers.png" alt="" aria-hidden="true" onerror="this.style.display='none'">4 Baggers</button>
+      <button class="nvbtn" data-nav="playoffs"><img class="nav-icon" src="assets/nav/playoffs.png" alt="" aria-hidden="true" onerror="this.style.display='none'">Playoffs</button>
+      <button class="nvbtn" data-nav="share"><img class="nav-icon" src="assets/nav/share.png" alt="" aria-hidden="true" onerror="this.style.display='none'">Share</button>
   </div>
 
   <!-- SCORE TAB -->
