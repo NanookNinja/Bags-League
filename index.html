@@ -776,7 +776,7 @@ var internalBackups = {};
 var viewingArchive = '';
 var playoffState = { locked:false, generated:false, topTitle:'Tier 1 Championship', bottomTitle:'Tier 2 Championship', top:null, bottom:null, final:{teamA:'',teamB:'',winner:''}, bracketLayout:null };
 var REGULAR_SEASON_END = '2026-08-06';
-var DEFAULT_WEEK_DATES = {1:'2026-05-28',2:'2026-06-04',3:'2026-06-18',4:'2026-06-25',5:'2026-07-09',6:'2026-07-16',7:'2026-07-23',8:'2026-07-30',9:'2026-08-06',10:''};
+var DEFAULT_WEEK_DATES = {1:'2026-05-28',2:'2026-06-04',3:'',4:'2026-06-18',5:'2026-06-25',6:'2026-07-09',7:'2026-07-16',8:'2026-07-23',9:'2026-07-30',10:'2026-08-06'};
 var DEFAULT_CALENDAR_NOTES = [
   {date:'2026-06-11',status:'Rainout',note:'Makeup date TBD'},
   {date:'2026-07-02',status:'Off',note:'4th of July break'}
@@ -1327,7 +1327,7 @@ function renderTeamPage(){
     });
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekRainouts.forEach(function(rainout){
-      var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
+      var makeupDate = rainout.makeupDate || '';
       var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
       html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="' + getMediaAssetUrl('rainoutBanner','rained-out-stamp.png') + '" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
       html += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
@@ -1388,7 +1388,7 @@ function renderTeamPage(){
     var weekRainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekRainouts.forEach(function(rainout){
-      var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
+      var makeupDate = rainout.makeupDate || '';
       var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
       var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="' + getMediaAssetUrl('rainoutBanner','rained-out-stamp.png') + '" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
       rainHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
@@ -1770,6 +1770,7 @@ function applyLeagueSettings(settings) {
   applyBackgroundTheme();
   applyMediaAssets();
   enforceSeasonDeadline();
+  if (repairFixed2026WeekDates()) window.pendingWeekDateRepair = true;
   WEEKS = leagueSettings.weeks;
   TEAMS = leagueSettings.teams.slice();
   RR = buildRR(TEAMS);
@@ -2020,6 +2021,22 @@ function enforceSeasonDeadline(){
     if (leagueSettings.weekDates[week] && leagueSettings.weekDates[week] > deadline) leagueSettings.weekDates[week] = '';
   });
 }
+function repairFixed2026WeekDates(){
+  if (!leagueSettings || Number(leagueSettings.weeks) !== 10) return false;
+  leagueSettings.weekDates = leagueSettings.weekDates || {};
+  leagueSettings.actualWeekDates = leagueSettings.actualWeekDates || {};
+  var fixedDates = {1:'2026-05-28',2:'2026-06-04',4:'2026-06-18',5:'2026-06-25',6:'2026-07-09',7:'2026-07-16',8:'2026-07-23',9:'2026-07-30',10:'2026-08-06'};
+  var changed = false;
+  Object.keys(fixedDates).forEach(function(week){
+    if (leagueSettings.weekDates[week] !== fixedDates[week]) { leagueSettings.weekDates[week] = fixedDates[week]; changed = true; }
+  });
+  var week3Makeup = '';
+  (leagueSettings.rainouts || []).forEach(function(item){ if (Number(item.week) === 3 && item.makeupDate) week3Makeup = item.makeupDate; });
+  if ((leagueSettings.weekDates[3] || '') !== week3Makeup) { leagueSettings.weekDates[3] = week3Makeup; changed = true; }
+  delete leagueSettings.weekDates['11'];
+  if (leagueSettings.actualWeekDates[3] && !week3Makeup) { delete leagueSettings.actualWeekDates[3]; changed = true; }
+  return changed;
+}
 function addDaysISO(dateValue,days){
   var date = new Date(dateValue + 'T12:00:00');
   date.setDate(date.getDate() + days);
@@ -2034,7 +2051,7 @@ function rainOutWeek(week){
   if (!confirm('Mark Week ' + week + ' (' + formatLeagueDate(postponedDate,false) + ') as rained out? The week will stay open for a makeup date later.')) return;
   leagueSettings.rainouts = leagueSettings.rainouts || [];
   var alreadyRecorded = leagueSettings.rainouts.some(function(item){ return Number(item.week) === week && item.date === postponedDate; });
-  if (!alreadyRecorded) leagueSettings.rainouts.push({week:week,date:postponedDate,previousWeekDates:Object.assign({},leagueSettings.weekDates)});
+  if (!alreadyRecorded) leagueSettings.rainouts.push({week:week,date:postponedDate});
   leagueSettings.calendarNotes = leagueSettings.calendarNotes || [];
   var noteExists = leagueSettings.calendarNotes.some(function(item){ return item.date === postponedDate && item.status === 'Rainout'; });
   if (!noteExists) leagueSettings.calendarNotes.push({date:postponedDate,status:'Rainout',note:'Week ' + week + ' postponed'});
@@ -2053,20 +2070,8 @@ function undoRainOutWeek(week){
   for (var i=rainouts.length-1; i>=0; i--) { if (Number(rainouts[i].week) === week) { index = i; break; } }
   if (index < 0) return;
   var removed = rainouts[index];
-  if (!confirm('Remove the ' + formatLeagueDate(removed.date,false) + ' rainout and move the schedule back?')) return;
-  if (removed.previousWeekDates) {
-    leagueSettings.weekDates = Object.assign({},removed.previousWeekDates);
-  } else {
-    var blocked = {};
-    (leagueSettings.calendarNotes || []).forEach(function(item){ if ((item.status === 'Off' || item.status === 'Rainout') && item.date !== removed.date) blocked[item.date] = true; });
-    var nextDate = removed.date;
-    for (var w=week; w<=WEEKS; w++) {
-      if (isActualWeekDate(w)) continue;
-      while (blocked[nextDate]) nextDate = addDaysISO(nextDate,7);
-      leagueSettings.weekDates[w] = nextDate;
-      nextDate = addDaysISO(nextDate,7);
-    }
-  }
+  if (!confirm('Remove the ' + formatLeagueDate(removed.date,false) + ' rainout?')) return;
+  if (!isActualWeekDate(week)) leagueSettings.weekDates[week] = removed.date || leagueSettings.weekDates[week] || '';
   rainouts.splice(index,1);
   leagueSettings.calendarNotes = (leagueSettings.calendarNotes || []).filter(function(item){
     return !(item.date === removed.date && item.status === 'Rainout');
@@ -2264,20 +2269,7 @@ function addHolidayDayOff(){
   var existing = leagueSettings.calendarNotes.find(function(item){ return item.status === 'Off' && item.date === date; });
   if (existing) { existing.note = name; }
   else {
-    leagueSettings.calendarNotes.push({date:date,status:'Off',note:name,previousWeekDates:Object.assign({},leagueSettings.weekDates || {})});
-    var affectedWeek = 0;
-    for (var w=1; w<=WEEKS; w++) { if (!isActualWeekDate(w) && leagueSettings.weekDates[w] === date) { affectedWeek = w; break; } }
-    if (affectedWeek) {
-      var blocked = {};
-      leagueSettings.calendarNotes.forEach(function(item){ if (item.status === 'Off' || item.status === 'Rainout') blocked[item.date] = true; });
-      var nextDate = addDaysISO(date,7);
-      for (var later=affectedWeek; later<=WEEKS; later++) {
-        if (isActualWeekDate(later)) continue;
-        while (blocked[nextDate]) nextDate = addDaysISO(nextDate,7);
-        leagueSettings.weekDates[later] = !leagueSettings.regularSeasonEnd || nextDate <= leagueSettings.regularSeasonEnd ? nextDate : '';
-        nextDate = addDaysISO(nextDate,7);
-      }
-    }
+    leagueSettings.calendarNotes.push({date:date,status:'Off',note:name});
   }
   if (dateInput) dateInput.value = '';
   if (nameInput) nameInput.value = '';
@@ -2390,7 +2382,6 @@ function removeHolidayDayOff(date){
   if (index < 0) return;
   var holiday = notes[index];
   if (!confirm('Remove ' + (holiday.note || 'this holiday') + ' on ' + formatLeagueDate(date,false) + '?')) return;
-  if (holiday.previousWeekDates) leagueSettings.weekDates = Object.assign({},holiday.previousWeekDates);
   notes.splice(index,1);
   rebuildWeekControls(); renderTeamPage(); renderHolidayAdmin(); save();
 }
@@ -3174,6 +3165,7 @@ async function startCloudSync() {
       if ((needsTenWeekMigration || makeupRotationApplied || movedInternalBackups || window.pendingWeekDateRepair) && ADMIN_MODE) {
         pendingWeekMigration = false;
         window.pendingWeekDateRepair = false;
+        setTimeout(function(){ if (typeof window.forceCloudSave === 'function') window.forceCloudSave(); }, 250);
       }
     }, function(error) {
       console.error(error);
