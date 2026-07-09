@@ -245,6 +245,7 @@ th{padding:7px 9px;font-size:10px}td{padding:7px 9px;font-size:12px}.pill{border
 .wk-filter{gap:5px;margin-bottom:8px}.wfbtn{padding:6px 10px;border-radius:999px;box-shadow:none;border:1px solid var(--line)}.wfbtn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .share-btn,.add-btn,.import-btn,.admin-action-btn{border-radius:12px;padding:11px 12px;font-size:14px;box-shadow:0 2px 8px rgba(15,23,42,.10)}
 .admin-panel{padding:12px;margin-bottom:10px;background:linear-gradient(180deg,#fff,#f8fbff)}.admin-panel h3{font-size:15px;margin-bottom:4px}.admin-panel h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 0 7px}.admin-note{font-size:11px;color:var(--muted);margin-bottom:8px}.admin-grid{display:grid;grid-template-columns:1fr 96px;gap:8px}.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-action-btn{width:100%;border:none;margin-bottom:7px;background:#e8f0fe;color:#1f3864;font-weight:800;cursor:pointer}.admin-action-btn.green{background:#dcfce7;color:#166534}.admin-action-btn.orange{background:#ffedd5;color:#9a3412}.admin-action-btn.red{background:#fee2e2;color:#991b1b}.import-btn{background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.media-manager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 12px}.media-card{border:1.5px solid #bfdbfe;border-radius:14px;background:linear-gradient(180deg,#fff,#eef6ff);padding:10px;box-shadow:0 4px 12px rgba(15,23,42,.08)}.media-card strong{display:block;color:#1e3a8a;font-size:11px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.media-preview{height:74px;border-radius:11px;border:1px solid #dbeafe;background:#fff center/cover no-repeat;margin-bottom:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)}.media-card input[type=file]{width:100%;font-size:10px;margin-bottom:7px}.media-actions{display:grid;grid-template-columns:1fr 76px;gap:6px}.media-actions button{border:0;border-radius:10px;padding:8px 6px;font-size:10px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}.media-upload-btn{background:#2563eb;color:#fff}.media-reset-btn{background:#fee2e2;color:#991b1b}.media-status{font-size:10px;color:#64748b;min-height:13px;margin-top:5px;font-weight:800}
 .holiday-admin-grid{display:grid;grid-template-columns:130px 1fr;gap:7px}.holiday-admin-grid input{width:100%;border:1.5px solid #dbe3ef;border-radius:10px;padding:10px;margin-bottom:7px;font-size:13px}.holiday-admin-list{display:grid;gap:6px;margin-bottom:8px}.holiday-admin-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #fbbf24;border-radius:10px;background:#fffbeb;color:#92400e;font-size:11px;font-weight:800}.holiday-remove-btn{border:0;border-radius:8px;padding:6px 8px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;cursor:pointer}
 .background-preview{height:92px;border:2px solid #bfdbfe;border-radius:14px;background:#eef4fb url("bags-logo.png") center/contain no-repeat;margin:6px 0 8px;box-shadow:inset 0 0 0 999px rgba(255,255,255,.25)}.background-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .league-name-box{background:#eef6ff;border:1px solid #bfdbfe;border-radius:14px;padding:10px;margin:10px 0}.league-name-box label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1e40af;margin-bottom:6px}.mini-btn{width:100%;border:none;border-radius:11px;background:#1f3864;color:#fff;font-weight:800;padding:10px 12px;margin-bottom:8px;cursor:pointer}
@@ -378,9 +379,10 @@ body::before{
 
 /* Polished app navigation + standings refresh */
 .nav{display:grid;grid-template-columns:repeat(4,minmax(74px,1fr));gap:7px;padding:8px;margin:0 0 12px;border:1px solid rgba(191,219,254,.85);border-radius:18px;background:rgba(239,246,255,.9);box-shadow:0 8px 20px rgba(15,23,42,.10)}
-.nvbtn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-height:92px;padding:7px 6px 9px!important;border:1.5px solid rgba(191,219,254,.95)!important;border-radius:15px!important;background:linear-gradient(180deg,#ffffff,#eef6ff)!important;color:#1e3a8a!important;font-size:9.5px!important;font-weight:1000!important;line-height:1.08;box-shadow:0 4px 10px rgba(15,23,42,.08)!important;overflow:hidden}
-.nav-icon{width:100%;height:66px;object-fit:cover;object-position:center;display:block;margin:0 auto 4px auto;border-radius:11px;filter:drop-shadow(0 2px 3px rgba(15,23,42,.18));transition:.15s transform,.15s filter}
-.nvbtn.active .nav-icon{filter:drop-shadow(0 3px 5px rgba(0,0,0,.35)) saturate(1.12) brightness(1.08);transform:translateY(-1px)}
+.nvbtn{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0;min-height:104px;padding:0!important;border:1.5px solid rgba(191,219,254,.95)!important;border-radius:15px!important;background:linear-gradient(180deg,#ffffff,#eef6ff)!important;color:#fff!important;font-size:9.5px!important;font-weight:1000!important;line-height:1.08;box-shadow:0 4px 10px rgba(15,23,42,.08)!important;overflow:hidden;text-shadow:0 2px 5px rgba(0,0,0,.85)}
+.nav-icon{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;margin:0;border-radius:13px;filter:saturate(1.08) contrast(1.03);transition:.15s transform,.15s filter;z-index:0}
+.nav-label{position:relative;z-index:2;width:100%;display:flex;align-items:center;justify-content:center;min-height:30px;padding:5px 4px;background:linear-gradient(180deg,rgba(15,23,42,0),rgba(15,23,42,.84) 38%,rgba(15,23,42,.96));color:#fff;text-align:center}
+.nvbtn.active .nav-icon{filter:saturate(1.18) contrast(1.08) brightness(1.05);transform:scale(1.03)}
 .nvbtn.active{background:linear-gradient(135deg,#183153,#2563eb 52%,#7c3aed)!important;color:#fff!important;border-color:#fbbf24!important;box-shadow:0 8px 18px rgba(37,99,235,.32),inset 0 0 0 1px rgba(255,255,255,.22)!important;transform:translateY(-1px)}
 .nvbtn.active:after{content:"";position:absolute;left:18%;right:18%;bottom:-5px;height:4px;border-radius:999px;background:#fbbf24;box-shadow:0 2px 8px rgba(251,191,36,.65)}
 .tab.active{animation:softTabIn .18s ease-out}
@@ -403,8 +405,9 @@ td:first-child,th:first-child{text-align:center}
 .bagger-hdr{position:relative;min-height:172px!important;align-items:flex-end!important;overflow:hidden!important;background-image:url('four-baggers-banner-worded.png')!important;background-size:cover!important;background-position:center!important;border:3px solid #7e22ce!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 10px 28px rgba(15,23,42,.28),inset 0 0 0 2px rgba(255,255,255,.20)!important}
 .bagger-hdr:after{content:none!important}
 .bagger-hdr .ico,.bagger-hdr>div{display:none!important}
-@media(max-width:600px){.nvbtn{min-height:84px!important;padding:6px 5px 8px!important}.nav-icon{height:58px;margin-bottom:4px}}
-@media(max-width:420px){.nav{grid-template-columns:repeat(4,minmax(66px,1fr));gap:5px;padding:6px}.nvbtn{min-width:0!important;min-height:78px!important;font-size:8.5px!important}.nav-icon{height:52px;margin-bottom:3px;border-radius:10px}}
+@media(max-width:600px){.nvbtn{min-height:94px!important}.nav-label{min-height:28px;padding:4px 3px}}
+@media(max-width:600px){.media-manager{grid-template-columns:1fr}.media-preview{height:96px}}
+@media(max-width:420px){.nav{grid-template-columns:repeat(4,minmax(66px,1fr));gap:5px;padding:6px}.nvbtn{min-width:0!important;min-height:86px!important;font-size:8.5px!important}.nav-label{min-height:27px;padding:4px 3px}}
 #slot-sel{top:146px!important;z-index:34;border-color:#fbbf24!important;box-shadow:0 8px 20px rgba(15,23,42,.22)!important}
 #slot-sel{text-align:center!important;text-align-last:center!important}
 .admin-authenticated #slot-sel{top:292px!important}
@@ -487,6 +490,21 @@ select:not(#team-page-select){padding-right:54px!important;background-image:url(
       <button class="admin-action-btn" id="restore-background-btn" type="button">Restore Default</button>
     </div>
 
+    <h4>Media Manager</h4>
+    <div class="admin-note">Upload an image, hit Save Image, and the app will use it for everyone. If an image is reset, the app goes back to the normal GitHub file.</div>
+    <div class="media-manager" id="media-manager">
+      <div class="media-card" data-media-card="background"><strong>App Background</strong><div class="media-preview" data-media-preview="background"></div><input type="file" accept="image/*" data-media-file="background"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="background">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="background">Reset</button></div><div class="media-status" data-media-status="background"></div></div>
+      <div class="media-card" data-media-card="rainoutBanner"><strong>Rainout Banner</strong><div class="media-preview" data-media-preview="rainoutBanner"></div><input type="file" accept="image/*" data-media-file="rainoutBanner"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="rainoutBanner">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="rainoutBanner">Reset</button></div><div class="media-status" data-media-status="rainoutBanner"></div></div>
+      <div class="media-card" data-media-card="fourBaggersBanner"><strong>4 Baggers Banner</strong><div class="media-preview" data-media-preview="fourBaggersBanner"></div><input type="file" accept="image/*" data-media-file="fourBaggersBanner"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="fourBaggersBanner">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="fourBaggersBanner">Reset</button></div><div class="media-status" data-media-status="fourBaggersBanner"></div></div>
+      <div class="media-card" data-media-card="scoreboardIcon"><strong>Scoreboard Icon</strong><div class="media-preview" data-media-preview="scoreboardIcon"></div><input type="file" accept="image/*" data-media-file="scoreboardIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="scoreboardIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="scoreboardIcon">Reset</button></div><div class="media-status" data-media-status="scoreboardIcon"></div></div>
+      <div class="media-card" data-media-card="weekIcon"><strong>Week Standings Icon</strong><div class="media-preview" data-media-preview="weekIcon"></div><input type="file" accept="image/*" data-media-file="weekIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="weekIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="weekIcon">Reset</button></div><div class="media-status" data-media-status="weekIcon"></div></div>
+      <div class="media-card" data-media-card="seasonIcon"><strong>Season Standings Icon</strong><div class="media-preview" data-media-preview="seasonIcon"></div><input type="file" accept="image/*" data-media-file="seasonIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="seasonIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="seasonIcon">Reset</button></div><div class="media-status" data-media-status="seasonIcon"></div></div>
+      <div class="media-card" data-media-card="teamsIcon"><strong>Teams / Schedules Icon</strong><div class="media-preview" data-media-preview="teamsIcon"></div><input type="file" accept="image/*" data-media-file="teamsIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="teamsIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="teamsIcon">Reset</button></div><div class="media-status" data-media-status="teamsIcon"></div></div>
+      <div class="media-card" data-media-card="fourBaggersIcon"><strong>4 Baggers Icon</strong><div class="media-preview" data-media-preview="fourBaggersIcon"></div><input type="file" accept="image/*" data-media-file="fourBaggersIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="fourBaggersIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="fourBaggersIcon">Reset</button></div><div class="media-status" data-media-status="fourBaggersIcon"></div></div>
+      <div class="media-card" data-media-card="playoffsIcon"><strong>Playoffs Icon</strong><div class="media-preview" data-media-preview="playoffsIcon"></div><input type="file" accept="image/*" data-media-file="playoffsIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="playoffsIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="playoffsIcon">Reset</button></div><div class="media-status" data-media-status="playoffsIcon"></div></div>
+      <div class="media-card" data-media-card="shareIcon"><strong>Share Icon</strong><div class="media-preview" data-media-preview="shareIcon"></div><input type="file" accept="image/*" data-media-file="shareIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="shareIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="shareIcon">Reset</button></div><div class="media-status" data-media-status="shareIcon"></div></div>
+    </div>
+
     <h4>Season Setup</h4>
     <div class="admin-grid">
       <input id="admin-season-name" type="text" placeholder="Season name, e.g. Summer 2026">
@@ -540,13 +558,13 @@ Tim/Rick"></textarea>
 
   <div id="scoring-page-content">
   <div class="nav">
-      <button class="nvbtn active" data-nav="score"><img class="nav-icon" src="./scoreboard.png?v=nav3" data-fallback-src="./assets/nav/scoreboard.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">Scoreboard</button>
-      <button class="nvbtn" data-nav="week"><img class="nav-icon" src="./week-standings.png?v=nav3" data-fallback-src="./assets/nav/week-standings.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">Week Standings</button>
-      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="./season-standings.png?v=nav3" data-fallback-src="./assets/nav/season-standings.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">Season Standings</button>
-      <button class="nvbtn" data-nav="teams"><img class="nav-icon" src="./teams-schedules.png?v=nav3" data-fallback-src="./assets/nav/teams-schedules.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">Teams / Schedules</button>
-      <button class="nvbtn" data-nav="baggers"><img class="nav-icon" src="./four-baggers.png?v=nav3" data-fallback-src="./assets/nav/four-baggers.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">4 Baggers</button>
-      <button class="nvbtn" data-nav="playoffs"><img class="nav-icon" src="./playoffs.png?v=nav3" data-fallback-src="./assets/nav/playoffs.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">Playoffs</button>
-      <button class="nvbtn" data-nav="share"><img class="nav-icon" src="./share.png?v=nav3" data-fallback-src="./assets/nav/share.png?v=nav3" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}">Share</button>
+      <button class="nvbtn active" data-nav="score"><img class="nav-icon" src="./scoreboard.png?v=nav4" data-fallback-src="./assets/nav/scoreboard.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Scoreboard</span></button>
+      <button class="nvbtn" data-nav="week"><img class="nav-icon" src="./week-standings.png?v=nav4" data-fallback-src="./assets/nav/week-standings.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week Standings</span></button>
+      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="./season-standings.png?v=nav4" data-fallback-src="./assets/nav/season-standings.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Season Standings</span></button>
+      <button class="nvbtn" data-nav="teams"><img class="nav-icon" src="./teams-schedules.png?v=nav4" data-fallback-src="./assets/nav/teams-schedules.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Teams / Schedules</span></button>
+      <button class="nvbtn" data-nav="baggers"><img class="nav-icon" src="./four-baggers.png?v=nav4" data-fallback-src="./assets/nav/four-baggers.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">4 Baggers</span></button>
+      <button class="nvbtn" data-nav="playoffs"><img class="nav-icon" src="./playoffs.png?v=nav4" data-fallback-src="./assets/nav/playoffs.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Playoffs</span></button>
+      <button class="nvbtn" data-nav="share"><img class="nav-icon" src="./share.png?v=nav4" data-fallback-src="./assets/nav/share.png?v=nav4" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Share</span></button>
   </div>
 
   <!-- SCORE TAB -->
@@ -764,7 +782,9 @@ var DEFAULT_CALENDAR_NOTES = [
   {date:'2026-07-02',status:'Off',note:'4th of July break'}
 ];
 var DEFAULT_RAINOUTS = [{week:3,date:'2026-06-11'}];
-var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], backgroundUrl:'', scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
+var DEFAULT_MEDIA_ASSETS = {background:'bags-logo.png',rainoutBanner:'rained-out-stamp.png',fourBaggersBanner:'four-baggers-banner-worded.png',scoreboardIcon:'scoreboard.png',weekIcon:'week-standings.png',seasonIcon:'season-standings.png',teamsIcon:'teams-schedules.png',fourBaggersIcon:'four-baggers.png',playoffsIcon:'playoffs.png',shareIcon:'share.png'};
+var NAV_MEDIA_KEYS = {score:'scoreboardIcon',week:'weekIcon',season:'seasonIcon',teams:'teamsIcon',baggers:'fourBaggersIcon',playoffs:'playoffsIcon',share:'shareIcon'};
+var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], backgroundUrl:'', mediaAssets:{}, scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
 window.pendingWeekDateRepair = false;
 
@@ -1309,7 +1329,7 @@ function renderTeamPage(){
     weekRainouts.forEach(function(rainout){
       var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
       var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
-      html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="rained-out-stamp.png" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
+      html += '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="' + getMediaAssetUrl('rainoutBanner','rained-out-stamp.png') + '" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
       html += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       html += '</div></div>';
     });
@@ -1370,7 +1390,7 @@ function renderTeamPage(){
     weekRainouts.forEach(function(rainout){
       var makeupDate = rainout.makeupDate || getWeekDate(weekNumber) || '';
       var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
-      var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="rained-out-stamp.png" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
+      var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="' + getMediaAssetUrl('rainoutBanner','rained-out-stamp.png') + '" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
       rainHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       rainHtml += '</div></div>';
       scheduleEvents.push({date:rainout.date || '9999-12-31',order:1,html:rainHtml});
@@ -1733,6 +1753,7 @@ function applyLeagueSettings(settings) {
     forfeits: (settings.forfeits || leagueSettings.forfeits || []).slice(),
     subs: (settings.subs || leagueSettings.subs || []).slice(),
     backgroundUrl: Object.prototype.hasOwnProperty.call(settings,'backgroundUrl') ? settings.backgroundUrl : (leagueSettings.backgroundUrl || ''),
+    mediaAssets: Object.assign({},leagueSettings.mediaAssets || {},settings.mediaAssets || {}),
     scheduleWeekMap: Object.assign({},settings.scheduleWeekMap || {}),
     week3MakeupRotationApplied: !!settings.week3MakeupRotationApplied,
     regularSeasonEnd: Object.prototype.hasOwnProperty.call(settings,'regularSeasonEnd') ? settings.regularSeasonEnd : leagueSettings.regularSeasonEnd
@@ -1747,6 +1768,7 @@ function applyLeagueSettings(settings) {
     window.pendingWeekDateRepair = true;
   }
   applyBackgroundTheme();
+  applyMediaAssets();
   enforceSeasonDeadline();
   WEEKS = leagueSettings.weeks;
   TEAMS = leagueSettings.teams.slice();
@@ -1760,6 +1782,40 @@ function applyLeagueSettings(settings) {
 }
 function safeCssUrl(url){
   return String(url || '').trim().replace(/["\\\n\r]/g,'');
+}
+function getMediaAssetUrl(key, fallback){
+  leagueSettings.mediaAssets = leagueSettings.mediaAssets || {};
+  return safeCssUrl(leagueSettings.mediaAssets[key] || fallback || DEFAULT_MEDIA_ASSETS[key] || '');
+}
+function setMediaPreview(key, url){
+  var preview = document.querySelector('[data-media-preview="' + key + '"]');
+  if (!preview) return;
+  preview.style.backgroundImage = 'url("' + safeCssUrl(url || DEFAULT_MEDIA_ASSETS[key] || 'bags-logo.png') + '")';
+  preview.style.backgroundSize = (key === 'background' && !url) ? 'contain' : 'cover';
+}
+function renderMediaManager(){
+  Object.keys(DEFAULT_MEDIA_ASSETS).forEach(function(key){
+    var url = key === 'background' ? safeCssUrl(leagueSettings.backgroundUrl) : getMediaAssetUrl(key,'');
+    setMediaPreview(key, url || DEFAULT_MEDIA_ASSETS[key]);
+    var status = document.querySelector('[data-media-status="' + key + '"]');
+    if (status) status.textContent = url && url !== DEFAULT_MEDIA_ASSETS[key] ? 'Custom image active' : 'Using default image';
+  });
+}
+function applyMediaAssets(){
+  document.querySelectorAll('.nav-icon').forEach(function(img){
+    var nav = img.closest('.nvbtn');
+    var navId = nav && nav.getAttribute('data-nav');
+    var key = NAV_MEDIA_KEYS[navId];
+    if (!key) return;
+    var fallback = DEFAULT_MEDIA_ASSETS[key];
+    img.dataset.triedFallback = '';
+    img.dataset.fallbackSrc = './assets/nav/' + fallback + '?v=nav5';
+    img.src = getMediaAssetUrl(key, './' + fallback + '?v=nav5');
+  });
+  document.querySelectorAll('.bagger-hdr').forEach(function(el){
+    el.style.backgroundImage = 'url("' + getMediaAssetUrl('fourBaggersBanner','four-baggers-banner-worded.png') + '")';
+  });
+  renderMediaManager();
 }
 function applyBackgroundTheme(){
   var url = safeCssUrl(leagueSettings && leagueSettings.backgroundUrl);
@@ -1777,6 +1833,7 @@ function applyBackgroundTheme(){
     document.documentElement.style.setProperty('--app-bg-opacity','.05');
   }
   renderBackgroundAdmin();
+  renderMediaManager();
 }
 function renderBackgroundAdmin(){
   var input = document.getElementById('admin-background-url');
@@ -1808,6 +1865,47 @@ function restoreDefaultBackground(){
   save();
   alert('Default background restored.');
 }
+function setupMediaManager(){
+  document.querySelectorAll('[data-media-file]').forEach(function(input){
+    input.addEventListener('change',function(){
+      var key = input.getAttribute('data-media-file');
+      var file = input.files && input.files[0];
+      if (!file) return;
+      setMediaPreview(key, URL.createObjectURL(file));
+      var status = document.querySelector('[data-media-status="' + key + '"]');
+      if (status) status.textContent = 'Ready to save';
+    });
+  });
+  document.querySelectorAll('[data-media-upload]').forEach(function(button){
+    button.addEventListener('click',function(){
+      var key = button.getAttribute('data-media-upload');
+      if (typeof window.uploadMediaAsset === 'function') window.uploadMediaAsset(key);
+      else alert('Media upload is still loading. Try again in a few seconds.');
+    });
+  });
+  document.querySelectorAll('[data-media-reset]').forEach(function(button){
+    button.addEventListener('click',function(){
+      if (!ADMIN_MODE) { alert('Media Manager is only available in admin mode.'); return; }
+      var key = button.getAttribute('data-media-reset');
+      if (!confirm('Reset this image back to the default?')) return;
+      if (key === 'background') leagueSettings.backgroundUrl = '';
+      else {
+        leagueSettings.mediaAssets = leagueSettings.mediaAssets || {};
+        delete leagueSettings.mediaAssets[key];
+      }
+      applyBackgroundTheme();
+      applyMediaAssets();
+      try { renderMatchups(); } catch(e) {}
+      try { renderTeamPage(); } catch(e) {}
+      try { renderBaggers(); } catch(e) {}
+      if (typeof save === 'function') save();
+      var status = document.querySelector('[data-media-status="' + key + '"]');
+      if (status) status.textContent = 'Reset to default';
+    });
+  });
+}
+setupMediaManager();
+applyMediaAssets();
 function isInternalBackupArchive(key, archive) {
   archive = archive || {};
   if (archive.note && /automatic backup|pre-live-update/i.test(archive.note)) return true;
@@ -2840,6 +2938,7 @@ function cloudStatus(msg, cls) {
 }
 
 let db = null;
+let storage = null;
 let cloudReady = false;
 let applyingRemote = false;
 let saveTimer = null;
@@ -2865,10 +2964,12 @@ async function startCloudSync() {
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
     const { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
     const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
+    const { getStorage, ref: storageRef, uploadBytes, getDownloadURL } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js');
 
     const app = initializeApp(FIREBASE_CONFIG);
     const auth = getAuth(app);
     db = getFirestore(app);
+    storage = getStorage(app);
     const ref = doc(db, 'leagues', LEAGUE_ID);
 
     const emailInput = document.getElementById('admin-email');
@@ -2906,6 +3007,39 @@ async function startCloudSync() {
       await signOut(auth);
       if (authMessage) authMessage.textContent = 'Signed out.';
     });
+
+    window.uploadMediaAsset = async function(key) {
+      if (!ADMIN_MODE) { alert('Media Manager is only available in admin mode.'); return; }
+      if (!storage) { alert('Firebase Storage is not ready yet. Try again in a few seconds.'); return; }
+      const input = document.querySelector('[data-media-file="' + key + '"]');
+      const status = document.querySelector('[data-media-status="' + key + '"]');
+      const file = input && input.files && input.files[0];
+      if (!file) { alert('Choose an image first.'); return; }
+      if (!/^image\//i.test(file.type || '')) { alert('Choose an image file.'); return; }
+      if (file.size > 8 * 1024 * 1024 && !confirm('This image is pretty large. Upload it anyway?')) return;
+      const safeName = (file.name || (key + '.png')).replace(/[^a-z0-9._-]/gi,'-').toLowerCase();
+      const path = 'leagues/' + LEAGUE_ID + '/media/' + key + '-' + Date.now() + '-' + safeName;
+      try {
+        if (status) status.textContent = 'Uploading...';
+        const snap = await uploadBytes(storageRef(storage, path), file, {contentType:file.type || 'image/png'});
+        const url = await getDownloadURL(snap.ref);
+        if (key === 'background') leagueSettings.backgroundUrl = url;
+        else {
+          leagueSettings.mediaAssets = leagueSettings.mediaAssets || {};
+          leagueSettings.mediaAssets[key] = url;
+        }
+        applyBackgroundTheme();
+        applyMediaAssets();
+        renderEverything();
+        await window.forceCloudSave();
+        if (status) status.textContent = 'Saved live';
+        if (input) input.value = '';
+      } catch (error) {
+        console.error(error);
+        if (status) status.textContent = 'Upload failed';
+        alert('Upload failed. If this is the first time, Firebase Storage may need to be enabled or its rules updated.');
+      }
+    };
 
     onAuthStateChanged(auth, async function(user) {
       if (user && user.uid === ADMIN_UID) {
@@ -3252,3 +3386,4 @@ startCloudSync();
 
 </body>
 </html>
+
