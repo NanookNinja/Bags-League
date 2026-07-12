@@ -607,6 +607,23 @@ body:not(.admin-authenticated) #team-page-select{
   #tab-season table,#tab-week table{font-size:11px!important}
   #tab-season th,#tab-season td,#tab-week th,#tab-week td{font-size:10px!important}
 }
+body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
+  display:flex!important;
+  justify-content:center!important;
+}
+.forfeit-record-note{
+  margin:-3px 0 10px;
+  padding:7px 10px;
+  border-radius:10px;
+  background:#fff7ed;
+  border:1px solid #fdba74;
+  color:#9a3412;
+  font-size:10px;
+  font-weight:900;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
 
 /* Rainout cards should feel like normal schedule cards, just storm-themed */
 .team-week-block.rainout-day{
@@ -1555,12 +1572,16 @@ function renderTeamPage(){
   if (teamNumber) teamNumber.textContent = team ? 'Team ' + tnum(team) : '';
   if (!team) { content.innerHTML = ''; return; }
   select.value = team;
-  var totals = calcSeasonTotals(null)[team] || {wins:0,losses:0,played:0};
-  var pct = totals.played ? Math.round(totals.wins / totals.played * 100) + '%' : '--';
+  var totals = calcSeasonTotals(null)[team] || {wins:0,losses:0,ftw:0,ftl:0,played:0};
+  var totalWins = (totals.wins || 0) + (totals.ftw || 0);
+  var totalLosses = (totals.losses || 0) + (totals.ftl || 0);
+  var hasForfeits = !!((totals.ftw || 0) || (totals.ftl || 0));
+  var pct = totals.played ? Math.round(totalWins / totals.played * 100) + '%' : '--';
   var detail = getTeamSchedule(team), opponentNames = Object.keys(detail.opponents).sort(function(a,b){
     return detail.opponents[b].scheduled - detail.opponents[a].scheduled || a.localeCompare(b);
   });
-  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totals.wins + '-' + totals.losses + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '*' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  if (hasForfeits) html += '<div class="forfeit-record-note">* Forfeited wins and losses are included in this record.</div>';
   var notes = leagueSettings.calendarNotes || [];
   var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
   if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
@@ -1621,12 +1642,16 @@ function renderTeamPage(){
   if (teamNumber) teamNumber.textContent = team ? 'Team ' + tnum(team) : '';
   if (!team) { content.innerHTML = ''; return; }
   select.value = team;
-  var totals = calcSeasonTotals(null)[team] || {wins:0,losses:0,played:0};
-  var pct = totals.played ? Math.round(totals.wins / totals.played * 100) + '%' : '--';
+  var totals = calcSeasonTotals(null)[team] || {wins:0,losses:0,ftw:0,ftl:0,played:0};
+  var totalWins = (totals.wins || 0) + (totals.ftw || 0);
+  var totalLosses = (totals.losses || 0) + (totals.ftl || 0);
+  var hasForfeits = !!((totals.ftw || 0) || (totals.ftl || 0));
+  var pct = totals.played ? Math.round(totalWins / totals.played * 100) + '%' : '--';
   var detail = getTeamSchedule(team), opponentNames = Object.keys(detail.opponents).sort(function(a,b){
     return detail.opponents[b].scheduled - detail.opponents[a].scheduled || a.localeCompare(b);
   });
-  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totals.wins + '-' + totals.losses + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '*' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  if (hasForfeits) html += '<div class="forfeit-record-note">* Forfeited wins and losses are included in this record.</div>';
   var notes = leagueSettings.calendarNotes || [];
   var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
   if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
