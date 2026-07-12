@@ -634,7 +634,7 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
 }
 .forfeit-makeup-card{
   display:grid;
-  grid-template-columns:58px 1fr auto;
+  grid-template-columns:62px 1fr auto;
   gap:8px;
   align-items:center;
   padding:9px 10px;
@@ -648,6 +648,18 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
   color:#1e3a8a;
   text-transform:uppercase;
 }
+.forfeit-makeup-week strong{
+  display:block;
+  font-size:16px;
+  line-height:1;
+  margin-bottom:3px;
+}
+.forfeit-makeup-week small{
+  display:block;
+  color:#64748b;
+  font-size:9px;
+  font-weight:900;
+}
 .forfeit-makeup-opponent{
   font-size:12px;
   font-weight:900;
@@ -659,6 +671,18 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
   font-size:9px;
   margin-top:2px;
   font-weight:800;
+}
+.made-up-note{
+  display:block;
+  margin-top:5px;
+  color:#dc2626!important;
+  font-size:9px!important;
+  font-weight:1000!important;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.team-stat strong .record-asterisk{
+  color:#dc2626;
 }
 
 /* Rainout cards should feel like normal schedule cards, just storm-themed */
@@ -1033,7 +1057,7 @@ var DEFAULT_CALENDAR_NOTES = [
 var DEFAULT_RAINOUTS = [{week:3,date:'2026-06-11'}];
 var DEFAULT_MEDIA_ASSETS = {background:'bags-logo.png',rainoutBanner:'rained-out-stamp.png',fourBaggersBanner:'four-baggers-banner-worded.png',scoreboardIcon:'scoreboard.png',weekIcon:'week-standings.png',seasonIcon:'season-standings.png',teamsIcon:'teams-schedules.png',fourBaggersIcon:'four-baggers.png',playoffsIcon:'playoffs.png',shareIcon:'share.png'};
 var NAV_MEDIA_KEYS = {score:'scoreboardIcon',week:'weekIcon',season:'seasonIcon',teams:'teamsIcon',baggers:'fourBaggersIcon',playoffs:'playoffsIcon',share:'shareIcon'};
-var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], subs:[], backgroundUrl:'', mediaAssets:{}, scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
+var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], forfeitMakeups:[], subs:[], backgroundUrl:'', mediaAssets:{}, scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
 window.pendingWeekDateRepair = false;
 
@@ -1457,7 +1481,7 @@ function renderBaggers() {
     var won = !!game.opponentForfeit;
     var resultText = won ? 'WON 3' : 'LOST 3';
     var resultClass = won ? ' win forfeit' : ' loss forfeit';
-    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week ' + game.week + '<small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + ' · ' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week <strong>' + game.week + '</strong><small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
   }).join('') : '<div style="text-align:center;color:#999;padding:12px">No forfeited wins or losses for this team.</div>';
   html += '</div></details>';
   var keepScrollY = window.scrollY || window.pageYOffset || 0;
@@ -1574,6 +1598,13 @@ function subNotesForTeamHtml(team, week, round){
     return '<small class="sub-for-note"><span class="sub-player-name">' + escapeHtml(item.name) + '</span> subbing for ' + escapeHtml(item.forPlayer) + '</small>';
   }).join('');
 }
+function getForfeitMakeupDate(week, teamA, teamB){
+  var item = (leagueSettings.forfeitMakeups || []).find(function(record){
+    if (Number(record.week) !== Number(week)) return false;
+    return (record.team === teamA && record.opponent === teamB) || (record.team === teamB && record.opponent === teamA);
+  });
+  return item && item.date ? item.date : '';
+}
 function getTeamSchedule(team){
   var schedule = [], opponents = {};
   for (var w = 1; w <= WEEKS; w++) {
@@ -1590,6 +1621,7 @@ function getTeamSchedule(team){
         var opponentSubNoteHtml = subNotesForTeamHtml(opponent,w,s+1);
         var teamForfeit = (leagueSettings.forfeits || []).some(function(item){ return Number(item.week) === w && item.team === team; });
         var opponentForfeit = (leagueSettings.forfeits || []).some(function(item){ return Number(item.week) === w && item.team === opponent; });
+        var forfeitMakeupDate = getForfeitMakeupDate(w, team, opponent);
         var subNote = (leagueSettings.subs || []).filter(function(item){ return Number(item.week) === w && item.team === team && subAppliesToRound(item, s + 1); }).map(function(item){ return item.name + (item.forPlayer ? ' for ' + item.forPlayer : ''); }).join(', ');
         var match = getMatch(w,s,mi), wins = 0, losses = 0;
         [match.g1,match.g2,match.g3].forEach(function(winner){
@@ -1597,7 +1629,7 @@ function getTeamSchedule(team){
           else if (winner === 'a' || winner === 'b') losses++;
         });
         var played = wins + losses, complete = played === 3;
-        schedule.push({week:w,date:getWeekDate(w),round:s+1,opponent:opponent,opponentDisplay:opponentDisplay,opponentDisplayHtml:opponentDisplayHtml,teamDisplay:teamDisplay,teamDisplayHtml:teamDisplayHtml,teamSubNoteHtml:teamSubNoteHtml,opponentSubNoteHtml:opponentSubNoteHtml,board:mu.board,wins:wins,losses:losses,played:played,complete:complete,teamForfeit:teamForfeit,opponentForfeit:opponentForfeit,subNote:subNote});
+        schedule.push({week:w,date:getWeekDate(w),round:s+1,opponent:opponent,opponentDisplay:opponentDisplay,opponentDisplayHtml:opponentDisplayHtml,teamDisplay:teamDisplay,teamDisplayHtml:teamDisplayHtml,opponentSubNoteHtml:opponentSubNoteHtml,teamSubNoteHtml:teamSubNoteHtml,board:mu.board,wins:wins,losses:losses,played:played,complete:complete,teamForfeit:teamForfeit,opponentForfeit:opponentForfeit,forfeitMakeupDate:forfeitMakeupDate,subNote:subNote});
         if (!opponents[opponent]) opponents[opponent] = {scheduled:0,completed:0,wins:0,losses:0,matchWins:0,matchLosses:0};
         var history = opponents[opponent];
         history.scheduled++; history.wins += wins; history.losses += losses;
@@ -1625,7 +1657,7 @@ function renderTeamPage(){
   var detail = getTeamSchedule(team), opponentNames = Object.keys(detail.opponents).sort(function(a,b){
     return detail.opponents[b].scheduled - detail.opponents[a].scheduled || a.localeCompare(b);
   });
-  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '*' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '<span class="record-asterisk">*</span>' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
   if (hasForfeits) html += '<div class="forfeit-record-note">* Forfeited wins and losses are included in this record.</div>';
   var notes = leagueSettings.calendarNotes || [];
   var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
@@ -1679,7 +1711,7 @@ function renderTeamPage(){
     var won = !!game.opponentForfeit;
     var resultText = won ? 'WON 3' : 'LOST 3';
     var resultClass = won ? ' win forfeit' : ' loss forfeit';
-    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week ' + game.week + '<small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + ' · ' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week <strong>' + game.week + '</strong><small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
   }).join('') : '<div style="text-align:center;color:#999;padding:12px">No forfeited wins or losses for this team.</div>';
   html += '</div></details>';
   var keepScrollY = window.scrollY || window.pageYOffset || 0;
@@ -1704,7 +1736,7 @@ function renderTeamPage(){
   var detail = getTeamSchedule(team), opponentNames = Object.keys(detail.opponents).sort(function(a,b){
     return detail.opponents[b].scheduled - detail.opponents[a].scheduled || a.localeCompare(b);
   });
-  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '*' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
+  var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '<span class="record-asterisk">*</span>' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
   if (hasForfeits) html += '<div class="forfeit-record-note">* Forfeited wins and losses are included in this record.</div>';
   var notes = leagueSettings.calendarNotes || [];
   var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
@@ -1736,7 +1768,8 @@ function renderTeamPage(){
           else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
           else if (game.played) { resultText = game.wins + '-' + game.losses; resultClass = ' progress'; }
           var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : '';
-          return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+          var madeUpNote = game.forfeitMakeupDate ? '<small class="made-up-note">MADE UP ON ' + formatLeagueDate(game.forfeitMakeupDate,false) + '</small>' : '';
+          return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + madeUpNote + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
         }).join('');
         makeupHtml += '</div></div>';
         scheduleEvents.push({date:makeupDate,order:2,html:makeupHtml});
@@ -1751,7 +1784,8 @@ function renderTeamPage(){
       else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
       else if (game.played) { resultText = game.wins + '-' + game.losses; resultClass = ' progress'; }
       var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : '';
-      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+      var madeUpNote = game.forfeitMakeupDate ? '<small class="made-up-note">MADE UP ON ' + formatLeagueDate(game.forfeitMakeupDate,false) + '</small>' : '';
+      return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + madeUpNote + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
     }).join('');
     weekHtml += '</div></div>';
     scheduleEvents.push({date:weekGames[0].date || '9999-12-31',order:2,html:weekHtml});
@@ -1768,7 +1802,7 @@ function renderTeamPage(){
     var won = !!game.opponentForfeit;
     var resultText = won ? 'WON 3' : 'LOST 3';
     var resultClass = won ? ' win forfeit' : ' loss forfeit';
-    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week ' + game.week + '<small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + ' · ' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week <strong>' + game.week + '</strong><small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
   }).join('') : '<div style="text-align:center;color:#999;padding:12px">No forfeited wins or losses for this team.</div>';
   html += '</div></details>';
   var keepScrollY = window.scrollY || window.pageYOffset || 0;
@@ -2095,6 +2129,7 @@ function applyLeagueSettings(settings) {
     calendarNotes: (settings.calendarNotes || leagueSettings.calendarNotes || DEFAULT_CALENDAR_NOTES).slice(),
     rainouts: (settings.rainouts || leagueSettings.rainouts || DEFAULT_RAINOUTS).slice(),
     forfeits: (settings.forfeits || leagueSettings.forfeits || []).slice(),
+    forfeitMakeups: (settings.forfeitMakeups || leagueSettings.forfeitMakeups || []).slice(),
     subs: (settings.subs || leagueSettings.subs || []).slice(),
     backgroundUrl: Object.prototype.hasOwnProperty.call(settings,'backgroundUrl') ? settings.backgroundUrl : (leagueSettings.backgroundUrl || ''),
     mediaAssets: Object.assign({},leagueSettings.mediaAssets || {},settings.mediaAssets || {}),
@@ -2519,13 +2554,27 @@ function undoTeamForfeit(teamOverride){
   if (index < 0) return;
   var record = leagueSettings.forfeits[index];
   if (!confirm('Undo the Week ' + curWeek + ' forfeit for ' + team + ' and restore the previous scores?')) return;
+  var makeupDate = prompt('If this forfeit is being made up, enter the make-up date as YYYY-MM-DD. Leave blank if there is no make-up date yet.', localISODate());
   (record.previousMatches || []).forEach(function(item){
     if (!results[curWeek]) results[curWeek] = {};
     if (!results[curWeek][item.slot]) results[curWeek][item.slot] = {};
     results[curWeek][item.slot][item.match] = item.data;
   });
+  if (makeupDate && /^\d{4}-\d{2}-\d{2}$/.test(makeupDate)) {
+    leagueSettings.forfeitMakeups = leagueSettings.forfeitMakeups || [];
+    (record.previousMatches || []).forEach(function(item){
+      var mu = getMatchups(curWeek - 1, item.slot)[item.match];
+      if (!mu) return;
+      var opponent = mu.a === team ? mu.b : mu.a;
+      var existing = leagueSettings.forfeitMakeups.find(function(saved){
+        return Number(saved.week) === Number(curWeek) && ((saved.team === team && saved.opponent === opponent) || (saved.team === opponent && saved.opponent === team));
+      });
+      if (existing) existing.date = makeupDate;
+      else leagueSettings.forfeitMakeups.push({week:curWeek,team:team,opponent:opponent,date:makeupDate});
+    });
+  }
   leagueSettings.forfeits.splice(index,1);
-  updateForfeitControl(); renderMatchups(); renderWeekStandings(); save();
+  updateForfeitControl(); renderMatchups(); renderWeekStandings(); renderTeamPage(); save();
 }
 function ensureWeekStarted(week){
   if (!week) return;
