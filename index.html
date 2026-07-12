@@ -506,6 +506,28 @@ body:not(.week-selected) #tab-playoffs,
 body:not(.week-selected) #tab-share{
   display:none!important;
 }
+/* Public menu cleanup */
+[data-nav="share"]{display:none!important}
+body:not(.admin-authenticated) [data-nav="score"]{display:none!important}
+body:not(.playoffs-active) [data-nav="playoffs"]{display:none!important}
+
+/* Admin live scoring progress borders */
+.match-card.score-live-open{
+  border:3px solid #dc2626!important;
+  box-shadow:0 0 0 2px rgba(220,38,38,.12),0 8px 20px rgba(220,38,38,.18)!important;
+}
+.match-card.score-live-complete{
+  border:3px solid #16a34a!important;
+  box-shadow:0 0 0 2px rgba(22,163,74,.14),0 8px 20px rgba(22,163,74,.18)!important;
+}
+.match-card.score-live-open .mc-hdr{
+  background:linear-gradient(135deg,#7f1d1d,#dc2626)!important;
+  color:#fff!important;
+}
+.match-card.score-live-complete .mc-hdr{
+  background:linear-gradient(135deg,#14532d,#16a34a)!important;
+  color:#fff!important;
+}
 </style>
 </head>
 <body>
@@ -934,6 +956,7 @@ window.setAdminMode(false, '');
 function updateWeekSelectedView() {
   var selected = !!parseInt((document.getElementById('week-sel') || {}).value || '');
   document.body.classList.toggle('week-selected', selected);
+  document.body.classList.toggle('playoffs-active', !!(playoffState && (playoffState.locked || playoffState.generated)));
   if (!selected) {
     document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
     var scoreTab = document.getElementById('tab-score');
@@ -1050,13 +1073,14 @@ function renderMatchups() {
     var mw = done ? (aW > bW ? 'a' : 'b') : null;
     var hcls = m.swept ? 'swept' : done ? 'done' : '';
     var stlbl = m.swept ? '&#127942; Sweep!' : done ? '&#10003; Complete' : PUBLIC_VIEW_ONLY ? 'View only' : !SCORE_EDIT_UNLOCKED ? 'Scores locked' : 'Tap to record';
+    var liveScoreClass = ADMIN_MODE && curWeek ? (done ? ' score-live-complete' : ' score-live-open') : '';
 
     var aCls = 'team-side' + (mw === 'a' ? ' winner' : mw === 'b' ? ' loser' : '');
     var bCls = 'team-side' + (mw === 'b' ? ' winner' : mw === 'a' ? ' loser' : '');
     var aDisplay = teamNameForScheduleHtml(mu.a, curWeek, curSlot + 1);
     var bDisplay = teamNameForScheduleHtml(mu.b, curWeek, curSlot + 1);
 
-    html += '<div class="match-card">';
+    html += '<div class="match-card' + liveScoreClass + '">';
     html += '<div class="mc-hdr ' + hcls + '"><span>' + mu.board + '</span><span>' + stlbl + '</span></div>';
     html += '<div class="mc-body">';
     // Teams display
@@ -1148,6 +1172,10 @@ document.getElementById('week-sel').addEventListener('change', function() {
   qr.style.display = 'flex';
   curSlot = 0; ss.value = '0';
   renderMatchups();
+  if (!ADMIN_MODE) {
+    var teamsButton = document.querySelector('[data-nav="teams"]');
+    if (teamsButton) teamsButton.click();
+  }
 });
 document.getElementById('week-start-btn').addEventListener('click',startWeekToday);
 document.getElementById('week-rainout-btn').addEventListener('click',function(){ if (curWeek) rainOutWeek(curWeek); });
@@ -2903,6 +2931,7 @@ function chooseChampionsChampionshipWinner(team){
 window.startChampionsChampionshipFromPlayoffs = startChampionsChampionshipFromPlayoffs;
 window.chooseChampionsChampionshipWinner = chooseChampionsChampionshipWinner;
 function renderPlayoffs(){
+  try { document.body.classList.toggle('playoffs-active', !!(playoffState && (playoffState.locked || playoffState.generated))); } catch(e) {}
   var body = document.getElementById('playoff-body'); if (!body) return;
   captureBracketScrollPositions();
   if (!playoffState || !playoffState.generated) {
