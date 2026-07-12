@@ -624,6 +624,42 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
   text-transform:uppercase;
   letter-spacing:.04em;
 }
+.cloud-status{
+  margin:0 0 8px 0!important;
+  align-self:flex-start!important;
+}
+.forfeit-makeup-list{
+  display:grid;
+  gap:7px;
+}
+.forfeit-makeup-card{
+  display:grid;
+  grid-template-columns:58px 1fr auto;
+  gap:8px;
+  align-items:center;
+  padding:9px 10px;
+  border:1px solid #dbe3ef;
+  border-radius:12px;
+  background:#fff;
+}
+.forfeit-makeup-week{
+  font-size:10px;
+  font-weight:1000;
+  color:#1e3a8a;
+  text-transform:uppercase;
+}
+.forfeit-makeup-opponent{
+  font-size:12px;
+  font-weight:900;
+  color:#172033;
+}
+.forfeit-makeup-opponent small{
+  display:block;
+  color:#64748b;
+  font-size:9px;
+  margin-top:2px;
+  font-weight:800;
+}
 
 /* Rainout cards should feel like normal schedule cards, just storm-themed */
 .team-week-block.rainout-day{
@@ -658,13 +694,13 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
        alt="Bags League Summer 2026">
 </section>
 <div class="app">
+  <div class="cloud-status off" id="cloud-status">Sync Offline</div>
   <div class="hdr">
   <h1 id="league-title">Bags League</h1>
   <div class="sub" id="league-sub">20 Teams &nbsp;|&nbsp; 10 Regular Weeks &nbsp;|&nbsp; Playoffs Week 11</div>
 </div>
 
   <div class="save-bar" id="save-bar">&#10003; &nbsp;All data saved</div>
-  <div class="cloud-status off" id="cloud-status">Sync Offline</div>
   <div class="mode-status" id="mode-status">Team View Mode</div>
   <div class="admin-page-switch" id="admin-page-switch" aria-label="Admin pages">
     <button type="button" class="active" data-admin-page="scoring">Page 1 · Scoring</button>
@@ -771,13 +807,13 @@ Tim/Rick"></textarea>
 
   <div id="scoring-page-content">
   <div class="nav">
-      <button class="nvbtn active" data-nav="score"><img class="nav-icon" src="./scoreboard.png?v=nav6" data-fallback-src="./scoreboard.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Scoreboard</span></button>
-      <button class="nvbtn" data-nav="week"><img class="nav-icon" src="./week-standings.png?v=nav6" data-fallback-src="./week-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week Standings</span></button>
-      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="./season-standings.png?v=nav6" data-fallback-src="./season-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week / Season Standings</span></button>
       <button class="nvbtn" data-nav="teams"><img class="nav-icon" src="./teams-schedules.png?v=nav6" data-fallback-src="./teams-schedules.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Teams / Schedules</span></button>
+      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="./season-standings.png?v=nav6" data-fallback-src="./season-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week / Season Standings</span></button>
       <button class="nvbtn" data-nav="baggers"><img class="nav-icon" src="./four-baggers.png?v=nav6" data-fallback-src="./four-baggers.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">4 Baggers</span></button>
       <button class="nvbtn" data-nav="playoffs"><img class="nav-icon" src="./playoffs.png?v=nav6" data-fallback-src="./playoffs.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Playoffs</span></button>
       <button class="nvbtn" data-nav="share"><img class="nav-icon" src="./share.png?v=nav6" data-fallback-src="./share.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Share</span></button>
+      <button class="nvbtn active" data-nav="score"><img class="nav-icon" src="./scoreboard.png?v=nav6" data-fallback-src="./scoreboard.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Scoreboard</span></button>
+      <button class="nvbtn" data-nav="week"><img class="nav-icon" src="./week-standings.png?v=nav6" data-fallback-src="./week-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week Standings</span></button>
   </div>
 
   <!-- SCORE TAB -->
@@ -1415,6 +1451,15 @@ function renderBaggers() {
     var player = detail.getAttribute('data-bagger-player');
     if (player) openPlayers[player] = true;
   });
+  var forfeitMakeups = detail.schedule.filter(function(game){ return game.teamForfeit || game.opponentForfeit; });
+  html += '<details class="team-collapse" data-team-section="forfeits"><summary><span>FORFEIT WIN / LOSS MAKE-UPS</span><small>' + forfeitMakeups.length + ' forfeited rounds</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content forfeit-makeup-list">';
+  html += forfeitMakeups.length ? forfeitMakeups.map(function(game){
+    var won = !!game.opponentForfeit;
+    var resultText = won ? 'WON 3' : 'LOST 3';
+    var resultClass = won ? ' win forfeit' : ' loss forfeit';
+    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week ' + game.week + '<small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + ' · ' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+  }).join('') : '<div style="text-align:center;color:#999;padding:12px">No forfeited wins or losses for this team.</div>';
+  html += '</div></details>';
   var keepScrollY = window.scrollY || window.pageYOffset || 0;
   var entries = baggerWeek ? (baggers[baggerWeek] || []) : [];
   if (baggerWeek) {
@@ -1628,6 +1673,15 @@ function renderTeamPage(){
     return '<div class="opponent-card"><strong>' + opponent + '</strong><span>Met ' + h.scheduled + 'x · ' + h.completed + ' completed</span><span class="opponent-record">' + h.wins + '-' + h.losses + '</span></div>';
   }).join('') || '<div style="text-align:center;color:#999;padding:12px">No opponents scheduled.</div>';
   html += '</div></details>';
+  var forfeitMakeupsActive = detail.schedule.filter(function(game){ return game.teamForfeit || game.opponentForfeit; });
+  html += '<details class="team-collapse" data-team-section="forfeits"><summary><span>FORFEIT WIN / LOSS MAKE-UPS</span><small>' + forfeitMakeupsActive.length + ' forfeited rounds</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content forfeit-makeup-list">';
+  html += forfeitMakeupsActive.length ? forfeitMakeupsActive.map(function(game){
+    var won = !!game.opponentForfeit;
+    var resultText = won ? 'WON 3' : 'LOST 3';
+    var resultClass = won ? ' win forfeit' : ' loss forfeit';
+    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week ' + game.week + '<small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + ' · ' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+  }).join('') : '<div style="text-align:center;color:#999;padding:12px">No forfeited wins or losses for this team.</div>';
+  html += '</div></details>';
   var keepScrollY = window.scrollY || window.pageYOffset || 0;
   content.innerHTML = html;
   if (keepSeasonOpen || keepHistoryOpen) requestAnimationFrame(function(){ window.scrollTo(0, keepScrollY); });
@@ -1707,6 +1761,15 @@ function renderTeamPage(){
   html += '</div></details>';
   html += '<details class="team-collapse" data-team-section="history"' + (keepHistoryOpen ? ' open' : '') + '><summary><span>Opponent History</span><small>Meetings and game record</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content opponent-history">';
   html += opponentNames.map(function(opponent){ var h = detail.opponents[opponent]; return '<div class="opponent-card"><strong>' + opponent + '</strong><span>Met ' + h.scheduled + 'x · ' + h.completed + ' completed</span><span class="opponent-record">' + h.wins + '-' + h.losses + '</span></div>'; }).join('') || '<div style="text-align:center;color:#999;padding:12px">No opponents scheduled.</div>';
+  html += '</div></details>';
+  var forfeitMakeupsFinal = detail.schedule.filter(function(game){ return game.teamForfeit || game.opponentForfeit; });
+  html += '<details class="team-collapse" data-team-section="forfeits"><summary><span>FORFEIT WIN / LOSS MAKE-UPS</span><small>' + forfeitMakeupsFinal.length + ' forfeited rounds</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content forfeit-makeup-list">';
+  html += forfeitMakeupsFinal.length ? forfeitMakeupsFinal.map(function(game){
+    var won = !!game.opponentForfeit;
+    var resultText = won ? 'WON 3' : 'LOST 3';
+    var resultClass = won ? ' win forfeit' : ' loss forfeit';
+    return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week ' + game.week + '<small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + ' · ' + game.board + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
+  }).join('') : '<div style="text-align:center;color:#999;padding:12px">No forfeited wins or losses for this team.</div>';
   html += '</div></details>';
   var keepScrollY = window.scrollY || window.pageYOffset || 0;
   content.innerHTML = html;
