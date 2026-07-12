@@ -245,7 +245,7 @@ th{padding:7px 9px;font-size:10px}td{padding:7px 9px;font-size:12px}.pill{border
 .wk-filter{gap:5px;margin-bottom:8px}.wfbtn{padding:6px 10px;border-radius:999px;box-shadow:none;border:1px solid var(--line)}.wfbtn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .share-btn,.add-btn,.import-btn,.admin-action-btn{border-radius:12px;padding:11px 12px;font-size:14px;box-shadow:0 2px 8px rgba(15,23,42,.10)}
 .admin-panel{padding:12px;margin-bottom:10px;background:linear-gradient(180deg,#fff,#f8fbff)}.admin-panel h3{font-size:15px;margin-bottom:4px}.admin-panel h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:12px 0 7px}.admin-note{font-size:11px;color:var(--muted);margin-bottom:8px}.admin-grid{display:grid;grid-template-columns:1fr 96px;gap:8px}.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-action-btn{width:100%;border:none;margin-bottom:7px;background:#e8f0fe;color:#1f3864;font-weight:800;cursor:pointer}.admin-action-btn.green{background:#dcfce7;color:#166534}.admin-action-btn.orange{background:#ffedd5;color:#9a3412}.admin-action-btn.red{background:#fee2e2;color:#991b1b}.import-btn{background:linear-gradient(135deg,#7c3aed,#a855f7)}
-.media-manager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 12px}.media-card{border:1.5px solid #bfdbfe;border-radius:14px;background:linear-gradient(180deg,#fff,#eef6ff);padding:10px;box-shadow:0 4px 12px rgba(15,23,42,.08)}.media-card strong{display:block;color:#1e3a8a;font-size:11px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.media-preview{height:74px;border-radius:11px;border:1px solid #dbeafe;background:#fff center/cover no-repeat;margin-bottom:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)}.media-card input[type=file]{width:100%;font-size:10px;margin-bottom:7px}.media-actions{display:grid;grid-template-columns:1fr 76px;gap:6px}.media-actions button{border:0;border-radius:10px;padding:8px 6px;font-size:10px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}.media-upload-btn{background:#2563eb;color:#fff}.media-reset-btn{background:#fee2e2;color:#991b1b}.media-status{font-size:10px;color:#64748b;min-height:13px;margin-top:5px;font-weight:800}
+.media-manager{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 12px}.media-card{border:1.5px solid #bfdbfe;border-radius:14px;background:linear-gradient(180deg,#fff,#eef6ff);padding:10px;box-shadow:0 4px 12px rgba(15,23,42,.08)}.media-card strong{display:block;color:#1e3a8a;font-size:11px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.media-preview{height:74px;border-radius:11px;border:1px solid #dbeafe;background:#fff center/cover no-repeat;margin-bottom:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)}.media-card input[type=file]{width:100%;font-size:10px;margin-bottom:7px}.media-actions{display:grid;grid-template-columns:1fr 76px;gap:6px}.media-actions button{border:0;border-radius:10px;padding:8px 6px;font-size:10px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}.media-upload-btn{background:#2563eb;color:#fff}.media-reset-btn{background:#fee2e2;color:#991b1b}.media-status{font-size:10px;color:#64748b;min-height:13px;margin-top:5px;font-weight:800}
 .holiday-admin-grid{display:grid;grid-template-columns:130px 1fr;gap:7px}.holiday-admin-grid input{width:100%;border:1.5px solid #dbe3ef;border-radius:10px;padding:10px;margin-bottom:7px;font-size:13px}.holiday-admin-list{display:grid;gap:6px;margin-bottom:8px}.holiday-admin-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #fbbf24;border-radius:10px;background:#fffbeb;color:#92400e;font-size:11px;font-weight:800}.holiday-remove-btn{border:0;border-radius:8px;padding:6px 8px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;cursor:pointer}
 .background-preview{height:92px;border:2px solid #bfdbfe;border-radius:14px;background:#eef4fb url("bags-logo.png") center/contain no-repeat;margin:6px 0 8px;box-shadow:inset 0 0 0 999px rgba(255,255,255,.25)}.background-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .league-name-box{background:#eef6ff;border:1px solid #bfdbfe;border-radius:14px;padding:10px;margin:10px 0}.league-name-box label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1e40af;margin-bottom:6px}.mini-btn{width:100%;border:none;border-radius:11px;background:#1f3864;color:#fff;font-weight:800;padding:10px 12px;margin-bottom:8px;cursor:pointer}
@@ -804,7 +804,7 @@ function setScoreEditUnlocked(enabled) {
   window.SCORE_EDIT_UNLOCKED = SCORE_EDIT_UNLOCKED;
   clearTimeout(scoreLockTimer);
   if (SCORE_EDIT_UNLOCKED) {
-    scoreLockTimer = setTimeout(function() { setScoreEditUnlocked(false); }, 120000);
+    scoreLockTimer = setTimeout(function() { setScoreEditUnlocked(false); }, 300000);
   }
   var control = document.getElementById('score-lock-control');
   var button = document.getElementById('score-lock-btn');
@@ -887,7 +887,6 @@ var scoreLockButton = document.getElementById('score-lock-btn');
 if (scoreLockButton) scoreLockButton.addEventListener('click', function() {
   if (!ADMIN_MODE) return;
   if (!SCORE_EDIT_UNLOCKED) {
-    if (!confirm('Unlock score editing for 2 minutes? Score buttons will become active.')) return;
     setScoreEditUnlocked(true);
   } else {
     setScoreEditUnlocked(false);
@@ -2224,6 +2223,8 @@ function rebuildWeekControls() {
   var bwsel = document.getElementById('bagger-week-sel');
   var wfilt = document.getElementById('wk-filter');
   var scoreCalendar = [];
+  var activeElement = document.activeElement;
+  if (wsel && activeElement === wsel) return;
   if (wsel) wsel.innerHTML = '<option value="">Select week...</option>';
   if (bwsel) bwsel.innerHTML = '<option value="">Select week...</option>';
   if (wfilt) wfilt.innerHTML = '<button class="wfbtn active" data-filter="">All</button>';
@@ -2940,6 +2941,7 @@ let cloudReady = false;
 let applyingRemote = false;
 let saveTimer = null;
 let pendingWeekMigration = false;
+let lastLocalCloudSaveAt = 0;
 const localSave = window.save;
 
 function renderEverything() {
@@ -2961,12 +2963,10 @@ async function startCloudSync() {
     const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js');
     const { getFirestore, doc, setDoc, onSnapshot, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js');
     const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js');
-    const { getStorage, ref: storageRef, uploadBytesResumable, getDownloadURL } = await import('https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js');
 
     const app = initializeApp(FIREBASE_CONFIG);
     const auth = getAuth(app);
     db = getFirestore(app);
-    storage = getStorage(app);
     const ref = doc(db, 'leagues', LEAGUE_ID);
 
     const emailInput = document.getElementById('admin-email');
@@ -3005,77 +3005,9 @@ async function startCloudSync() {
       if (authMessage) authMessage.textContent = 'Signed out.';
     });
 
-    function uploadFileWithProgress(fileRef, file, metadata, status) {
-      return new Promise(function(resolve, reject) {
-        var finished = false;
-        var timeout = setTimeout(function(){
-          if (finished) return;
-          finished = true;
-          reject(new Error('Upload timed out. Firebase Storage may not be enabled yet, or the image is too large/connection is slow.'));
-        }, 45000);
-        var task = uploadBytesResumable(fileRef, file, metadata);
-        task.on('state_changed', function(snapshot){
-          if (!status) return;
-          var pct = snapshot.totalBytes ? Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100) : 0;
-          status.textContent = 'Uploading ' + pct + '%...';
-        }, function(error){
-          if (finished) return;
-          finished = true;
-          clearTimeout(timeout);
-          reject(error);
-        }, async function(){
-          if (finished) return;
-          finished = true;
-          clearTimeout(timeout);
-          try {
-            resolve(await getDownloadURL(task.snapshot.ref));
-          } catch (error) {
-            reject(error);
-          }
-        });
-      });
-    }
-
     window.uploadMediaAsset = async function(key) {
       alert('Image uploads are paused for now because Firebase Storage was acting glitchy. For live images, keep using the GitHub PNG files or paste image URLs until we rebuild Media Manager cleaner.');
       return;
-      if (!ADMIN_MODE) { alert('Media Manager is only available in admin mode.'); return; }
-      if (!storage) { alert('Firebase Storage is not ready yet. Try again in a few seconds.'); return; }
-      const input = document.querySelector('[data-media-file="' + key + '"]');
-      const status = document.querySelector('[data-media-status="' + key + '"]');
-      const button = document.querySelector('[data-media-upload="' + key + '"]');
-      const file = input && input.files && input.files[0];
-      if (!file) { alert('Choose an image first.'); return; }
-      if (!/^image\//i.test(file.type || '')) { alert('Choose an image file.'); return; }
-      if (file.size > 6 * 1024 * 1024 && !confirm('This image is pretty large and may upload slowly. Upload it anyway?')) return;
-      const safeName = (file.name || (key + '.png')).replace(/[^a-z0-9._-]/gi,'-').toLowerCase();
-      const path = 'leagues/' + LEAGUE_ID + '/media/' + key + '-' + Date.now() + '-' + safeName;
-      try {
-        if (button) button.disabled = true;
-        if (status) status.textContent = 'Starting upload...';
-        const url = await uploadFileWithProgress(storageRef(storage, path), file, {contentType:file.type || 'image/png'}, status);
-        if (key === 'background') leagueSettings.backgroundUrl = url;
-        else {
-          leagueSettings.mediaAssets = leagueSettings.mediaAssets || {};
-          leagueSettings.mediaAssets[key] = url;
-        }
-        applyBackgroundTheme();
-        applyMediaAssets();
-        renderEverything();
-        await window.forceCloudSave();
-        if (status) status.textContent = 'Saved live';
-        if (input) input.value = '';
-      } catch (error) {
-        console.error(error);
-        var code = error && error.code ? String(error.code) : '';
-        var message = code === 'storage/unauthorized' ? 'Upload blocked by Firebase Storage rules.' :
-          code === 'storage/bucket-not-found' ? 'Firebase Storage is not enabled yet.' :
-          (error && error.message ? error.message : 'Upload failed.');
-        if (status) status.textContent = 'Upload failed';
-        alert(message + '\n\nIf this is the first time using Media Manager, enable Firebase Storage and allow the admin account to upload images.');
-      } finally {
-        if (button) button.disabled = false;
-      }
     };
 
     onAuthStateChanged(auth, async function(user) {
@@ -3100,6 +3032,7 @@ async function startCloudSync() {
       clearTimeout(saveTimer);
       saveTimer = setTimeout(async function() {
         try {
+          lastLocalCloudSaveAt = Date.now();
           await setDoc(ref, {
             settings: leagueSettings || {},
             results: results || {},
@@ -3121,6 +3054,7 @@ async function startCloudSync() {
       if (!ADMIN_MODE || !cloudReady || applyingRemote) return;
       clearTimeout(saveTimer);
       try {
+        lastLocalCloudSaveAt = Date.now();
         await setDoc(ref, {
           settings: leagueSettings || {},
           results: results || {},
@@ -3139,6 +3073,10 @@ async function startCloudSync() {
 
     // Listen for changes from other phones and update this screen live.
     onSnapshot(ref, function(snapshot) {
+      if (ADMIN_MODE && Date.now() - lastLocalCloudSaveAt < 1800) {
+        cloudStatus('Sync Online', 'ok');
+        return;
+      }
       if (!snapshot.exists()) {
         // First admin device to open the app creates the league document from local data.
         if (ADMIN_MODE) window.save();
