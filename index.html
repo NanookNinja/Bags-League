@@ -899,6 +899,9 @@ function getMatch(w, s, mi) {
   if (!results[w][s][mi]) results[w][s][mi] = { g1: null, g2: null, g3: null, swept: false };
   return results[w][s][mi];
 }
+function peekMatch(w, s, mi) {
+  return (results[w] && results[w][s] && results[w][s][mi]) || { g1: null, g2: null, g3: null, swept: false };
+}
 
 function recordGame(w, s, mi, game, winner) {
   if (!ADMIN_MODE) { return; }
@@ -921,7 +924,8 @@ function recordGame(w, s, mi, game, winner) {
   refreshScoreLockTimer();
   renderMatchups();
   renderWeekStandings();
-  renderSeasonStandings();
+  var active = document.querySelector('.tab.active');
+  if (active && active.id === 'tab-season') renderSeasonStandings();
 }
 
 // ── Persistence ───────────────────────────────────────────────────────────────
@@ -954,7 +958,7 @@ function renderMatchups() {
   var html = '';
   for (var mi = 0; mi < mus.length; mi++) {
     var mu = mus[mi];
-    var m = getMatch(curWeek, curSlot, mi);
+    var m = peekMatch(curWeek, curSlot, mi);
     var aW = 0, bW = 0;
     if (m.g1 === 'a') aW++; else if (m.g1 === 'b') bW++;
     if (m.g2 === 'a') aW++; else if (m.g2 === 'b') bW++;
@@ -2166,7 +2170,7 @@ function markTeamForfeit(){
     });
   }
   leagueSettings.forfeits.push({week:curWeek,team:team,previousMatches:previousMatches});
-  updateForfeitControl(); renderMatchups(); renderWeekStandings(); renderSeasonStandings(); renderTeamPage(); save();
+  updateForfeitControl(); renderMatchups(); renderWeekStandings(); save();
 }
 function undoTeamForfeit(teamOverride){
   if (!ADMIN_MODE || !curWeek) return;
@@ -2181,7 +2185,7 @@ function undoTeamForfeit(teamOverride){
     results[curWeek][item.slot][item.match] = item.data;
   });
   leagueSettings.forfeits.splice(index,1);
-  updateForfeitControl(); renderMatchups(); renderWeekStandings(); renderSeasonStandings(); renderTeamPage(); save();
+  updateForfeitControl(); renderMatchups(); renderWeekStandings(); save();
 }
 function ensureWeekStarted(week){
   if (!week) return;
@@ -2948,9 +2952,11 @@ function renderEverything() {
   try { renderMatchups(); } catch(e) {}
   try { renderWeekStandings(); } catch(e) {}
   try { renderSeasonStandings(); } catch(e) {}
-  try { renderTeamPage(); } catch(e) {}
-  try { renderBaggers(); } catch(e) {}
-  try { renderPlayoffs(); } catch(e) {}
+  var active = document.querySelector('.tab.active');
+  var activeId = active ? active.id : 'tab-score';
+  if (activeId === 'tab-teams') { try { renderTeamPage(); } catch(e) {} }
+  if (activeId === 'tab-baggers') { try { renderBaggers(); } catch(e) {} }
+  if (activeId === 'tab-playoffs') { try { renderPlayoffs(); } catch(e) {} }
 }
 
 async function startCloudSync() {
