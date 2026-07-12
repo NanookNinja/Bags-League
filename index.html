@@ -542,12 +542,61 @@ body:not(.playoffs-active) [data-nav="playoffs"]{display:none!important}
 
 /* Rain Out banner: show the full scene without cropping */
 .rainout-ribbon{
-  background:#020617!important;
+  background:linear-gradient(180deg,#dbeafe 0%,#93c5fd 45%,#60a5fa 100%)!important;
 }
 .rainout-stamp-img{
   object-fit:contain!important;
   object-position:center!important;
-  background:#020617!important;
+  background:linear-gradient(180deg,#dbeafe 0%,#93c5fd 45%,#60a5fa 100%)!important;
+}
+
+/* Public/team view starts with team selection, not week selection */
+[data-nav="week"]{display:none!important}
+body:not(.admin-authenticated) #tab-score{display:none!important}
+body:not(.admin-authenticated):not(.team-selected) #scoring-page-content .nav{display:none!important}
+body:not(.admin-authenticated).team-selected #scoring-page-content .nav{display:grid!important}
+body:not(.admin-authenticated):not(.team-selected) #tab-teams,
+body:not(.admin-authenticated).team-selected #tab-teams.active,
+body:not(.admin-authenticated).team-selected #tab-season.active,
+body:not(.admin-authenticated).team-selected #tab-baggers.active,
+body:not(.admin-authenticated).team-selected #tab-playoffs.active{
+  display:block!important;
+}
+body:not(.admin-authenticated):not(.team-selected) #tab-week,
+body:not(.admin-authenticated):not(.team-selected) #tab-season,
+body:not(.admin-authenticated):not(.team-selected) #tab-baggers,
+body:not(.admin-authenticated):not(.team-selected) #tab-playoffs,
+body:not(.admin-authenticated):not(.team-selected) #tab-share{
+  display:none!important;
+}
+body:not(.admin-authenticated) #team-page-select{
+  margin-top:6px!important;
+  text-align:center!important;
+  text-align-last:center!important;
+}
+
+/* Rainout cards should feel like normal schedule cards, just storm-themed */
+.team-week-block.rainout-day{
+  min-height:170px!important;
+  background:linear-gradient(135deg,#dbeafe,#93c5fd 48%,#60a5fa)!important;
+}
+.rainout-ribbon{
+  left:112px!important;
+  right:0!important;
+  top:0!important;
+  bottom:0!important;
+  border-radius:0 18px 18px 0!important;
+}
+.rainout-stamp-img{
+  border-radius:0 18px 18px 0!important;
+}
+.rainout-day .team-week-date{
+  font-size:11px!important;
+  margin-top:6px!important;
+  line-height:1.1!important;
+}
+.rainout-makeup-info{
+  font-size:8.5px!important;
 }
 </style>
 </head>
@@ -674,7 +723,7 @@ Tim/Rick"></textarea>
   <div class="nav">
       <button class="nvbtn active" data-nav="score"><img class="nav-icon" src="./scoreboard.png?v=nav6" data-fallback-src="./scoreboard.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Scoreboard</span></button>
       <button class="nvbtn" data-nav="week"><img class="nav-icon" src="./week-standings.png?v=nav6" data-fallback-src="./week-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week Standings</span></button>
-      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="./season-standings.png?v=nav6" data-fallback-src="./season-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Season Standings</span></button>
+      <button class="nvbtn" data-nav="season"><img class="nav-icon" src="./season-standings.png?v=nav6" data-fallback-src="./season-standings.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Week / Season Standings</span></button>
       <button class="nvbtn" data-nav="teams"><img class="nav-icon" src="./teams-schedules.png?v=nav6" data-fallback-src="./teams-schedules.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Teams / Schedules</span></button>
       <button class="nvbtn" data-nav="baggers"><img class="nav-icon" src="./four-baggers.png?v=nav6" data-fallback-src="./four-baggers.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">4 Baggers</span></button>
       <button class="nvbtn" data-nav="playoffs"><img class="nav-icon" src="./playoffs.png?v=nav6" data-fallback-src="./playoffs.png?v=nav6" alt="" aria-hidden="true" onerror="if(!this.dataset.triedFallback){this.dataset.triedFallback='1';this.src=this.dataset.fallbackSrc}else{this.style.display='none'}"><span class="nav-label">Playoffs</span></button>
@@ -740,7 +789,7 @@ Tim/Rick"></textarea>
     </div>
     <div class="card">
       <div class="card-hdr navy">
-        <span>Season Standings</span>
+        <span>Week / Season Standings</span>
         <span class="csub" id="season-sub">Full season</span>
       </div>
       <table>
@@ -974,18 +1023,30 @@ window.setAdminMode = function(enabled, email){
   try { renderPlayoffs(); } catch(e) {}
 };
 window.setAdminMode(false, '');
+function showNavTab(id) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.nvbtn').forEach(function(b) { b.classList.remove('active'); });
+  var tab = document.getElementById('tab-' + id);
+  var button = document.querySelector('[data-nav="' + id + '"]');
+  if (tab) tab.classList.add('active');
+  if (button) button.classList.add('active');
+}
+function updateTeamSelectedView() {
+  var selected = !!((document.getElementById('team-page-select') || {}).value || '');
+  document.body.classList.toggle('team-selected', selected);
+  if (!ADMIN_MODE) {
+    var active = document.querySelector('.tab.active');
+    if (!selected || !active || active.id === 'tab-score' || active.id === 'tab-week') showNavTab('teams');
+  }
+}
 function updateWeekSelectedView() {
   var selected = !!parseInt((document.getElementById('week-sel') || {}).value || '');
   document.body.classList.toggle('week-selected', selected);
   document.body.classList.toggle('playoffs-active', !!(playoffState && (playoffState.locked || playoffState.generated)));
   if (!selected) {
-    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-    var scoreTab = document.getElementById('tab-score');
-    if (scoreTab) scoreTab.classList.add('active');
-    document.querySelectorAll('.nvbtn').forEach(function(b) { b.classList.remove('active'); });
-    var scoreButton = document.querySelector('[data-nav="score"]');
-    if (scoreButton) scoreButton.classList.add('active');
+    showNavTab(ADMIN_MODE ? 'score' : 'teams');
   }
+  try { updateTeamSelectedView(); } catch(e) {}
 }
 document.querySelectorAll('[data-admin-page]').forEach(function(button) {
   button.addEventListener('click', function() { setAdminPage(this.getAttribute('data-admin-page'), true); });
@@ -1577,7 +1638,10 @@ function openTeamPage(team){
   renderTeamPage();
 }
 window.openTeamPage = openTeamPage;
-document.getElementById('team-page-select').addEventListener('change',renderTeamPage);
+document.getElementById('team-page-select').addEventListener('change',function(){
+  updateTeamSelectedView();
+  renderTeamPage();
+});
 
 // ── Season week filter buttons ────────────────────────────────────────────────
 document.getElementById('wk-filter').addEventListener('click', function(e) {
@@ -3039,8 +3103,9 @@ function loadTestPlayoffDemo(){
 // ── Init ──────────────────────────────────────────────────────────────────────
 (function init() {
   rebuildWeekControls();
-  updateWeekSelectedView();
   populateTeamPageSelect();
+  updateWeekSelectedView();
+  updateTeamSelectedView();
   updateLeagueHeader();
   fillAdminSeasonForm();
   load();
