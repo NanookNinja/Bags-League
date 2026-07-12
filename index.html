@@ -435,6 +435,46 @@ select:not(#team-page-select){padding-right:54px!important;background-image:url(
 .rainout-day .team-week-rounds{opacity:0!important;filter:none!important;background:#020617!important}
 .rainout-makeup-info{display:block;margin-top:8px;padding:4px 5px;border-radius:8px;background:rgba(255,255,255,.95);color:#dc2626!important;font-size:8.5px!important;font-weight:1000!important;line-height:1.15;text-align:center;letter-spacing:.03em;text-transform:uppercase;box-shadow:0 2px 7px rgba(0,0,0,.18)}
 .rainout-day .makeup-ribbon{display:none!important}
+
+/* Admin scoring sticky controls: keep only the scoring tools pinned while entering scores */
+body.admin-authenticated:not(.admin-tools-page) #scoring-page-content .nav{
+  position:relative!important;
+  top:auto!important;
+  z-index:auto!important;
+}
+body.admin-authenticated:not(.admin-tools-page) #tab-score #week-sel{
+  position:sticky!important;
+  top:54px!important;
+  z-index:39!important;
+  margin-bottom:8px!important;
+  box-shadow:0 8px 18px rgba(15,23,42,.20)!important;
+}
+body.admin-authenticated:not(.admin-tools-page) .score-lock-control.show{
+  position:sticky!important;
+  top:6px!important;
+  z-index:40!important;
+  margin-bottom:8px!important;
+  box-shadow:0 8px 20px rgba(15,23,42,.22)!important;
+}
+body.admin-authenticated:not(.admin-tools-page) #slot-sel{
+  position:sticky!important;
+  top:108px!important;
+  z-index:38!important;
+  margin-bottom:10px!important;
+  text-align:center!important;
+  text-align-last:center!important;
+  border-color:#fbbf24!important;
+  box-shadow:0 8px 20px rgba(15,23,42,.22)!important;
+}
+body.admin-authenticated:not(.admin-tools-page) #week-sel,
+body.admin-authenticated:not(.admin-tools-page) #slot-sel{
+  min-height:48px!important;
+  -webkit-tap-highlight-color:transparent;
+}
+@media(max-width:420px){
+  body.admin-authenticated:not(.admin-tools-page) #tab-score #week-sel{top:52px!important}
+  body.admin-authenticated:not(.admin-tools-page) #slot-sel{top:106px!important}
+}
 </style>
 </head>
 <body>
