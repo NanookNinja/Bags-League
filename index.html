@@ -528,6 +528,27 @@ body:not(.playoffs-active) [data-nav="playoffs"]{display:none!important}
   background:linear-gradient(135deg,#14532d,#16a34a)!important;
   color:#fff!important;
 }
+
+/* 4 Baggers banner: show the full worded image without cropping */
+.bagger-hdr{
+  min-height:0!important;
+  height:clamp(138px,37vw,210px)!important;
+  padding:0!important;
+  background-color:#020617!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+}
+
+/* Rain Out banner: show the full scene without cropping */
+.rainout-ribbon{
+  background:#020617!important;
+}
+.rainout-stamp-img{
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#020617!important;
+}
 </style>
 </head>
 <body>
