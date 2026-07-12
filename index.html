@@ -106,6 +106,8 @@ tr:last-child td{border-bottom:none}
 .pill.green{background:#C6EFCE;color:#276221}
 .pill.orange{background:#FCE4D6;color:#843C0C}
 .pill.purple{background:#EDD9F5;color:#5B2070}
+.pill.blue{background:#dbeafe;color:#1e3a8a}
+.pill.red{background:#fee2e2;color:#991b1b}
 /* Week filter */
 .wk-filter{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .wfbtn{padding:6px 11px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:#fff;color:#666;box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -575,6 +577,37 @@ body:not(.admin-authenticated) #team-page-select{
   text-align-last:center!important;
 }
 
+/* Center visible menu tiles after hidden buttons are removed */
+#scoring-page-content .nav{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  justify-content:center!important;
+  align-items:stretch!important;
+  gap:8px!important;
+}
+#scoring-page-content .nav .nvbtn{
+  flex:0 1 116px!important;
+  width:116px!important;
+}
+#week-body td,#season-body td,#week-body th,#season-body th{
+  padding-left:5px!important;
+  padding-right:5px!important;
+}
+#week-body .pill,#season-body .pill{
+  min-width:28px;
+  text-align:center;
+  padding-left:6px!important;
+  padding-right:6px!important;
+}
+@media(max-width:420px){
+  #scoring-page-content .nav .nvbtn{
+    flex-basis:118px!important;
+    width:118px!important;
+  }
+  #tab-season table,#tab-week table{font-size:11px!important}
+  #tab-season th,#tab-season td,#tab-week th,#tab-week td{font-size:10px!important}
+}
+
 /* Rainout cards should feel like normal schedule cards, just storm-themed */
 .team-week-block.rainout-day{
   min-height:170px!important;
@@ -776,7 +809,7 @@ Tim/Rick"></textarea>
         <span class="csub" id="week-sub">Select a week</span>
       </div>
       <table>
-        <thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>Win%</th></tr></thead>
+        <thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>FTW</th><th>FTL</th><th>PTS</th></tr></thead>
         <tbody id="week-body"></tbody>
       </table>
     </div>
@@ -793,7 +826,7 @@ Tim/Rick"></textarea>
         <span class="csub" id="season-sub">Full season</span>
       </div>
       <table>
-        <thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>Played</th><th>Win%</th></tr></thead>
+        <thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>FTW</th><th>FTL</th><th>PTS</th></tr></thead>
         <tbody id="season-body"></tbody>
       </table>
     </div>
@@ -1282,25 +1315,44 @@ document.getElementById('slot-sel').addEventListener('change', function() {
 // ── Standings ─────────────────────────────────────────────────────────────────
 function calcWeekTotals(w) {
   var tot = {};
-  TEAMS.forEach(function(t) { tot[t] = { wins: 0, losses: 0, played: 0 }; });
+  TEAMS.forEach(function(t) { tot[t] = { wins: 0, losses: 0, ftw: 0, ftl: 0, played: 0, points: 0 }; });
   for (var s = 0; s < GPW; s++) {
     getMatchups(w - 1, s).forEach(function(mu, mi) {
       var m = getMatch(w, s, mi);
+      var forfeitingTeam = (leagueSettings.forfeits || []).find(function(item){
+        return Number(item.week) === Number(w) && (item.team === mu.a || item.team === mu.b);
+      });
       [m.g1, m.g2, m.g3].forEach(function(winner) {
-        if (winner === 'a') { tot[mu.a].wins++; tot[mu.b].losses++; tot[mu.a].played++; tot[mu.b].played++; }
-        else if (winner === 'b') { tot[mu.b].wins++; tot[mu.a].losses++; tot[mu.b].played++; tot[mu.a].played++; }
+        if (winner === 'a') {
+          if (forfeitingTeam && forfeitingTeam.team === mu.b) { tot[mu.a].ftw++; tot[mu.b].ftl++; }
+          else { tot[mu.a].wins++; tot[mu.b].losses++; }
+          tot[mu.a].played++; tot[mu.b].played++;
+        }
+        else if (winner === 'b') {
+          if (forfeitingTeam && forfeitingTeam.team === mu.a) { tot[mu.b].ftw++; tot[mu.a].ftl++; }
+          else { tot[mu.b].wins++; tot[mu.a].losses++; }
+          tot[mu.b].played++; tot[mu.a].played++;
+        }
       });
     });
   }
+  TEAMS.forEach(function(t) { tot[t].points = tot[t].wins + tot[t].ftw; });
   return tot;
 }
 
 function calcSeasonTotals(upto) {
   var tot = {};
-  TEAMS.forEach(function(t) { tot[t] = { wins: 0, losses: 0, played: 0 }; });
+  TEAMS.forEach(function(t) { tot[t] = { wins: 0, losses: 0, ftw: 0, ftl: 0, played: 0, points: 0 }; });
   for (var w = 1; w <= (upto || WEEKS); w++) {
     var wt = calcWeekTotals(w);
-    TEAMS.forEach(function(t) { tot[t].wins += wt[t].wins; tot[t].losses += wt[t].losses; tot[t].played += wt[t].played; });
+    TEAMS.forEach(function(t) {
+      tot[t].wins += wt[t].wins;
+      tot[t].losses += wt[t].losses;
+      tot[t].ftw += wt[t].ftw;
+      tot[t].ftl += wt[t].ftl;
+      tot[t].played += wt[t].played;
+      tot[t].points += wt[t].points;
+    });
   }
   return tot;
 }
@@ -1318,21 +1370,23 @@ function renderWeekStandings() {
     if (weekCard) weekCard.classList.add('standings-waiting');
     document.getElementById('week-title').textContent = 'SELECT A WEEK FIRST';
     document.getElementById('week-sub').textContent = 'Choose a week to show standings';
-    document.getElementById('week-body').innerHTML = '<tr><td colspan="5" class="select-week-first-msg">SELECT A WEEK FIRST</td></tr>';
+    document.getElementById('week-body').innerHTML = '<tr><td colspan="7" class="select-week-first-msg">SELECT A WEEK FIRST</td></tr>';
     return;
   }
   if (weekCard) weekCard.classList.remove('standings-waiting');
   document.getElementById('week-title').textContent = 'Week ' + curWeek + ' Standings' + (getWeekDate(curWeek) ? ' — ' + formatLeagueDate(getWeekDate(curWeek),false) : '');
   document.getElementById('week-sub').textContent = 'Live';
   var tot = calcWeekTotals(curWeek);
-  var sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
+  var sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
   document.getElementById('week-body').innerHTML = sorted.map(function(t, i) {
-    var d = tot[t], pct = d.played ? Math.round(d.wins / d.played * 100) + '%' : '--';
+    var d = tot[t];
     return '<tr><td>' + rankCell(i) + '</td>'
       + '<td><span style="font-size:10px;color:#999">T' + tnum(t) + '</span> <button class="team-page-link" onclick="openTeamPage(decodeURIComponent(\'' + encodeURIComponent(t) + '\'))">' + t + '</button></td>'
       + '<td><span class="pill green">' + d.wins + '</span></td>'
       + '<td><span class="pill orange">' + d.losses + '</span></td>'
-      + '<td style="color:#999">' + pct + '</td></tr>';
+      + '<td><span class="pill blue">' + d.ftw + '</span></td>'
+      + '<td><span class="pill red">' + d.ftl + '</span></td>'
+      + '<td><span class="pill purple">' + d.points + '</span></td></tr>';
   }).join('');
 }
 
@@ -1389,17 +1443,18 @@ function renderBaggers() {
 
 function renderSeasonStandings() {
   var tot = calcSeasonTotals(seasonFilter);
-  var sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
+  var sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
   document.getElementById('season-sub').textContent = seasonFilter ? 'Through Wk ' + seasonFilter : 'Full season';
   document.getElementById('season-body').innerHTML = sorted.map(function(t, i) {
-    var d = tot[t], pct = d.played ? Math.round(d.wins / d.played * 100) + '%' : '--';
+    var d = tot[t];
     var tier = i < 10 ? '<span class="tier1">T1</span>' : '<span class="tier2">T2</span>';
     return '<tr><td>' + rankCell(i) + '</td>'
       + '<td><span style="font-size:10px;color:#999">T' + tnum(t) + '</span> <button class="team-page-link" onclick="openTeamPage(decodeURIComponent(\'' + encodeURIComponent(t) + '\'))">' + t + '</button> ' + tier + '</td>'
       + '<td><span class="pill green">' + d.wins + '</span></td>'
       + '<td><span class="pill orange">' + d.losses + '</span></td>'
-      + '<td>' + d.played + '</td>'
-      + '<td style="color:#999">' + pct + '</td></tr>';
+      + '<td><span class="pill blue">' + d.ftw + '</span></td>'
+      + '<td><span class="pill red">' + d.ftl + '</span></td>'
+      + '<td><span class="pill purple">' + d.points + '</span></td></tr>';
   }).join('');
 }
 
@@ -1823,7 +1878,7 @@ function buildWeekText(w) {
     });
   }
   txt += '\n' + '─'.repeat(26) + '\nSTANDINGS AFTER WEEK ' + w + '\n';
-  var tot = calcSeasonTotals(w), sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
+  var tot = calcSeasonTotals(w), sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
   sorted.forEach(function(t, i) {
     var d = tot[t], pct = d.played ? Math.round(d.wins / d.played * 100) + '%' : '--';
     txt += (i + 1) + '. T' + tnum(t) + ' ' + t + ' — ' + d.wins + '-' + d.losses + ' (' + pct + ')\n';
@@ -1833,7 +1888,7 @@ function buildWeekText(w) {
 }
 
 function buildSeasonText() {
-  var tot = calcSeasonTotals(null), sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
+  var tot = calcSeasonTotals(null), sorted = TEAMS.slice().sort(function(a, b) { return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
   var txt = 'BAGS LEAGUE 2026 — SEASON STANDINGS\n' + TODAY + '\n' + '─'.repeat(26) + '\n';
   sorted.forEach(function(t, i) {
     var d = tot[t], pct = d.played ? Math.round(d.wins / d.played * 100) + '%' : '--';
@@ -3069,7 +3124,7 @@ function renderPlayoffs(){
 function generatePlayoffsFromStandings(){
   getPlayoffTitlesFromAdmin();
   var tot = calcSeasonTotals(null);
-  var sorted = TEAMS.slice().sort(function(a,b){ return (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
+  var sorted = TEAMS.slice().sort(function(a,b){ return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
   if (sorted.length < 20) { alert('This playoff setup needs 20 teams.'); return; }
   playoffState.generated = true;
   playoffState.locked = true;
