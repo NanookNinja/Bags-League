@@ -475,6 +475,37 @@ body.admin-authenticated:not(.admin-tools-page) #slot-sel{
   body.admin-authenticated:not(.admin-tools-page) #tab-score #week-sel{top:52px!important}
   body.admin-authenticated:not(.admin-tools-page) #slot-sel{top:106px!important}
 }
+
+/* Cleaner opening screen: week selector first, menu appears after a week is chosen */
+.mode-status{display:none!important}
+.cloud-status{
+  width:max-content!important;
+  max-width:145px!important;
+  margin:-2px 0 8px auto!important;
+  padding:4px 8px!important;
+  border-radius:999px!important;
+  font-size:9px!important;
+  line-height:1!important;
+  letter-spacing:.04em!important;
+  box-shadow:0 2px 7px rgba(15,23,42,.12)!important;
+  pointer-events:none!important;
+  cursor:default!important;
+}
+.cloud-status:before{width:6px!important;height:6px!important}
+body:not(.week-selected) #scoring-page-content .nav{display:none!important}
+body:not(.week-selected) #tab-score{display:block!important}
+body:not(.week-selected) #tab-score #week-sel{
+  margin-top:6px!important;
+  margin-bottom:12px!important;
+}
+body:not(.week-selected) #tab-week,
+body:not(.week-selected) #tab-season,
+body:not(.week-selected) #tab-teams,
+body:not(.week-selected) #tab-baggers,
+body:not(.week-selected) #tab-playoffs,
+body:not(.week-selected) #tab-share{
+  display:none!important;
+}
 </style>
 </head>
 <body>
@@ -900,6 +931,18 @@ window.setAdminMode = function(enabled, email){
   try { renderPlayoffs(); } catch(e) {}
 };
 window.setAdminMode(false, '');
+function updateWeekSelectedView() {
+  var selected = !!parseInt((document.getElementById('week-sel') || {}).value || '');
+  document.body.classList.toggle('week-selected', selected);
+  if (!selected) {
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    var scoreTab = document.getElementById('tab-score');
+    if (scoreTab) scoreTab.classList.add('active');
+    document.querySelectorAll('.nvbtn').forEach(function(b) { b.classList.remove('active'); });
+    var scoreButton = document.querySelector('[data-nav="score"]');
+    if (scoreButton) scoreButton.classList.add('active');
+  }
+}
 document.querySelectorAll('[data-admin-page]').forEach(function(button) {
   button.addEventListener('click', function() { setAdminPage(this.getAttribute('data-admin-page'), true); });
 });
@@ -1089,6 +1132,7 @@ document.getElementById('match-list').addEventListener('click', function(e) {
 // ── Week select & slot select ─────────────────────────────────────────────────
 document.getElementById('week-sel').addEventListener('change', function() {
   curWeek = parseInt(this.value) || null;
+  updateWeekSelectedView();
   updateWeekStartControl();
   updateForfeitControl();
   renderScoreSubEntry();
@@ -2297,6 +2341,7 @@ function rebuildWeekControls() {
   if (baggerWeek && baggerWeek <= WEEKS && bwsel) bwsel.value = baggerWeek;
   updateForfeitControl();
   renderScoreSubEntry();
+  try { updateWeekSelectedView(); } catch(e) {}
 }
 function renderHolidayAdmin(){
   var list = document.getElementById('holiday-admin-list');
@@ -2481,6 +2526,7 @@ function viewSeason(key) {
   renderEverythingSafe();
 }
 function renderEverythingSafe() {
+  try { updateWeekSelectedView(); } catch(e) {}
   try { applyBackgroundTheme(); } catch(e) {}
   try { renderMatchups(); } catch(e) {}
   try { renderWeekStandings(); } catch(e) {}
@@ -2943,6 +2989,7 @@ function loadTestPlayoffDemo(){
 // ── Init ──────────────────────────────────────────────────────────────────────
 (function init() {
   rebuildWeekControls();
+  updateWeekSelectedView();
   populateTeamPageSelect();
   updateLeagueHeader();
   fillAdminSeasonForm();
@@ -2989,6 +3036,7 @@ let lastLocalCloudSaveAt = 0;
 const localSave = window.save;
 
 function renderEverything() {
+  try { updateWeekSelectedView(); } catch(e) {}
   try { renderMatchups(); } catch(e) {}
   try { renderWeekStandings(); } catch(e) {}
   try { renderSeasonStandings(); } catch(e) {}
