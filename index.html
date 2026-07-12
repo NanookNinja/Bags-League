@@ -647,12 +647,13 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
   font-weight:1000;
   color:#1e3a8a;
   text-transform:uppercase;
+  white-space:nowrap;
 }
 .forfeit-makeup-week strong{
-  display:block;
-  font-size:16px;
+  display:inline;
+  font-size:10px;
   line-height:1;
-  margin-bottom:3px;
+  margin-left:2px;
 }
 .forfeit-makeup-week small{
   display:block;
@@ -683,6 +684,22 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
 }
 .team-stat strong .record-asterisk{
   color:#dc2626;
+  font-size:.58em;
+  line-height:0;
+  vertical-align:super;
+  margin-left:1px;
+}
+.team-result.win.forfeit{
+  background:#dbeafe!important;
+  color:#1e3a8a!important;
+}
+.team-result.loss{
+  background:#fee2e2!important;
+  color:#991b1b!important;
+}
+.team-result.loss.forfeit{
+  background:#FCE4D6!important;
+  color:#843C0C!important;
 }
 
 /* Rainout cards should feel like normal schedule cards, just storm-themed */
