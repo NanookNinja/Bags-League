@@ -599,6 +599,31 @@ body:not(.admin-authenticated) #team-page-select{
   padding-left:6px!important;
   padding-right:6px!important;
 }
+#week-body td:nth-child(4) .pill,
+#season-body td:nth-child(4) .pill{
+  background:#fee2e2!important;
+  color:#991b1b!important;
+}
+#week-body td:nth-child(6) .pill,
+#season-body td:nth-child(6) .pill{
+  background:#FCE4D6!important;
+  color:#843C0C!important;
+}
+.standings-legend{
+  margin:8px 10px 6px;
+  padding:8px 10px;
+  border:1px solid #bfdbfe;
+  border-radius:12px;
+  background:linear-gradient(135deg,#eff6ff,#f8fbff);
+  color:#1e3a8a;
+  font-size:10px;
+  font-weight:1000;
+  line-height:1.45;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.035em;
+}
+.standings-legend span{white-space:nowrap}
 @media(max-width:420px){
   #scoring-page-content .nav .nvbtn{
     flex-basis:118px!important;
@@ -918,6 +943,10 @@ Tim/Rick"></textarea>
       <div class="card-hdr navy">
         <span>Week / Season Standings</span>
         <span class="csub" id="season-sub">Full season</span>
+      </div>
+      <div class="standings-legend">
+        <span>W = Wins</span> • <span>L = Losses</span> • <span>FTW = Forfeit Wins</span> • <span>FTL = Forfeit Losses</span> • <span>PTS = Points</span>
+        <div>W + FTW = PTS</div>
       </div>
       <table>
         <thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>FTW</th><th>FTL</th><th>PTS</th></tr></thead>
