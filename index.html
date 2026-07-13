@@ -1477,9 +1477,9 @@ function renderWeekStandings() {
     return '<tr><td>' + rankCell(i) + '</td>'
       + '<td><span style="font-size:10px;color:#999">T' + tnum(t) + '</span> <button class="team-page-link" onclick="openTeamPage(decodeURIComponent(\'' + encodeURIComponent(t) + '\'))">' + t + '</button></td>'
       + '<td><span class="pill green">' + d.wins + '</span></td>'
-      + '<td><span class="pill orange">' + d.losses + '</span></td>'
+      + '<td><span class="pill red">' + d.losses + '</span></td>'
       + '<td><span class="pill blue">' + d.ftw + '</span></td>'
-      + '<td><span class="pill red">' + d.ftl + '</span></td>'
+      + '<td><span class="pill orange">' + d.ftl + '</span></td>'
       + '<td><span class="pill purple">' + d.points + '</span></td></tr>';
   }).join('');
 }
@@ -1554,9 +1554,9 @@ function renderSeasonStandings() {
     return '<tr><td>' + rankCell(i) + '</td>'
       + '<td><span style="font-size:10px;color:#999">T' + tnum(t) + '</span> <button class="team-page-link" onclick="openTeamPage(decodeURIComponent(\'' + encodeURIComponent(t) + '\'))">' + t + '</button> ' + tier + '</td>'
       + '<td><span class="pill green">' + d.wins + '</span></td>'
-      + '<td><span class="pill orange">' + d.losses + '</span></td>'
+      + '<td><span class="pill red">' + d.losses + '</span></td>'
       + '<td><span class="pill blue">' + d.ftw + '</span></td>'
-      + '<td><span class="pill red">' + d.ftl + '</span></td>'
+      + '<td><span class="pill orange">' + d.ftl + '</span></td>'
       + '<td><span class="pill purple">' + d.points + '</span></td></tr>';
   }).join('');
 }
