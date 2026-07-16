@@ -258,6 +258,7 @@ th{padding:7px 9px;font-size:10px}td{padding:7px 9px;font-size:12px}.pill{border
 .payment-owed-box{border:2px solid #fecaca;border-radius:14px;background:linear-gradient(135deg,#fff1f2,#fff);padding:10px;box-shadow:0 4px 12px rgba(220,38,38,.10)}.payment-owed-box.paid-clear{border-color:#86efac;background:linear-gradient(135deg,#dcfce7,#fff)}.payment-owed-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;color:#991b1b;font-size:12px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em}.payment-owed-box.paid-clear .payment-owed-title{color:#166534}.payment-owed-count{border-radius:999px;background:#fee2e2;color:#991b1b;padding:4px 8px;font-size:10px}.payment-owed-box.paid-clear .payment-owed-count{background:#bbf7d0;color:#166534}.payment-owed-list{display:grid;gap:6px}.payment-owed-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-radius:11px;background:#fff;border:1px solid #fecaca;padding:8px 9px}.payment-owed-item strong{font-size:12px;color:#172033}.payment-owed-item small{display:block;margin-top:2px;color:#64748b;font-size:9px;font-weight:900;text-transform:uppercase}.payment-owed-amount{font-size:13px;font-weight:1000;color:#dc2626}.payment-all-paid{border-radius:12px;background:#f0fdf4;border:1px solid #86efac;padding:10px;text-align:center;color:#166534;font-size:12px;font-weight:1000;text-transform:uppercase;letter-spacing:.05em}
 .payment-row{grid-template-columns:1fr 78px 1.2fr}.payment-method-buttons{display:flex;gap:5px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.payment-method-btn{border:0;border-radius:999px;padding:8px 9px;font-size:10px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;box-shadow:0 2px 7px rgba(15,23,42,.12);white-space:nowrap}.payment-method-btn.cash{background:#dcfce7;color:#166534;border:1.5px solid #86efac}.payment-method-btn.venmo{background:#dbeafe;color:#1d4ed8;border:1.5px solid #93c5fd}.payment-method-btn.zelle{background:#f3e8ff;color:#6d28d9;border:1.5px solid #d8b4fe}.payment-method-btn.selected{transform:scale(1.05);box-shadow:0 0 0 3px rgba(251,191,36,.42),0 4px 10px rgba(15,23,42,.16)}.payment-method-buttons.has-method .payment-method-btn:not(.selected){display:none}.payment-owed-method{display:inline-block;margin-left:5px;border-radius:999px;background:#eff6ff;color:#1d4ed8;padding:2px 6px;font-size:8px;font-weight:1000}
 .payment-lock-control{border:1.5px solid #bfdbfe;border-radius:14px;background:#eff6ff;padding:9px;text-align:center}.payment-lock-control.unlocked{border-color:#fbbf24;background:#fffbeb}.payment-lock-control button{width:100%;border:0;border-radius:11px;padding:11px 12px;background:#1F3864;color:#fff;font-size:13px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.05em}.payment-lock-control.unlocked button{background:#b45309}.payment-lock-note{margin-top:6px;font-size:10px;font-weight:800;color:#64748b}.payment-tracker.payments-locked .payment-row input,.payment-tracker.payments-locked .payment-note{opacity:.55;pointer-events:none}.payment-tracker.payments-locked .payment-method-btn{opacity:.48;pointer-events:none;filter:grayscale(.25)}.payment-tracker.payments-locked .payment-team-card{position:relative}.payment-tracker.payments-locked .payment-team-card:after{content:"PAYMENTS LOCKED";position:absolute;right:9px;bottom:9px;border-radius:999px;background:rgba(15,23,42,.82);color:#fff;padding:4px 8px;font-size:8px;font-weight:1000;letter-spacing:.06em;pointer-events:none}
+.payment-summary-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}.payment-summary-card{padding:14px 8px!important;border-width:2px!important;box-shadow:0 6px 16px rgba(15,23,42,.08)!important}.payment-summary-card strong{font-size:28px!important;line-height:1!important}.payment-summary-card span{font-size:10px!important}.payment-summary-card.owed strong{color:#dc2626!important}.payment-method-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.payment-method-total{border-radius:14px;padding:10px 8px;text-align:center;border:2px solid #dbe3ef;background:#fff;box-shadow:0 4px 12px rgba(15,23,42,.06)}.payment-method-total strong{display:block;font-size:20px;font-weight:1000}.payment-method-total span{display:block;margin-top:2px;font-size:9px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em;color:#64748b}.payment-method-total.cash{border-color:#86efac;background:#f0fdf4}.payment-method-total.cash strong{color:#166534}.payment-method-total.venmo{border-color:#93c5fd;background:#eff6ff}.payment-method-total.venmo strong{color:#1d4ed8}.payment-method-total.zelle{border-color:#d8b4fe;background:#f5f3ff}.payment-method-total.zelle strong{color:#6d28d9}.payment-owed-box summary{list-style:none;cursor:pointer}.payment-owed-box summary::-webkit-details-marker{display:none}.payment-owed-item{cursor:pointer;transition:transform .12s,box-shadow .12s}.payment-owed-item:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(220,38,38,.12)}.payment-team-card.jump-highlight{animation:paymentJump 1.25s ease-in-out 1}@keyframes paymentJump{0%,100%{box-shadow:0 2px 8px rgba(15,23,42,.06)}35%{box-shadow:0 0 0 5px rgba(251,191,36,.6),0 12px 28px rgba(245,158,11,.32)}}
 @media(max-width:420px){.app{padding:8px}.hdr{padding:14px 12px}.hdr h1{font-size:18px}.admin-grid,.admin-row{grid-template-columns:1fr}.nav{gap:3px}.nvbtn{font-size:10px;padding:9px 2px}.team-side .tname{font-size:10.5px}.wbtn{font-size:9px}}
 
 
@@ -838,13 +839,18 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
         </div>
         <div class="payment-summary-grid">
           <div class="payment-summary-card"><strong id="payment-expected">$0</strong><span>Expected Pot</span></div>
-          <div class="payment-summary-card"><strong id="payment-collected">$0</strong><span>Collected</span></div>
-          <div class="payment-summary-card"><strong id="payment-owed">$0</strong><span>Still Owed</span></div>
+          <div class="payment-summary-card"><strong id="payment-collected">$0</strong><span>Current Money</span></div>
+          <div class="payment-summary-card owed"><strong id="payment-owed">$0</strong><span>Still Needed</span></div>
         </div>
-        <div class="payment-owed-box" id="payment-owed-box">
-          <div class="payment-owed-title"><span>Still Owes Quick List</span><span class="payment-owed-count" id="payment-owed-count">0</span></div>
+        <div class="payment-method-totals">
+          <div class="payment-method-total cash"><strong id="payment-cash-total">$0</strong><span>Cash</span></div>
+          <div class="payment-method-total venmo"><strong id="payment-venmo-total">$0</strong><span>Venmo</span></div>
+          <div class="payment-method-total zelle"><strong id="payment-zelle-total">$0</strong><span>Zelle</span></div>
+        </div>
+        <details class="payment-owed-box" id="payment-owed-box" open>
+          <summary class="payment-owed-title"><span>Still Owes Quick List</span><span class="payment-owed-count" id="payment-owed-count">0</span></summary>
           <div class="payment-owed-list" id="payment-owed-list"></div>
-        </div>
+        </details>
         <div class="payment-team-list" id="payment-team-list"></div>
       </div>
     </details>
@@ -2944,9 +2950,14 @@ function paymentStatusText(totalPaid){
   return 'Owes';
 }
 function paymentTotals(){
-  var teams = leagueSettings.teams || TEAMS, expected = teams.length * 100, collected = 0;
-  teams.forEach(function(team){ var rec = getTeamPayment(team); collected += rec.p1 + rec.p2; });
-  return {expected:expected,collected:collected,owed:Math.max(0,expected-collected)};
+  var teams = leagueSettings.teams || TEAMS, expected = teams.length * 100, collected = 0, methods = {cash:0,venmo:0,zelle:0};
+  teams.forEach(function(team){
+    var rec = getTeamPayment(team);
+    collected += rec.p1 + rec.p2;
+    if (rec.m1 && methods.hasOwnProperty(rec.m1)) methods[rec.m1] += rec.p1;
+    if (rec.m2 && methods.hasOwnProperty(rec.m2)) methods[rec.m2] += rec.p2;
+  });
+  return {expected:expected,collected:collected,owed:Math.max(0,expected-collected),methods:methods};
 }
 function renderPaymentOwedQuickList(teams){
   var box = document.getElementById('payment-owed-box'), list = document.getElementById('payment-owed-list'), countEl = document.getElementById('payment-owed-count');
@@ -2954,14 +2965,14 @@ function renderPaymentOwedQuickList(teams){
   var owedItems = [];
   (teams || leagueSettings.teams || TEAMS).forEach(function(team){
     var players = teamPlayers(team), rec = getTeamPayment(team);
-    if (rec.p1 < 50) owedItems.push({team:team,player:players[0],owes:50-rec.p1,method:rec.m1});
-    if (rec.p2 < 50) owedItems.push({team:team,player:players[1],owes:50-rec.p2,method:rec.m2});
+    if (rec.p1 < 50) owedItems.push({team:team,player:players[0],owes:50-rec.p1,method:rec.m1,playerIndex:1});
+    if (rec.p2 < 50) owedItems.push({team:team,player:players[1],owes:50-rec.p2,method:rec.m2,playerIndex:2});
   });
   box.classList.toggle('paid-clear', owedItems.length === 0);
   if (countEl) countEl.textContent = owedItems.length ? owedItems.length + ' owing' : 'All paid';
   list.innerHTML = owedItems.length ? owedItems.map(function(item){
     var method = paymentMethodLabel(item.method);
-    return '<div class="payment-owed-item"><div><strong>' + escapeHtml(item.player) + (method ? '<span class="payment-owed-method">' + method + '</span>' : '') + '</strong><small>Team ' + tnum(item.team) + ' - ' + escapeHtml(item.team) + '</small></div><div class="payment-owed-amount">' + money(item.owes) + '</div></div>';
+    return '<div class="payment-owed-item" data-jump-team="' + escapeHtml(item.team) + '" data-jump-player="' + item.playerIndex + '"><div><strong>' + escapeHtml(item.player) + (method ? '<span class="payment-owed-method">' + method + '</span>' : '') + '</strong><small>Team ' + tnum(item.team) + ' - ' + escapeHtml(item.team) + '</small></div><div class="payment-owed-amount">' + money(item.owes) + '</div></div>';
   }).join('') : '<div class="payment-all-paid">Everyone is paid up</div>';
 }
 function renderPaymentTracker(){
@@ -2981,9 +2992,13 @@ function renderPaymentTracker(){
   });
   list.innerHTML = html;
   var expectedEl = document.getElementById('payment-expected'), collectedEl = document.getElementById('payment-collected'), owedEl = document.getElementById('payment-owed');
+  var cashEl = document.getElementById('payment-cash-total'), venmoEl = document.getElementById('payment-venmo-total'), zelleEl = document.getElementById('payment-zelle-total');
   if (expectedEl) expectedEl.textContent = money(totals.expected);
   if (collectedEl) collectedEl.textContent = money(totals.collected);
   if (owedEl) owedEl.textContent = money(totals.owed);
+  if (cashEl) cashEl.textContent = money(totals.methods.cash);
+  if (venmoEl) venmoEl.textContent = money(totals.methods.venmo);
+  if (zelleEl) zelleEl.textContent = money(totals.methods.zelle);
   renderPaymentOwedQuickList(teams);
   renderPayoutTracker();
   setPaymentEditUnlocked(PAYMENT_EDIT_UNLOCKED);
@@ -3020,6 +3035,27 @@ function togglePaymentMethod(button){
     group.classList.add('has-method');
   }
   updatePaymentRecord(card);
+}
+function jumpToPaymentTeam(item){
+  if (!item) return;
+  var team = item.getAttribute('data-jump-team');
+  var playerIndex = item.getAttribute('data-jump-player') || '1';
+  var target = null;
+  document.querySelectorAll('.payment-team-card').forEach(function(card){
+    if (card.getAttribute('data-payment-team') === team) target = card;
+  });
+  if (!target) return;
+  target.classList.remove('jump-highlight');
+  target.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(function(){
+    target.classList.add('jump-highlight');
+    var field = target.querySelector('[data-payment-field="p' + playerIndex + '"]');
+    if (field && PAYMENT_EDIT_UNLOCKED) field.focus();
+    if (!PAYMENT_EDIT_UNLOCKED) {
+      var lockBtn = document.getElementById('payment-lock-btn');
+      if (lockBtn) lockBtn.focus();
+    }
+  }, 350);
 }
 function defaultPayouts(){
   return {
@@ -3927,6 +3963,11 @@ startCloudSync();
   if (paymentList) paymentList.addEventListener('click',function(event){
     var methodButton = event.target.closest('.payment-method-btn');
     if (methodButton) togglePaymentMethod(methodButton);
+  });
+  var owedQuickList = document.getElementById('payment-owed-list');
+  if (owedQuickList) owedQuickList.addEventListener('click',function(event){
+    var item = event.target.closest('.payment-owed-item');
+    if (item) jumpToPaymentTeam(item);
   });
   var payoutList = document.getElementById('payout-list');
   if (payoutList) payoutList.addEventListener('change',function(event){
