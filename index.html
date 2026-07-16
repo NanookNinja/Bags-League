@@ -223,6 +223,7 @@ body{background:linear-gradient(180deg,#eaf2fb 0%,#f7f9fc 100%);color:var(--ink)
 .app{max-width:560px;padding:10px 10px 26px}
 .hdr{background:linear-gradient(135deg,#14284b,#285a95);border-radius:18px;padding:16px 14px;margin-bottom:10px;box-shadow:0 8px 22px rgba(31,56,100,.22)}
 .hdr h1{font-size:20px;letter-spacing:.2px}.hdr .sub{font-size:12px;color:#d7e9ff}
+.hdr h1{white-space:pre-line;line-height:1.15}
 .save-bar{border:none;border-radius:999px;padding:7px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(15,23,42,.08)}
 .nvbtn,.cloud-status,.mode-status,.save-bar,.card-hdr span,.card-hdr .csub,select:not(#team-page-select),.wfbtn,.qsbtn,.share-btn,.add-btn,.import-btn,.admin-action-btn,.mini-btn,.week-start-btn,.week-rainout-btn,.week-undo-rainout-btn,.week-reset-start-btn,.week-makeup-btn,.forfeit-btn,.forfeit-undo-btn,.score-lock-control button,.admin-login button,.admin-session button,.admin-page-switch button,.team-collapse summary,.form-lbl,.bagger-hdr h2,.bagger-hdr p,.share-hdr h2,.share-hdr p,.share-box h3,.team-result,.week-date-status,.holiday-remove-btn,.championship-box h3,.playoff-bracket-hdr,.championship-team-choice,.fixed-podium-title,.podium-place .podium-label{text-transform:uppercase;letter-spacing:.04em}
 .nav{position:sticky;top:0;z-index:5;background:rgba(238,244,251,.92);backdrop-filter:blur(10px);padding:6px 0;margin-bottom:10px}
@@ -250,7 +251,7 @@ th{padding:7px 9px;font-size:10px}td{padding:7px 9px;font-size:12px}.pill{border
 .media-manager{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 12px}.media-card{border:1.5px solid #bfdbfe;border-radius:14px;background:linear-gradient(180deg,#fff,#eef6ff);padding:10px;box-shadow:0 4px 12px rgba(15,23,42,.08)}.media-card strong{display:block;color:#1e3a8a;font-size:11px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.media-preview{height:74px;border-radius:11px;border:1px solid #dbeafe;background:#fff center/cover no-repeat;margin-bottom:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)}.media-card input[type=file]{width:100%;font-size:10px;margin-bottom:7px}.media-actions{display:grid;grid-template-columns:1fr 76px;gap:6px}.media-actions button{border:0;border-radius:10px;padding:8px 6px;font-size:10px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}.media-upload-btn{background:#2563eb;color:#fff}.media-reset-btn{background:#fee2e2;color:#991b1b}.media-status{font-size:10px;color:#64748b;min-height:13px;margin-top:5px;font-weight:800}
 .holiday-admin-grid{display:grid;grid-template-columns:130px 1fr;gap:7px}.holiday-admin-grid input{width:100%;border:1.5px solid #dbe3ef;border-radius:10px;padding:10px;margin-bottom:7px;font-size:13px}.holiday-admin-list{display:grid;gap:6px;margin-bottom:8px}.holiday-admin-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #fbbf24;border-radius:10px;background:#fffbeb;color:#92400e;font-size:11px;font-weight:800}.holiday-remove-btn{border:0;border-radius:8px;padding:6px 8px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;cursor:pointer}
 .background-preview{height:92px;border:2px solid #bfdbfe;border-radius:14px;background:#eef4fb url("bags-logo.png") center/contain no-repeat;margin:6px 0 8px;box-shadow:inset 0 0 0 999px rgba(255,255,255,.25)}.background-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.league-name-box{background:#eef6ff;border:1px solid #bfdbfe;border-radius:14px;padding:10px;margin:10px 0}.league-name-box label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1e40af;margin-bottom:6px}.mini-btn{width:100%;border:none;border-radius:11px;background:#1f3864;color:#fff;font-weight:800;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.league-name-box{background:#eef6ff;border:1px solid #bfdbfe;border-radius:14px;padding:10px;margin:10px 0}.league-name-box label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#1e40af;margin-bottom:6px}.league-name-box textarea{width:100%;min-height:82px;resize:vertical;font-size:15px;line-height:1.35;padding:10px 12px;border-radius:10px;border:1.5px solid #bfdbfe;background:#fff;color:#172033;margin-bottom:8px;outline:none;font-family:inherit;font-weight:800}.league-name-box textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.14)}.mini-btn{width:100%;border:none;border-radius:11px;background:#1f3864;color:#fff;font-weight:800;padding:10px 12px;margin-bottom:8px;cursor:pointer}
 @media(max-width:420px){.app{padding:8px}.hdr{padding:14px 12px}.hdr h1{font-size:18px}.admin-grid,.admin-row{grid-template-columns:1fr}.nav{gap:3px}.nvbtn{font-size:10px;padding:9px 2px}.team-side .tname{font-size:10.5px}.wbtn{font-size:9px}}
 
 
@@ -792,7 +793,7 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
 
     <div class="league-name-box">
       <label for="admin-league-name">League Name</label>
-      <input id="admin-league-name" type="text" placeholder="Bags League Summer 2026">
+      <textarea id="admin-league-name" placeholder="Bags League Summer 2026&#10;Type announcement line here"></textarea>
       <button class="mini-btn" id="save-league-name-btn">Save League Name</button>
     </div>
 
@@ -2411,7 +2412,7 @@ function applyWeek3MakeupRotation(){
 function updateLeagueHeader() {
   var title = document.getElementById('league-title');
   var leagueName = (leagueSettings && leagueSettings.leagueName) ? leagueSettings.leagueName : 'Bags League';
-  if (title) title.innerHTML = leagueName;
+  if (title) title.textContent = leagueName;
   document.title = leagueName;
   var sub = document.getElementById('league-sub');
   if (sub) {
