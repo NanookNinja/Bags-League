@@ -2940,7 +2940,7 @@ function paymentMethodLabel(value){
 function getTeamPayment(team){
   leagueSettings.payments = leagueSettings.payments || {};
   var rec = leagueSettings.payments[team] || {};
-  return {p1:paidAmount(rec.p1),p2:paidAmount(rec.p2),m1:cleanPaymentMethod(rec.m1),m2:cleanPaymentMethod(rec.m2),note:rec.note || ''};
+  return {p1:paidAmount(rec.p1),p2:paidAmount(rec.p2),m1:cleanPaymentMethod(rec.m1 || rec.method1 || rec.p1Method),m2:cleanPaymentMethod(rec.m2 || rec.method2 || rec.p2Method),note:rec.note || ''};
 }
 function paymentStatusClass(totalPaid){
   if (totalPaid >= 100) return 'paid';
@@ -3031,12 +3031,30 @@ function togglePaymentMethod(button){
   var group = button.closest('.payment-method-buttons');
   var card = button.closest('.payment-team-card');
   if (!group || !card) return;
+  var team = card.getAttribute('data-payment-team');
+  var field = group.getAttribute('data-payment-field');
   var wasSelected = button.classList.contains('selected');
   group.querySelectorAll('.payment-method-btn').forEach(function(btn){ btn.classList.remove('selected'); });
   group.classList.remove('has-method');
+  var selectedMethod = '';
   if (!wasSelected) {
     button.classList.add('selected');
     group.classList.add('has-method');
+    selectedMethod = cleanPaymentMethod(button.getAttribute('data-payment-method'));
+  }
+  if (team && (field === 'm1' || field === 'm2')) {
+    leagueSettings.payments = leagueSettings.payments || {};
+    var current = getTeamPayment(team);
+    leagueSettings.payments[team] = {
+      p1: paidAmount((card.querySelector('[data-payment-field="p1"]') || {}).value),
+      p2: paidAmount((card.querySelector('[data-payment-field="p2"]') || {}).value),
+      m1: field === 'm1' ? selectedMethod : current.m1,
+      m2: field === 'm2' ? selectedMethod : current.m2,
+      note: ((card.querySelector('[data-payment-field="note"]') || {}).value || '').trim()
+    };
+    renderPaymentTracker();
+    save();
+    return;
   }
   updatePaymentRecord(card);
 }
