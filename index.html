@@ -155,10 +155,10 @@ input[type=text]:focus{border-color:#7B2D8B;background:#fff}
 .team-schedule{display:grid;gap:7px}.team-schedule-game{background:#fff;border:1px solid #dbe3ef;border-radius:12px;padding:9px 10px;display:grid;grid-template-columns:65px 1fr auto;align-items:center;gap:8px}.team-schedule-when{font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase}.team-schedule-opponent{font-size:12px;font-weight:800;color:#172033}.team-schedule-opponent small{display:block;color:#94a3b8;font-size:9px;margin-top:2px}.team-result{border-radius:999px;padding:4px 7px;font-size:10px;font-weight:900;background:#e2e8f0;color:#475569;white-space:nowrap}.team-result.win{background:#dcfce7;color:#166534}.team-result.loss{background:#fee2e2;color:#991b1b}.team-result.progress{background:#fef3c7;color:#854d0e}
 .team-week-block{display:grid;grid-template-columns:62px 1fr;border:2px solid #bfdbfe;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 3px 9px rgba(15,23,42,.07)}.team-week-block:nth-child(even){border-color:#c4b5fd}.team-week-label{display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1F3864,#2E75B6);color:#fff;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}.team-week-label strong{font-size:24px;line-height:1;margin-top:3px}.team-week-block:nth-child(even) .team-week-label{background:linear-gradient(180deg,#5b21b6,#7c3aed)}.team-week-rounds{display:grid}.team-week-round{display:grid;grid-template-columns:54px 1fr auto;align-items:center;gap:8px;padding:9px;border-bottom:1px solid #e2e8f0;min-height:57px}.team-week-round:last-child{border-bottom:0}.team-round-label{font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase}.team-round-opponent{font-size:12px;font-weight:900;color:#172033}.team-round-opponent small{display:block;font-size:9px;color:#94a3b8;font-weight:700;margin-top:2px}
 .team-week-date{font-size:11px;margin-top:6px;opacity:.95;text-transform:none;letter-spacing:0;text-align:center;line-height:1.25;font-weight:1000}.calendar-notices{display:grid;gap:6px;margin-bottom:10px}.calendar-notice{display:flex;align-items:center;justify-content:space-between;gap:8px;border-radius:11px;padding:8px 10px;background:#fff7ed;border:1px solid #fdba74;color:#9a3412;font-size:10px;font-weight:800}.calendar-notice.off{background:#eff6ff;border-color:#93c5fd;color:#1e40af}.calendar-notice strong{font-size:11px}.calendar-notice span{text-align:right}
-.team-week-block{position:relative}.team-week-block.rainout-day{min-height:285px;border-color:#60a5fa;background:#dbeafe}.rainout-day .team-week-label,.rainout-day .team-week-rounds{opacity:.18;filter:grayscale(1)}.rainout-ribbon{position:absolute;z-index:3;left:4%;right:4%;top:47%;transform:translateY(-50%) rotate(-1.5deg);min-height:205px;display:flex;align-items:center;justify-content:center;padding:8px;border:3px solid #2563eb;border-radius:16px;background:#dbeafe;color:#fff;box-shadow:0 10px 24px rgba(30,64,175,.24);overflow:hidden}.rainout-stamp-img{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);object-fit:contain;object-position:center;filter:brightness(1.25) contrast(1.1) saturate(1.15);z-index:1}.rainout-ribbon-date{position:absolute;right:10px;top:10px;z-index:2;display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:999px;background:rgba(15,23,42,.88);border:1.5px solid rgba(255,255,255,.75);color:#fff;font-size:11px;font-weight:1000;letter-spacing:.04em;box-shadow:0 4px 12px rgba(0,0,0,.35)}.makeup-ribbon{position:absolute;z-index:3;left:9%;right:9%;bottom:16px;display:flex;align-items:center;justify-content:center;padding:8px 10px;border:2px solid #fbbf24;border-radius:12px;background:#fffbeb;color:#92400e;font-size:13px;font-weight:1000;letter-spacing:.04em;text-align:center;text-transform:uppercase;box-shadow:0 5px 12px rgba(146,64,14,.15)}.team-week-block.holiday-day{display:flex;min-height:112px;align-items:center;justify-content:center;border-color:#f59e0b;background:linear-gradient(135deg,#172554,#1e3a8a)}.holiday-stamp{padding:13px 18px;border:3px solid #fbbf24;border-radius:14px;background:rgba(255,255,255,.96);color:#b91c1c;font-size:18px;font-weight:1000;text-align:center;letter-spacing:.04em;box-shadow:0 5px 14px rgba(15,23,42,.25)}.holiday-stamp small{display:block;margin-top:3px;color:#1d4ed8;font-size:11px;letter-spacing:.02em}
+.team-week-block{position:relative}.team-week-block.rainout-day,.team-week-block.smokeout-day{min-height:285px;border-color:#60a5fa;background:#dbeafe}.rainout-day .team-week-label,.rainout-day .team-week-rounds,.smokeout-day .team-week-label,.smokeout-day .team-week-rounds{opacity:.18;filter:grayscale(1)}.rainout-ribbon,.smokeout-ribbon{position:absolute;z-index:3;left:4%;right:4%;top:47%;transform:translateY(-50%) rotate(-1.5deg);min-height:205px;display:flex;align-items:center;justify-content:center;padding:8px;border:3px solid #2563eb;border-radius:16px;background:#dbeafe;color:#fff;box-shadow:0 10px 24px rgba(30,64,175,.24);overflow:hidden}.rainout-stamp-img,.smokeout-stamp-img{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);object-fit:contain;object-position:center;filter:brightness(1.25) contrast(1.1) saturate(1.15);z-index:1}.rainout-ribbon-date,.smokeout-ribbon-date{position:absolute;right:10px;top:10px;z-index:2;display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:999px;background:rgba(15,23,42,.88);border:1.5px solid rgba(255,255,255,.75);color:#fff;font-size:11px;font-weight:1000;letter-spacing:.04em;box-shadow:0 4px 12px rgba(0,0,0,.35)}.makeup-ribbon{position:absolute;z-index:3;left:9%;right:9%;bottom:16px;display:flex;align-items:center;justify-content:center;padding:8px 10px;border:2px solid #fbbf24;border-radius:12px;background:#fffbeb;color:#92400e;font-size:13px;font-weight:1000;letter-spacing:.04em;text-align:center;text-transform:uppercase;box-shadow:0 5px 12px rgba(146,64,14,.15)}.team-week-block.holiday-day{display:flex;min-height:112px;align-items:center;justify-content:center;border-color:#f59e0b;background:linear-gradient(135deg,#172554,#1e3a8a)}.holiday-stamp{padding:13px 18px;border:3px solid #fbbf24;border-radius:14px;background:rgba(255,255,255,.96);color:#b91c1c;font-size:18px;font-weight:1000;text-align:center;letter-spacing:.04em;box-shadow:0 5px 14px rgba(15,23,42,.25)}.holiday-stamp small{display:block;margin-top:3px;color:#1d4ed8;font-size:11px;letter-spacing:.02em}
 .team-week-block.makeup-week{border-color:#f59e0b;background:#fffbeb}.makeup-week .team-week-label{background:linear-gradient(180deg,#92400e,#f59e0b);font-size:9px}.makeup-week .team-week-label strong{font-size:21px}.makeup-week-badge{display:block;margin-top:4px;padding:2px 5px;border-radius:999px;background:rgba(255,255,255,.22);font-size:8px;font-weight:1000;letter-spacing:.02em;text-transform:none}
 .team-page-link{border:0;background:none;padding:0;color:#1F3864;font:inherit;font-weight:700;text-align:left;cursor:pointer;text-decoration:underline;text-decoration-color:#bfdbfe;text-underline-offset:2px}
-.week-start-row{display:none;align-items:center;justify-content:space-between;gap:8px;margin:-3px 0 9px;padding:8px 10px;border-radius:11px;background:#eef6ff;border:1px solid #bfdbfe}.week-date-status{font-size:11px;font-weight:800;color:#1e40af}.week-action-buttons{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.week-action-pair{display:flex;gap:5px;align-items:center}.week-start-btn,.week-rainout-btn,.week-undo-rainout-btn,.week-reset-start-btn,.week-makeup-btn{border:0;border-radius:9px;padding:8px 10px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}.week-start-btn{background:#16a34a}.week-rainout-btn{background:#2563eb}.week-undo-rainout-btn{background:#64748b}.week-reset-start-btn{background:#d97706}.makeup-date-control{display:none;align-items:center;gap:5px;padding:4px;border:1px solid #93c5fd;border-radius:9px;background:#fff}.makeup-date-control input{width:124px;border:0;padding:4px;color:#1e3a8a;font-size:11px;font-weight:800;outline:none}.week-makeup-btn{background:#7c3aed}
+.week-start-row{display:none;align-items:center;justify-content:space-between;gap:8px;margin:-3px 0 9px;padding:8px 10px;border-radius:11px;background:#eef6ff;border:1px solid #bfdbfe}.week-date-status{font-size:11px;font-weight:800;color:#1e40af}.week-action-buttons{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.week-action-pair{display:flex;gap:5px;align-items:center}.week-start-btn,.week-rainout-btn,.week-undo-rainout-btn,.week-smokeout-btn,.week-undo-smokeout-btn,.week-reset-start-btn,.week-makeup-btn{border:0;border-radius:9px;padding:8px 10px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}.week-start-btn{background:#16a34a}.week-rainout-btn{background:#2563eb}.week-undo-rainout-btn{background:#64748b}.week-smokeout-btn{background:#3f1d7a}.week-undo-smokeout-btn{background:#7f1d1d}.week-reset-start-btn{background:#d97706}.makeup-date-control{display:none;align-items:center;gap:5px;padding:4px;border:1px solid #93c5fd;border-radius:9px;background:#fff}.makeup-date-control input{width:124px;border:0;padding:4px;color:#1e3a8a;font-size:11px;font-weight:800;outline:none}.week-makeup-btn{background:#7c3aed}
 .forfeit-control{display:none;grid-template-columns:1fr auto auto;gap:6px;align-items:center;margin:-3px 0 9px;padding:8px;border:1px solid #fca5a5;border-radius:11px;background:#fff1f2}.forfeit-control select{margin:0}.forfeit-btn,.forfeit-undo-btn{border:0;border-radius:9px;padding:9px 10px;font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap}.forfeit-btn{background:#dc2626;color:#fff}.forfeit-undo-btn{background:#e2e8f0;color:#475569}.forfeit-marked-list{display:none;grid-column:1/-1;gap:6px;flex-wrap:wrap;padding-top:4px}.forfeit-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:6px 8px;font-size:10px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em}.forfeit-chip button{border:0;border-radius:999px;background:#991b1b;color:#fff;font-size:10px;font-weight:1000;padding:3px 7px;cursor:pointer}.team-result.forfeit{font-size:9px;letter-spacing:.03em}
 .forfeit-note{padding:7px 10px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:.03em}.sub-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.sub-admin-list{display:grid;gap:6px;margin-bottom:8px}.sub-admin-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #93c5fd;border-radius:10px;background:#eff6ff;color:#1e40af;font-size:11px;font-weight:900}.sub-note{display:block;margin-top:3px;color:#7c3aed!important;font-size:9px!important;font-weight:1000!important;text-transform:uppercase;letter-spacing:.04em}.sub-remove-btn{border:0;border-radius:8px;padding:6px 8px;background:#fee2e2;color:#991b1b;font-size:10px;font-weight:900;cursor:pointer}.score-sub-panel{display:none;margin:-2px 0 9px;border:1.5px solid #c4b5fd;border-radius:14px;background:#f5f3ff;overflow:hidden;box-shadow:0 3px 10px rgba(124,58,237,.10)}.admin-authenticated .score-sub-panel{display:block}.score-sub-panel summary{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 38px;background:linear-gradient(135deg,#6d28d9,#2563eb);color:#fff;font-size:12px;font-weight:1000;cursor:pointer;list-style:none;text-align:center;text-transform:uppercase;letter-spacing:.08em}.score-sub-panel summary span:first-child{flex:1;text-align:center}.score-sub-panel summary span:last-child{position:absolute;right:14px}.score-sub-panel summary::-webkit-details-marker{display:none}.score-sub-body{padding:10px}.score-sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.score-sub-list{display:grid;gap:5px;margin-top:8px}.score-sub-list .sub-admin-item{margin:0}.score-sub-hint{font-size:10px;font-weight:800;color:#6d28d9;margin-bottom:7px;text-transform:uppercase;letter-spacing:.04em}
 .sub-player-name{color:#dc2626!important;font-weight:1000}.team-side.winner .sub-player-name,.team-side.loser .sub-player-name{color:#dc2626!important}.sub-for-note{display:block;margin-top:3px;color:#7c3aed!important;font-size:9px!important;font-weight:1000!important;text-transform:uppercase;letter-spacing:.04em}
@@ -225,7 +225,7 @@ body{background:linear-gradient(180deg,#eaf2fb 0%,#f7f9fc 100%);color:var(--ink)
 .hdr h1{font-size:20px;letter-spacing:.2px}.hdr .sub{font-size:12px;color:#d7e9ff}
 .hdr h1{white-space:pre-line;line-height:1.15}
 .save-bar{border:none;border-radius:999px;padding:7px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(15,23,42,.08)}
-.nvbtn,.cloud-status,.mode-status,.save-bar,.card-hdr span,.card-hdr .csub,select:not(#team-page-select),.wfbtn,.qsbtn,.share-btn,.add-btn,.import-btn,.admin-action-btn,.mini-btn,.week-start-btn,.week-rainout-btn,.week-undo-rainout-btn,.week-reset-start-btn,.week-makeup-btn,.forfeit-btn,.forfeit-undo-btn,.score-lock-control button,.admin-login button,.admin-session button,.admin-page-switch button,.team-collapse summary,.form-lbl,.bagger-hdr h2,.bagger-hdr p,.share-hdr h2,.share-hdr p,.share-box h3,.team-result,.week-date-status,.holiday-remove-btn,.championship-box h3,.playoff-bracket-hdr,.championship-team-choice,.fixed-podium-title,.podium-place .podium-label{text-transform:uppercase;letter-spacing:.04em}
+.nvbtn,.cloud-status,.mode-status,.save-bar,.card-hdr span,.card-hdr .csub,select:not(#team-page-select),.wfbtn,.qsbtn,.share-btn,.add-btn,.import-btn,.admin-action-btn,.mini-btn,.week-start-btn,.week-rainout-btn,.week-undo-rainout-btn,.week-smokeout-btn,.week-undo-smokeout-btn,.week-reset-start-btn,.week-makeup-btn,.forfeit-btn,.forfeit-undo-btn,.score-lock-control button,.admin-login button,.admin-session button,.admin-page-switch button,.team-collapse summary,.form-lbl,.bagger-hdr h2,.bagger-hdr p,.share-hdr h2,.share-hdr p,.share-box h3,.team-result,.week-date-status,.holiday-remove-btn,.championship-box h3,.playoff-bracket-hdr,.championship-team-choice,.fixed-podium-title,.podium-place .podium-label{text-transform:uppercase;letter-spacing:.04em}
 .nav{position:sticky;top:0;z-index:5;background:rgba(238,244,251,.92);backdrop-filter:blur(10px);padding:6px 0;margin-bottom:10px}
 .nvbtn{border-radius:999px;padding:10px 4px;font-size:11px;box-shadow:none;border:1px solid var(--line);transition:.15s transform,.15s background}
 .nvbtn:active,.wfbtn:active,.wbtn:active,.share-btn:active,.admin-action-btn:active,.import-btn:active,.add-btn:active{transform:scale(.98)}
@@ -552,11 +552,11 @@ body:not(.playoffs-active) [data-nav="playoffs"]{display:none!important}
   background-position:center!important;
 }
 
-/* Rain Out banner: show the full scene without cropping */
-.rainout-ribbon{
+/* Postponed banners: show the full scene without cropping */
+.rainout-ribbon,.smokeout-ribbon{
   background:linear-gradient(180deg,#dbeafe 0%,#93c5fd 45%,#60a5fa 100%)!important;
 }
-.rainout-stamp-img{
+.rainout-stamp-img,.smokeout-stamp-img{
   object-fit:contain!important;
   object-position:center!important;
   background:linear-gradient(180deg,#dbeafe 0%,#93c5fd 45%,#60a5fa 100%)!important;
@@ -738,28 +738,56 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
 }
 
 /* Rainout cards should feel like normal schedule cards, just storm-themed */
-.team-week-block.rainout-day{
+.team-week-block.rainout-day,.team-week-block.smokeout-day{
   min-height:170px!important;
   background:linear-gradient(135deg,#dbeafe,#93c5fd 48%,#60a5fa)!important;
 }
-.rainout-ribbon{
+.rainout-ribbon,.smokeout-ribbon{
   left:112px!important;
   right:0!important;
   top:0!important;
   bottom:0!important;
   border-radius:0 18px 18px 0!important;
 }
-.rainout-stamp-img{
+.rainout-stamp-img,.smokeout-stamp-img{
   border-radius:0 18px 18px 0!important;
 }
-.rainout-day .team-week-date{
+.rainout-day .team-week-date,.smokeout-day .team-week-date{
   font-size:11px!important;
   margin-top:6px!important;
   line-height:1.1!important;
 }
-.rainout-makeup-info{
+.rainout-makeup-info,.smokeout-makeup-info{
   font-size:8.5px!important;
 }
+.team-week-block.smokeout-day{
+  border-color:#7c3aed!important;
+}
+.smokeout-day .team-week-label{
+  opacity:1!important;
+  filter:none!important;
+  background:linear-gradient(180deg,#312e81,#7c3aed)!important;
+}
+.smokeout-day .team-week-rounds{
+  opacity:0!important;
+  filter:none!important;
+  background:#020617!important;
+}
+.smokeout-makeup-info{
+  display:block;
+  margin-top:8px;
+  padding:4px 5px;
+  border-radius:8px;
+  background:rgba(255,255,255,.95);
+  color:#dc2626!important;
+  font-weight:1000!important;
+  line-height:1.15;
+  text-align:center;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  box-shadow:0 2px 7px rgba(0,0,0,.18);
+}
+.smokeout-day .makeup-ribbon{display:none!important}
 </style>
 </head>
 <body>
@@ -820,6 +848,7 @@ body:not(.admin-authenticated).team-selected #scoring-page-content .nav{
     <div class="media-manager" id="media-manager">
       <div class="media-card" data-media-card="background"><strong>App Background</strong><div class="media-preview" data-media-preview="background"></div><input type="file" accept="image/*" data-media-file="background"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="background">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="background">Reset</button></div><div class="media-status" data-media-status="background"></div></div>
       <div class="media-card" data-media-card="rainoutBanner"><strong>Rainout Banner</strong><div class="media-preview" data-media-preview="rainoutBanner"></div><input type="file" accept="image/*" data-media-file="rainoutBanner"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="rainoutBanner">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="rainoutBanner">Reset</button></div><div class="media-status" data-media-status="rainoutBanner"></div></div>
+      <div class="media-card" data-media-card="smokeoutBanner"><strong>Smokeout Banner</strong><div class="media-preview" data-media-preview="smokeoutBanner"></div><input type="file" accept="image/*" data-media-file="smokeoutBanner"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="smokeoutBanner">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="smokeoutBanner">Reset</button></div><div class="media-status" data-media-status="smokeoutBanner"></div></div>
       <div class="media-card" data-media-card="fourBaggersBanner"><strong>4 Baggers Banner</strong><div class="media-preview" data-media-preview="fourBaggersBanner"></div><input type="file" accept="image/*" data-media-file="fourBaggersBanner"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="fourBaggersBanner">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="fourBaggersBanner">Reset</button></div><div class="media-status" data-media-status="fourBaggersBanner"></div></div>
       <div class="media-card" data-media-card="scoreboardIcon"><strong>Scoreboard Icon</strong><div class="media-preview" data-media-preview="scoreboardIcon"></div><input type="file" accept="image/*" data-media-file="scoreboardIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="scoreboardIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="scoreboardIcon">Reset</button></div><div class="media-status" data-media-status="scoreboardIcon"></div></div>
       <div class="media-card" data-media-card="weekIcon"><strong>Week Standings Icon</strong><div class="media-preview" data-media-preview="weekIcon"></div><input type="file" accept="image/*" data-media-file="weekIcon"><div class="media-actions"><button type="button" class="media-upload-btn" data-media-upload="weekIcon">Save Image</button><button type="button" class="media-reset-btn" data-media-reset="weekIcon">Reset</button></div><div class="media-status" data-media-status="weekIcon"></div></div>
@@ -944,7 +973,7 @@ Tim/Rick"></textarea>
     <details class="week-editor-panel" id="week-editor-panel">
       <summary><span>WEEK EDITOR</span><span>⌄</span></summary>
       <div class="week-editor-body">
-    <div class="week-start-row" id="week-start-row"><span class="week-date-status" id="week-date-status"></span><div class="week-action-buttons"><div class="week-action-pair"><div class="makeup-date-control" id="makeup-date-control"><input type="date" id="week-makeup-date" aria-label="Makeup date"><button type="button" class="week-makeup-btn" id="week-makeup-btn">Set Makeup Date</button></div><button type="button" class="week-start-btn" id="week-start-btn">Start Week Today</button></div><div class="week-action-pair"><button type="button" class="week-undo-rainout-btn" id="week-undo-rainout-btn">↩ Undo Rainout</button><button type="button" class="week-rainout-btn" id="week-rainout-btn">🌧 Rain Out</button></div><button type="button" class="week-reset-start-btn" id="week-reset-start-btn">↩ Reset Start Date</button></div></div>
+    <div class="week-start-row" id="week-start-row"><span class="week-date-status" id="week-date-status"></span><div class="week-action-buttons"><div class="week-action-pair"><div class="makeup-date-control" id="makeup-date-control"><input type="date" id="week-makeup-date" aria-label="Makeup date"><button type="button" class="week-makeup-btn" id="week-makeup-btn">Set Makeup Date</button></div><button type="button" class="week-start-btn" id="week-start-btn">Start Week Today</button></div><div class="week-action-pair"><button type="button" class="week-undo-rainout-btn" id="week-undo-rainout-btn">↩ Undo Rainout</button><button type="button" class="week-rainout-btn" id="week-rainout-btn">Rain Out</button></div><div class="week-action-pair"><button type="button" class="week-undo-smokeout-btn" id="week-undo-smokeout-btn">↩ Undo Smokeout</button><button type="button" class="week-smokeout-btn" id="week-smokeout-btn">Smoke Out</button></div><button type="button" class="week-reset-start-btn" id="week-reset-start-btn">↩ Reset Start Date</button></div></div>
     <div class="forfeit-control" id="forfeit-control"><select id="forfeit-team-select"><option value="">Select absent team...</option></select><button type="button" class="forfeit-btn" id="forfeit-team-btn">Mark Forfeit</button><button type="button" class="forfeit-undo-btn" id="forfeit-undo-btn">Undo</button><div class="forfeit-marked-list" id="forfeit-marked-list"></div></div>
     <details class="score-sub-panel" id="score-sub-panel">
       <summary><span>SUB ENTRY</span><span>⌄</span></summary>
@@ -1157,9 +1186,10 @@ var DEFAULT_CALENDAR_NOTES = [
   {date:'2026-07-02',status:'Off',note:'4th of July break'}
 ];
 var DEFAULT_RAINOUTS = [{week:3,date:'2026-06-11'}];
-var DEFAULT_MEDIA_ASSETS = {background:'bags-logo.png',rainoutBanner:'rained-out-stamp.png',fourBaggersBanner:'four-baggers-banner-worded.png',scoreboardIcon:'scoreboard.png',weekIcon:'week-standings.png',seasonIcon:'season-standings.png',teamsIcon:'teams-schedules.png',fourBaggersIcon:'four-baggers.png',playoffsIcon:'playoffs.png',shareIcon:'share.png'};
+var DEFAULT_SMOKEOUTS = [];
+var DEFAULT_MEDIA_ASSETS = {background:'bags-logo.png',rainoutBanner:'rained-out-stamp.png',smokeoutBanner:'smoked-out-stamp.png',fourBaggersBanner:'four-baggers-banner-worded.png',scoreboardIcon:'scoreboard.png',weekIcon:'week-standings.png',seasonIcon:'season-standings.png',teamsIcon:'teams-schedules.png',fourBaggersIcon:'four-baggers.png',playoffsIcon:'playoffs.png',shareIcon:'share.png'};
 var NAV_MEDIA_KEYS = {score:'scoreboardIcon',week:'weekIcon',season:'seasonIcon',teams:'teamsIcon',baggers:'fourBaggersIcon',playoffs:'playoffsIcon',share:'shareIcon'};
-var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), forfeits:[], forfeitMakeups:[], subs:[], payments:{}, payouts:null, backgroundUrl:'', mediaAssets:{}, scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
+var leagueSettings = { leagueName: 'Bags League', seasonName: '2026', weeks: 10, playoffsStart: '11', teams: TEAMS.slice(), weekDates:Object.assign({},DEFAULT_WEEK_DATES), actualWeekDates:{}, calendarNotes:DEFAULT_CALENDAR_NOTES.slice(), rainouts:DEFAULT_RAINOUTS.slice(), smokeouts:DEFAULT_SMOKEOUTS.slice(), forfeits:[], forfeitMakeups:[], subs:[], payments:{}, payouts:null, backgroundUrl:'', mediaAssets:{}, scheduleWeekMap:{}, week3MakeupRotationApplied:false, regularSeasonEnd:REGULAR_SEASON_END };
 var curWeek = null, curSlot = 0, seasonFilter = null, baggerCnt = 1, baggerWeek = null;
 window.pendingWeekDateRepair = false;
 
@@ -1500,6 +1530,8 @@ document.getElementById('week-sel').addEventListener('change', function() {
 document.getElementById('week-start-btn').addEventListener('click',startWeekToday);
 document.getElementById('week-rainout-btn').addEventListener('click',function(){ if (curWeek) rainOutWeek(curWeek); });
 document.getElementById('week-undo-rainout-btn').addEventListener('click',function(){ if (curWeek) undoRainOutWeek(curWeek); });
+document.getElementById('week-smokeout-btn').addEventListener('click',function(){ if (curWeek) smokeOutWeek(curWeek); });
+document.getElementById('week-undo-smokeout-btn').addEventListener('click',function(){ if (curWeek) undoSmokeOutWeek(curWeek); });
 document.getElementById('week-reset-start-btn').addEventListener('click',function(){ if (curWeek) resetWeekStartDate(curWeek); });
 document.getElementById('week-makeup-btn').addEventListener('click',function(){ if (curWeek) setMakeupDate(curWeek); });
 document.getElementById('forfeit-team-btn').addEventListener('click',markTeamForfeit);
@@ -1788,7 +1820,7 @@ function renderTeamPage(){
   var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '<span class="record-asterisk">*</span>' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
   if (hasForfeits) html += '<div class="forfeit-record-note">* Forfeited wins and losses are included in this record.</div>';
   var notes = leagueSettings.calendarNotes || [];
-  var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
+  var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Smokeout' && item.status !== 'Off'; });
   if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
   html += '<details class="team-collapse" data-team-section="season"' + (keepSeasonOpen ? ' open' : '') + '><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
   var offDays = notes.filter(function(item){ return item.status === 'Off'; }).sort(function(a,b){ return a.date.localeCompare(b.date); });
@@ -1867,7 +1899,7 @@ function renderTeamPage(){
   var html = '<div class="team-stat-grid"><div class="team-stat"><strong>' + totalWins + '-' + totalLosses + (hasForfeits ? '<span class="record-asterisk">*</span>' : '') + '</strong><span>Game Record</span></div><div class="team-stat"><strong>' + totals.played + '</strong><span>Games Played</span></div><div class="team-stat"><strong>' + pct + '</strong><span>Win Rate</span></div></div>';
   if (hasForfeits) html += '<div class="forfeit-record-note">* Forfeited wins and losses are included in this record.</div>';
   var notes = leagueSettings.calendarNotes || [];
-  var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Off'; });
+  var visibleNotes = notes.filter(function(item){ return item.status !== 'Rainout' && item.status !== 'Smokeout' && item.status !== 'Off'; });
   if (visibleNotes.length) html += '<div class="calendar-notices">' + visibleNotes.map(function(item){ return '<div class="calendar-notice"><strong>' + formatLeagueDate(item.date,false) + ' · ' + item.status + '</strong><span>' + item.note + '</span></div>'; }).join('') + '</div>';
   html += '<details class="team-collapse" data-team-section="season"' + (keepSeasonOpen ? ' open' : '') + '><summary><span>Full Season Schedule</span><small>' + detail.schedule.length + ' matchups</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content team-schedule">';
   var scheduleEvents = [];
@@ -1878,16 +1910,27 @@ function renderTeamPage(){
     var weekGames = detail.schedule.filter(function(game){ return game.week === weekNumber; });
     if (!weekGames.length) continue;
     var weekRainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
+    var weekSmokeouts = (leagueSettings.smokeouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
+    var weekPostponements = weekRainouts.map(function(item){ return Object.assign({postponeType:'rainout'},item); }).concat(weekSmokeouts.map(function(item){ return Object.assign({postponeType:'smokeout'},item); }));
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
-    weekRainouts.forEach(function(rainout){
-      var makeupDate = rainout.makeupDate || '';
+    weekPostponements.forEach(function(postponement){
+      var isSmokeout = postponement.postponeType === 'smokeout';
+      var makeupDate = postponement.makeupDate || '';
       var makeupText = makeupDate ? 'MAKE UP ' + formatLeagueDate(makeupDate,false) : 'MAKE UP DAY TBD!';
-      var rainHtml = '<div class="team-week-block rainout-day"><div class="rainout-ribbon"><img class="rainout-stamp-img" src="' + getMediaAssetUrl('rainoutBanner','rained-out-stamp.png') + '" alt="Rained out"><span class="rainout-ribbon-date">' + formatLeagueDate(rainout.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(rainout.date,true) + '</span><span class="rainout-makeup-info">' + makeupText + '</span></div><div class="team-week-rounds">';
-      rainHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
-      rainHtml += '</div></div>';
-      scheduleEvents.push({date:rainout.date || '9999-12-31',order:1,html:rainHtml});
+      var cardClass = isSmokeout ? 'smokeout-day' : 'rainout-day';
+      var ribbonClass = isSmokeout ? 'smokeout-ribbon' : 'rainout-ribbon';
+      var imageClass = isSmokeout ? 'smokeout-stamp-img' : 'rainout-stamp-img';
+      var dateClass = isSmokeout ? 'smokeout-ribbon-date' : 'rainout-ribbon-date';
+      var infoClass = isSmokeout ? 'smokeout-makeup-info' : 'rainout-makeup-info';
+      var assetKey = isSmokeout ? 'smokeoutBanner' : 'rainoutBanner';
+      var fallbackImage = isSmokeout ? 'smoked-out-stamp.png' : 'rained-out-stamp.png';
+      var altText = isSmokeout ? 'Smoked out' : 'Rained out';
+      var postponeHtml = '<div class="team-week-block ' + cardClass + '"><div class="' + ribbonClass + '"><img class="' + imageClass + '" src="' + getMediaAssetUrl(assetKey,fallbackImage) + '" alt="' + altText + '"><span class="' + dateClass + '">' + formatLeagueDate(postponement.date,true) + '</span></div><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(postponement.date,true) + '</span><span class="' + infoClass + '">' + makeupText + '</span></div><div class="team-week-rounds">';
+      postponeHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
+      postponeHtml += '</div></div>';
+      scheduleEvents.push({date:postponement.date || '9999-12-31',order:1,html:postponeHtml});
       if (makeupDate) {
-        var originalDateText = rainout.date ? '(' + formatLeagueDate(rainout.date,true) + ')' : '';
+        var originalDateText = postponement.date ? '(' + formatLeagueDate(postponement.date,true) + ')' : '';
         var makeupHtml = '<div class="team-week-block makeup-week"><div class="team-week-label"><span>Make-Up</span><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(makeupDate,true) + '</span>' + (originalDateText ? '<span class="makeup-week-badge">' + originalDateText + '</span>' : '') + '</div><div class="team-week-rounds">';
         makeupHtml += weekGames.map(function(game){
           var resultText = 'Upcoming', resultClass = '';
@@ -1903,7 +1946,7 @@ function renderTeamPage(){
         scheduleEvents.push({date:makeupDate,order:2,html:makeupHtml});
       }
     });
-    if (weekRainouts.length) continue;
+    if (weekPostponements.length) continue;
     var weekHtml = '<div class="team-week-block"><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong>' + (weekDate ? '<span class="team-week-date">' + weekDate + '</span>' : '') + '</div><div class="team-week-rounds">';
     weekHtml += weekGames.map(function(game){
       var resultText = 'Upcoming', resultClass = '';
@@ -2256,6 +2299,7 @@ function applyLeagueSettings(settings) {
     actualWeekDates: Object.assign({},settings.actualWeekDates || leagueSettings.actualWeekDates || {}),
     calendarNotes: (settings.calendarNotes || leagueSettings.calendarNotes || DEFAULT_CALENDAR_NOTES).slice(),
     rainouts: (settings.rainouts || leagueSettings.rainouts || DEFAULT_RAINOUTS).slice(),
+    smokeouts: (settings.smokeouts || leagueSettings.smokeouts || DEFAULT_SMOKEOUTS).slice(),
     forfeits: (settings.forfeits || leagueSettings.forfeits || []).slice(),
     forfeitMakeups: (settings.forfeitMakeups || leagueSettings.forfeitMakeups || []).slice(),
     subs: (settings.subs || leagueSettings.subs || []).slice(),
@@ -2559,9 +2603,12 @@ function rainOutWeek(week){
   if (!postponedDate) { alert('Week ' + week + ' needs a scheduled date before it can be rained out.'); return; }
   if (!confirm('Mark Week ' + week + ' (' + formatLeagueDate(postponedDate,false) + ') as rained out? The week will stay open for a makeup date later.')) return;
   leagueSettings.rainouts = leagueSettings.rainouts || [];
+  leagueSettings.smokeouts = (leagueSettings.smokeouts || []).filter(function(item){ return Number(item.week) !== week; });
   var alreadyRecorded = leagueSettings.rainouts.some(function(item){ return Number(item.week) === week && item.date === postponedDate; });
   if (!alreadyRecorded) leagueSettings.rainouts.push({week:week,date:postponedDate});
-  leagueSettings.calendarNotes = leagueSettings.calendarNotes || [];
+  leagueSettings.calendarNotes = (leagueSettings.calendarNotes || []).filter(function(item){
+    return !(item.date === postponedDate && item.status === 'Smokeout');
+  });
   var noteExists = leagueSettings.calendarNotes.some(function(item){ return item.date === postponedDate && item.status === 'Rainout'; });
   if (!noteExists) leagueSettings.calendarNotes.push({date:postponedDate,status:'Rainout',note:'Week ' + week + ' postponed'});
   leagueSettings.weekDates = leagueSettings.weekDates || {};
@@ -2592,6 +2639,50 @@ function undoRainOutWeek(week){
   save();
 }
 window.undoRainOutWeek = undoRainOutWeek;
+function smokeOutWeek(week){
+  week = Number(week);
+  if (!ADMIN_MODE || !week || week > WEEKS) return;
+  if (isActualWeekDate(week)) { alert('Week ' + week + ' has already been started, so its played date is protected.'); return; }
+  var postponedDate = leagueSettings.weekDates && leagueSettings.weekDates[week];
+  if (!postponedDate) { alert('Week ' + week + ' needs a scheduled date before it can be smoked out.'); return; }
+  if (!confirm('Mark Week ' + week + ' (' + formatLeagueDate(postponedDate,false) + ') as smoked out? The week will stay open for a makeup date later.')) return;
+  leagueSettings.smokeouts = leagueSettings.smokeouts || [];
+  leagueSettings.rainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) !== week; });
+  var alreadyRecorded = leagueSettings.smokeouts.some(function(item){ return Number(item.week) === week && item.date === postponedDate; });
+  if (!alreadyRecorded) leagueSettings.smokeouts.push({week:week,date:postponedDate});
+  leagueSettings.calendarNotes = (leagueSettings.calendarNotes || []).filter(function(item){
+    return !(item.date === postponedDate && item.status === 'Rainout');
+  });
+  var noteExists = leagueSettings.calendarNotes.some(function(item){ return item.date === postponedDate && item.status === 'Smokeout'; });
+  if (!noteExists) leagueSettings.calendarNotes.push({date:postponedDate,status:'Smokeout',note:'Week ' + week + ' postponed'});
+  leagueSettings.weekDates = leagueSettings.weekDates || {};
+  leagueSettings.weekDates[week] = '';
+  rebuildWeekControls();
+  updateWeekStartControl();
+  renderTeamPage();
+  save();
+}
+window.smokeOutWeek = smokeOutWeek;
+function undoSmokeOutWeek(week){
+  week = Number(week);
+  if (!ADMIN_MODE || !week) return;
+  var smokeouts = leagueSettings.smokeouts || [], index = -1;
+  for (var i=smokeouts.length-1; i>=0; i--) { if (Number(smokeouts[i].week) === week) { index = i; break; } }
+  if (index < 0) return;
+  var removed = smokeouts[index];
+  if (!confirm('Remove the ' + formatLeagueDate(removed.date,false) + ' smokeout?')) return;
+  if (!isActualWeekDate(week)) leagueSettings.weekDates[week] = removed.date || leagueSettings.weekDates[week] || '';
+  smokeouts.splice(index,1);
+  leagueSettings.calendarNotes = (leagueSettings.calendarNotes || []).filter(function(item){
+    return !(item.date === removed.date && item.status === 'Smokeout');
+  });
+  enforceSeasonDeadline();
+  rebuildWeekControls();
+  updateWeekStartControl();
+  renderTeamPage();
+  save();
+}
+window.undoSmokeOutWeek = undoSmokeOutWeek;
 function resetWeekStartDate(week){
   week = Number(week);
   if (!ADMIN_MODE || !week) return;
@@ -2620,12 +2711,14 @@ function setMakeupDate(week){
   var makeupDate = input && input.value;
   if (!makeupDate) { alert('Choose the makeup date first.'); return; }
   if (leagueSettings.regularSeasonEnd && makeupDate > leagueSettings.regularSeasonEnd) { alert('Choose a makeup date on or before ' + formatLeagueDate(leagueSettings.regularSeasonEnd,false) + '.'); return; }
-  var blocked = (leagueSettings.calendarNotes || []).some(function(item){ return item.date === makeupDate && (item.status === 'Off' || item.status === 'Rainout'); });
-  if (blocked) { alert('That date is already marked as a holiday or rainout. Please choose another date.'); return; }
+  var blocked = (leagueSettings.calendarNotes || []).some(function(item){ return item.date === makeupDate && (item.status === 'Off' || item.status === 'Rainout' || item.status === 'Smokeout'); });
+  if (blocked) { alert('That date is already marked as a holiday, rainout, or smokeout. Please choose another date.'); return; }
   leagueSettings.weekDates = leagueSettings.weekDates || {};
   leagueSettings.weekDates[week] = makeupDate;
   var rainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === week; });
   if (rainouts.length) rainouts[rainouts.length-1].makeupDate = makeupDate;
+  var smokeouts = (leagueSettings.smokeouts || []).filter(function(item){ return Number(item.week) === week; });
+  if (smokeouts.length) smokeouts[smokeouts.length-1].makeupDate = makeupDate;
   enforceSeasonDeadline();
   rebuildWeekControls();
   updateWeekStartControl();
@@ -2712,22 +2805,26 @@ function ensureWeekStarted(week){
   if (!leagueSettings.actualWeekDates[week]) leagueSettings.actualWeekDates[week] = localISODate();
 }
 function updateWeekStartControl(){
-  var row = document.getElementById('week-start-row'), status = document.getElementById('week-date-status'), button = document.getElementById('week-start-btn'), rainButton = document.getElementById('week-rainout-btn'), undoButton = document.getElementById('week-undo-rainout-btn'), resetButton = document.getElementById('week-reset-start-btn'), makeupControl = document.getElementById('makeup-date-control'), makeupInput = document.getElementById('week-makeup-date');
-  if (!row || !status || !button || !rainButton || !undoButton || !resetButton || !makeupControl || !makeupInput) return;
+  var row = document.getElementById('week-start-row'), status = document.getElementById('week-date-status'), button = document.getElementById('week-start-btn'), rainButton = document.getElementById('week-rainout-btn'), undoButton = document.getElementById('week-undo-rainout-btn'), smokeButton = document.getElementById('week-smokeout-btn'), undoSmokeButton = document.getElementById('week-undo-smokeout-btn'), resetButton = document.getElementById('week-reset-start-btn'), makeupControl = document.getElementById('makeup-date-control'), makeupInput = document.getElementById('week-makeup-date');
+  if (!row || !status || !button || !rainButton || !undoButton || !smokeButton || !undoSmokeButton || !resetButton || !makeupControl || !makeupInput) return;
   if (!curWeek) { row.style.display='none'; return; }
   var date = getWeekDate(curWeek);
   var hasRainout = (leagueSettings.rainouts || []).some(function(item){ return Number(item.week) === Number(curWeek); });
+  var hasSmokeout = (leagueSettings.smokeouts || []).some(function(item){ return Number(item.week) === Number(curWeek); });
+  var hasPostponement = hasRainout || hasSmokeout;
   var showPlayedDate = isActualWeekDate(curWeek);
   row.style.display = (ADMIN_MODE || showPlayedDate) ? 'flex' : 'none';
   status.style.display = showPlayedDate ? 'inline' : 'none';
   status.textContent = showPlayedDate ? 'Played On: ' + (date ? formatLeagueDate(date,false) : 'Date TBD') : '';
   button.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) ? 'block' : 'none';
-  rainButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) ? 'block' : 'none';
+  rainButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && !hasSmokeout ? 'block' : 'none';
   undoButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && hasRainout ? 'block' : 'none';
+  smokeButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && !hasRainout ? 'block' : 'none';
+  undoSmokeButton.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && hasSmokeout ? 'block' : 'none';
   var defaultDate = DEFAULT_WEEK_DATES[curWeek] || '';
   var scheduledDateChanged = !!defaultDate && !!(leagueSettings.weekDates && leagueSettings.weekDates[curWeek]) && leagueSettings.weekDates[curWeek] !== defaultDate;
   resetButton.style.display = ADMIN_MODE && (isActualWeekDate(curWeek) || scheduledDateChanged) ? 'block' : 'none';
-  makeupControl.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && hasRainout ? 'flex' : 'none';
+  makeupControl.style.display = ADMIN_MODE && !isActualWeekDate(curWeek) && hasPostponement ? 'flex' : 'none';
   makeupInput.value = !isActualWeekDate(curWeek) && date ? date : '';
 }
 function startWeekToday(){
@@ -2754,10 +2851,15 @@ function rebuildWeekControls() {
   for (var w = 1; w <= WEEKS; w++) {
     var dateLabel = formatLeagueDate(getWeekDate(w),false);
     var hadRainout = (leagueSettings.rainouts || []).some(function(item){ return Number(item.week) === w; });
+    var hadSmokeout = (leagueSettings.smokeouts || []).some(function(item){ return Number(item.week) === w; });
+    var hadPostponement = hadRainout || hadSmokeout;
     (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === w; }).forEach(function(item){
       scoreCalendar.push({date:item.date,order:0,label:'🌧 ' + formatLeagueDate(item.date,false) + ' — Week ' + w + ' RAINED OUT',disabled:true});
     });
-    scoreCalendar.push({date:getWeekDate(w),order:1,label:'Week ' + w + (hadRainout ? ' (Makeup)' : '') + (dateLabel ? ' — ' + dateLabel : ''),value:w});
+    (leagueSettings.smokeouts || []).filter(function(item){ return Number(item.week) === w; }).forEach(function(item){
+      scoreCalendar.push({date:item.date,order:0,label:formatLeagueDate(item.date,false) + ' — Week ' + w + ' SMOKED OUT',disabled:true});
+    });
+    scoreCalendar.push({date:getWeekDate(w),order:1,label:'Week ' + w + (hadPostponement ? ' (Makeup)' : '') + (dateLabel ? ' — ' + dateLabel : ''),value:w});
     if (bwsel) { var o2 = document.createElement('option'); o2.value = w; o2.textContent = 'Week ' + w + (dateLabel ? ' — ' + dateLabel : ''); bwsel.appendChild(o2); }
     if (wfilt) { var btn = document.createElement('button'); btn.className = 'wfbtn'; btn.textContent = 'Wk ' + w; btn.setAttribute('data-filter', w); wfilt.appendChild(btn); }
   }
@@ -2816,10 +2918,15 @@ function renderSubAdmin(){
     for (var w=1; w<=WEEKS; w++) {
       var date = getWeekDate(w);
       var hadRainout = (leagueSettings.rainouts || []).some(function(item){ return Number(item.week) === w; });
+      var hadSmokeout = (leagueSettings.smokeouts || []).some(function(item){ return Number(item.week) === w; });
+      var hadPostponement = hadRainout || hadSmokeout;
       (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === w; }).forEach(function(item){
         subCalendar.push({date:item.date,order:0,label:'🌧 ' + formatLeagueDate(item.date,false) + ' — Week ' + w + ' RAINED OUT',disabled:true});
       });
-      subCalendar.push({date:date || '9999-12-31',order:1,label:'Week ' + w + (hadRainout ? ' (Makeup)' : '') + (date ? ' — ' + formatLeagueDate(date,false) : ' — Date TBD'),value:w});
+      (leagueSettings.smokeouts || []).filter(function(item){ return Number(item.week) === w; }).forEach(function(item){
+        subCalendar.push({date:item.date,order:0,label:formatLeagueDate(item.date,false) + ' — Week ' + w + ' SMOKED OUT',disabled:true});
+      });
+      subCalendar.push({date:date || '9999-12-31',order:1,label:'Week ' + w + (hadPostponement ? ' (Makeup)' : '') + (date ? ' — ' + formatLeagueDate(date,false) : ' — Date TBD'),value:w});
     }
     (leagueSettings.calendarNotes || []).filter(function(item){ return item.status === 'Off'; }).forEach(function(item){
       subCalendar.push({date:item.date,order:0,label:'🎆 ' + formatLeagueDate(item.date,false) + ' — ' + (item.note || 'HOLIDAY / DAY OFF').toUpperCase(),disabled:true});
@@ -3218,6 +3325,7 @@ function resetForNewSeason(settings) {
     actualWeekDates: {},
     calendarNotes: [],
     rainouts: [],
+    smokeouts: [],
     forfeits: [],
     payments: {},
     payouts: null,
