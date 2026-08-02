@@ -1912,7 +1912,6 @@ function renderTeamPage(){
     var weekRainouts = (leagueSettings.rainouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
     var weekSmokeouts = (leagueSettings.smokeouts || []).filter(function(item){ return Number(item.week) === weekNumber; });
     var weekPostponements = weekRainouts.map(function(item){ return Object.assign({postponeType:'rainout'},item); }).concat(weekSmokeouts.map(function(item){ return Object.assign({postponeType:'smokeout'},item); }));
-    var weekHasEnteredScores = weekGames.some(function(game){ return game.played > 0 || game.teamForfeit || game.opponentForfeit; });
     var weekDate = weekGames[0].date ? formatLeagueDate(weekGames[0].date,true) : '';
     weekPostponements.forEach(function(postponement){
       var isSmokeout = postponement.postponeType === 'smokeout';
@@ -1930,11 +1929,9 @@ function renderTeamPage(){
       postponeHtml += weekGames.map(function(game){ var ownSubLine = game.teamDisplay && game.teamDisplay !== team ? '<small class="sub-for-note">Your team: ' + (game.teamDisplayHtml || escapeHtml(game.teamDisplay)) + '</small>' + (game.teamSubNoteHtml || '') : ''; return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result">Postponed</span></div>'; }).join('');
       postponeHtml += '</div></div>';
       scheduleEvents.push({date:postponement.date || '9999-12-31',order:1,html:postponeHtml});
-      if (makeupDate || weekHasEnteredScores) {
+      if (makeupDate) {
         var originalDateText = postponement.date ? '(' + formatLeagueDate(postponement.date,true) + ')' : '';
-        var makeupDateText = makeupDate ? formatLeagueDate(makeupDate,true) : 'Date TBD';
-        var makeupSortDate = makeupDate || weekGames[0].date || postponement.date || '9999-12-31';
-        var makeupHtml = '<div class="team-week-block makeup-week"><div class="team-week-label"><span>Make-Up</span><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + makeupDateText + '</span>' + (originalDateText ? '<span class="makeup-week-badge">' + originalDateText + '</span>' : '') + '</div><div class="team-week-rounds">';
+        var makeupHtml = '<div class="team-week-block makeup-week"><div class="team-week-label"><span>Make-Up</span><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + formatLeagueDate(makeupDate,true) + '</span>' + (originalDateText ? '<span class="makeup-week-badge">' + originalDateText + '</span>' : '') + '</div><div class="team-week-rounds">';
         makeupHtml += weekGames.map(function(game){
           var resultText = 'Upcoming', resultClass = '';
           if (game.teamForfeit) { resultText = 'FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
@@ -1946,7 +1943,7 @@ function renderTeamPage(){
           return '<div class="team-week-round"><div class="team-round-label">Round ' + game.round + '</div><div class="team-round-opponent">' + (game.opponentDisplayHtml || escapeHtml(game.opponentDisplay || game.opponent)) + '<small>' + game.board + '</small>' + madeUpNote + (game.opponentSubNoteHtml || '') + ownSubLine + '</div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
         }).join('');
         makeupHtml += '</div></div>';
-        scheduleEvents.push({date:makeupSortDate,order:2,html:makeupHtml});
+        scheduleEvents.push({date:makeupDate,order:2,html:makeupHtml});
       }
     });
     if (weekPostponements.length) continue;
@@ -2310,7 +2307,7 @@ function applyLeagueSettings(settings) {
     payouts: Object.prototype.hasOwnProperty.call(settings,'payouts') ? JSON.parse(JSON.stringify(settings.payouts || null)) : JSON.parse(JSON.stringify(leagueSettings.payouts || null)),
     backgroundUrl: Object.prototype.hasOwnProperty.call(settings,'backgroundUrl') ? settings.backgroundUrl : (leagueSettings.backgroundUrl || ''),
     mediaAssets: Object.assign({},leagueSettings.mediaAssets || {},settings.mediaAssets || {}),
-    scheduleWeekMap: Object.assign({},settings.scheduleWeekMap || {}),
+    scheduleWeekMap: {},
     week3MakeupRotationApplied: !!settings.week3MakeupRotationApplied,
     regularSeasonEnd: Object.prototype.hasOwnProperty.call(settings,'regularSeasonEnd') ? settings.regularSeasonEnd : leagueSettings.regularSeasonEnd
   };
@@ -2581,16 +2578,25 @@ function repairFixed2026WeekDates(){
   if (!leagueSettings || Number(leagueSettings.weeks) !== 10) return false;
   leagueSettings.weekDates = leagueSettings.weekDates || {};
   leagueSettings.actualWeekDates = leagueSettings.actualWeekDates || {};
-  var fixedDates = {1:'2026-05-28',2:'2026-06-04',4:'2026-06-18',5:'2026-06-25',6:'2026-07-09',7:'2026-07-16',8:'2026-07-23',9:'2026-07-30',10:'2026-08-06'};
+  var fixedDates = {1:'2026-05-28',2:'2026-06-04',3:'2026-06-11',4:'2026-06-18',5:'2026-06-25',6:'2026-07-09',7:'2026-07-16',8:'2026-07-23',9:'2026-07-30',10:'2026-08-06'};
+  var postponedByWeek = {};
+  (leagueSettings.rainouts || []).forEach(function(item){ if (item && item.week) postponedByWeek[Number(item.week)] = item; });
+  (leagueSettings.smokeouts || []).forEach(function(item){ if (item && item.week) postponedByWeek[Number(item.week)] = item; });
   var changed = false;
   Object.keys(fixedDates).forEach(function(week){
-    if (leagueSettings.weekDates[week] !== fixedDates[week]) { leagueSettings.weekDates[week] = fixedDates[week]; changed = true; }
+    var postponed = postponedByWeek[Number(week)];
+    var wantedDate = postponed ? (postponed.makeupDate || '') : fixedDates[week];
+    if (leagueSettings.weekDates[week] !== wantedDate) { leagueSettings.weekDates[week] = wantedDate; changed = true; }
   });
-  var week3Makeup = '';
-  (leagueSettings.rainouts || []).forEach(function(item){ if (Number(item.week) === 3 && item.makeupDate) week3Makeup = item.makeupDate; });
-  if ((leagueSettings.weekDates[3] || '') !== week3Makeup) { leagueSettings.weekDates[3] = week3Makeup; changed = true; }
   delete leagueSettings.weekDates['11'];
-  if (leagueSettings.actualWeekDates[3] && !week3Makeup) { delete leagueSettings.actualWeekDates[3]; changed = true; }
+  Object.keys(postponedByWeek).forEach(function(week){
+    var postponed = postponedByWeek[Number(week)];
+    if (leagueSettings.actualWeekDates[week] && !(postponed && postponed.makeupDate)) { delete leagueSettings.actualWeekDates[week]; changed = true; }
+  });
+  if (leagueSettings.scheduleWeekMap && Object.keys(leagueSettings.scheduleWeekMap).length) {
+    leagueSettings.scheduleWeekMap = {};
+    changed = true;
+  }
   return changed;
 }
 function addDaysISO(dateValue,days){
