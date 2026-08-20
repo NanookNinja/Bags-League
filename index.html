@@ -1565,17 +1565,30 @@ document.getElementById('slot-sel').addEventListener('change', function() {
 // ── Standings ─────────────────────────────────────────────────────────────────
 function forfeitAppliesToMatch(record, week, slot, matchIndex) {
   if (!record || Number(record.week) !== Number(week)) return false;
+  if (forfeitMatchIsDisabled(record, slot, matchIndex)) return false;
   var previous = Array.isArray(record.previousMatches) ? record.previousMatches : [];
   if (!previous.length) return true;
   return previous.some(function(item){
     return Number(item.slot) === Number(slot) && Number(item.match) === Number(matchIndex);
   });
 }
+function forfeitMatchIsDisabled(record, slot, matchIndex) {
+  var disabled = Array.isArray(record && record.disabledMatches) ? record.disabledMatches : [];
+  return disabled.some(function(item){
+    return Number(item.slot) === Number(slot) && Number(item.match) === Number(matchIndex);
+  });
+}
 function getMatchForfeitState(week, slot, matchIndex, mu) {
   var records = leagueSettings.forfeits || [];
-  var aRecord = records.find(function(item){ return item.team === mu.a && forfeitAppliesToMatch(item, week, slot, matchIndex); });
-  var bRecord = records.find(function(item){ return item.team === mu.b && forfeitAppliesToMatch(item, week, slot, matchIndex); });
-  return {aForfeit:!!aRecord,bForfeit:!!bRecord,both:!!aRecord && !!bRecord};
+  var aWeekRecord = records.find(function(item){ return Number(item.week) === Number(week) && item.team === mu.a; });
+  var bWeekRecord = records.find(function(item){ return Number(item.week) === Number(week) && item.team === mu.b; });
+  var aForfeit = !!(aWeekRecord && forfeitAppliesToMatch(aWeekRecord, week, slot, matchIndex));
+  var bForfeit = !!(bWeekRecord && forfeitAppliesToMatch(bWeekRecord, week, slot, matchIndex));
+  if (aWeekRecord && bWeekRecord) {
+    if (!forfeitMatchIsDisabled(aWeekRecord, slot, matchIndex)) aForfeit = true;
+    if (!forfeitMatchIsDisabled(bWeekRecord, slot, matchIndex)) bForfeit = true;
+  }
+  return {aForfeit:aForfeit,bForfeit:bForfeit,both:aForfeit && bForfeit};
 }
 function calcWeekTotals(w) {
   var tot = {};
@@ -2843,6 +2856,16 @@ function disableForfeitMatch(team, slot, matchIndex){
   var opponent = mu ? (mu.a === team ? mu.b : mu.a) : 'that opponent';
   if (!confirm('Disable the forfeit for ' + team + ' vs ' + opponent + ' in Round ' + (slot + 1) + '? This keeps the other forfeited rounds active.')) return;
   var removed = matches.splice(matchRecordIndex,1)[0];
+  record.disabledMatches = record.disabledMatches || [];
+  if (!forfeitMatchIsDisabled(record, slot, matchIndex)) record.disabledMatches.push({slot:slot,match:matchIndex});
+  var opponentRecord = (leagueSettings.forfeits || []).find(function(item){ return Number(item.week) === Number(curWeek) && item.team === opponent; });
+  if (opponentRecord) {
+    opponentRecord.previousMatches = opponentRecord.previousMatches || [];
+    var opponentMatchIndex = opponentRecord.previousMatches.findIndex(function(item){ return Number(item.slot) === Number(slot) && Number(item.match) === Number(matchIndex); });
+    if (opponentMatchIndex >= 0) opponentRecord.previousMatches.splice(opponentMatchIndex,1);
+    opponentRecord.disabledMatches = opponentRecord.disabledMatches || [];
+    if (!forfeitMatchIsDisabled(opponentRecord, slot, matchIndex)) opponentRecord.disabledMatches.push({slot:slot,match:matchIndex});
+  }
   if (!results[curWeek]) results[curWeek] = {};
   if (!results[curWeek][slot]) results[curWeek][slot] = {};
   results[curWeek][slot][matchIndex] = removed && removed.data ? removed.data : {g1:null,g2:null,g3:null,swept:false};
