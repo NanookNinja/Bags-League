@@ -327,7 +327,7 @@ button.fixed-team-slot{cursor:pointer}.fixed-team-slot:disabled{cursor:default;o
 .fixed-team-slot .seed-tag{font-size:9px;color:#64748b;font-weight:900}.fixed-team-slot.win .seed-tag,.fixed-team-slot.lose .seed-tag{color:inherit}
 .fixed-source-label{font-size:8px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#64748b;font-style:normal;line-height:1.1}.fixed-team-slot.win .fixed-source-label,.fixed-team-slot.lose .fixed-source-label{color:inherit;opacity:.8}
 .fixed-team-name-line{display:flex;align-items:center;gap:6px;width:100%;line-height:1.15}.seed-place{display:inline-flex;align-items:center;justify-content:center;min-width:28px;padding:3px 5px;border-radius:999px;background:#dbeafe;color:#1e40af;font-size:9px;font-weight:900;font-style:normal}.fixed-team-slot.win .seed-place{background:#bbf7d0;color:#166534}.fixed-team-slot.lose .seed-place{background:#fed7aa;color:#9a3412}
-.fixed-team-slot.eliminated{background:#fee2e2!important;color:#991b1b!important;border:1px solid #fca5a5}.fixed-team-slot.eliminated .fixed-team-name-line>span:last-child{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#dc2626}.fixed-team-slot.eliminated .seed-place{background:#fecaca;color:#991b1b}.eliminated-label{font-size:8px;font-weight:900;letter-spacing:.08em;color:#dc2626;text-transform:uppercase;font-style:normal;margin-left:34px}
+.fixed-team-slot.winner-drop{background:#ffedd5!important;color:#9a3412!important;border:1px solid #fdba74;position:relative}.fixed-team-slot.winner-drop .fixed-team-name-line>span:last-child{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#f97316}.fixed-team-slot.winner-drop .seed-place{background:#fed7aa;color:#9a3412}.winner-drop-label{font-size:8px;font-weight:900;letter-spacing:.08em;color:#9a3412;text-transform:uppercase;font-style:normal;margin-left:34px}.fixed-team-slot.eliminated{position:relative;background:#fee2e2!important;color:#991b1b!important;border:1px solid #fca5a5;overflow:hidden}.fixed-team-slot.eliminated .fixed-team-name-line>span:last-child{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#dc2626}.fixed-team-slot.eliminated .seed-place{background:#fecaca;color:#991b1b}.fixed-team-slot.eliminated::after{content:"ELIMINATED";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-8deg);padding:4px 9px;border:2px solid #dc2626;border-radius:7px;background:rgba(127,29,29,.92);color:#fff;font-size:11px;font-weight:1000;letter-spacing:.08em;box-shadow:0 4px 10px rgba(127,29,29,.25);pointer-events:none}.eliminated-label{font-size:8px;font-weight:900;letter-spacing:.08em;color:#dc2626;text-transform:uppercase;font-style:normal;margin-left:34px}
 .fixed-bracket-lines{position:absolute;left:0;top:0;width:2200px;height:1100px;pointer-events:none;z-index:1;overflow:visible}
 .fixed-bracket-scroll-hint{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#dbeafe;position:sticky;top:50px;z-index:30;box-shadow:0 3px 10px rgba(15,23,42,.16)}
 .admin-authenticated .fixed-bracket-scroll-hint{top:106px}
@@ -3602,8 +3602,9 @@ function setFixedGameWinner(divKey, gameId, winner){
   if (!div || !def || !isFixedGameNeeded(div, def)) return;
   var teams = getFixedParticipants(div, def);
   if (teams.indexOf(winner) < 0 || !teams[0] || !teams[1]) return;
+  var currentWinner = div.games && div.games[gameId] && div.games[gameId].winner;
   clearFixedDescendants(div, gameId);
-  div.games[gameId].winner = winner;
+  div.games[gameId].winner = currentWinner === winner ? '' : winner;
   updateFixedChampion(div);
   playoffState.final = {teamA:'',teamB:'',winner:''};
   renderPlayoffs();
@@ -3639,16 +3640,20 @@ function isFixedEliminationLoss(div, def, team, winner){
   }
   return false;
 }
+function isFixedWinnerBracketDrop(def, team, winner){
+  return !!(team && winner && team !== winner && def && def.side === 'W');
+}
 function renderFixedTeamSlot(divKey, div, def, source, team, winner){
   var complete = !!winner, isWinner = complete && winner === team;
   var eliminated = isFixedEliminationLoss(div,def,team,winner);
+  var winnerDrop = !eliminated && isFixedWinnerBracketDrop(def,team,winner);
   var teams = getFixedParticipants(div, def), ready = teams[0] && teams[1] && isFixedGameNeeded(div, def);
-  var cls = 'fixed-team-slot' + (!team ? ' pending' : '') + (isWinner ? ' win' : (complete && team ? ' lose' : '')) + (eliminated ? ' eliminated' : '');
+  var cls = 'fixed-team-slot' + (!team ? ' pending' : '') + (isWinner ? ' win' : (complete && team ? ' lose' : '')) + (winnerDrop ? ' winner-drop' : '') + (eliminated ? ' eliminated' : '');
   var label = team || (source.type === 'seed' ? fixedSourceName(div,source) : 'TBD');
   var sourceText = source.type === 'seed' ? '' : (source.type === 'winner' ? 'Winner of Game ' : 'Loser of Game ') + source.game;
   var seed = team ? div.teams.indexOf(team) + 1 : 0;
   var nameLine = '<span class="fixed-team-name-line">' + (seed > 0 ? '<b class="seed-place">' + ordinalPlace(seed) + '</b>' : '') + '<span>' + label + '</span></span>';
-  var content = (sourceText ? '<small class="fixed-source-label">' + sourceText + '</small>' : '') + nameLine + (eliminated ? '<small class="eliminated-label">Eliminated</small>' : '');
+  var content = (sourceText ? '<small class="fixed-source-label">' + sourceText + '</small>' : '') + nameLine + (winnerDrop ? '<small class="winner-drop-label">To loser bracket</small>' : '') + (eliminated ? '<small class="eliminated-label">Eliminated</small>' : '');
   if (ADMIN_MODE && ready && !BRACKET_DESIGN_MODE) return '<button type="button" class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '" onclick="setFixedGameWinner(\'' + divKey + '\',' + def.id + ',decodeURIComponent(\'' + encodeURIComponent(team) + '\'))">' + content + '</button>';
   return '<div class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '">' + content + '</div>';
 }
@@ -3794,7 +3799,7 @@ function startChampionsChampionshipFromPlayoffs(){
 function chooseChampionsChampionshipWinner(team){
   if (!ADMIN_MODE || !playoffState.final) return;
   if ([playoffState.final.teamA,playoffState.final.teamB].indexOf(team) < 0) return;
-  playoffState.final.winner = team;
+  playoffState.final.winner = playoffState.final.winner === team ? '' : team;
   updateFinalWinnerSelect();
   renderPlayoffs();
   save();
