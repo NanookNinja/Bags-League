@@ -1458,6 +1458,9 @@ function renderMatchups() {
     var forfeitingTeamName = forfeitState.aForfeit && forfeitState.bForfeit ? 'Both teams' : (forfeitState.aForfeit ? mu.a : mu.b);
     var forfeitingTeam = {team:forfeitingTeamName};
     if (forfeitState.aForfeit || forfeitState.bForfeit) {
+      if (forfeitState.both) {
+        html += '<div class="forfeit-note">&#128683; Double forfeit &middot; both teams receive a forfeit loss</div>';
+      } else
       html += '<div class="forfeit-note">🚫 ' + forfeitingTeam.team + ' forfeited · Opponent awarded 3-0</div>';
     } else if (m.swept) {
       html += '<div class="sweep-note">&#127942; ' + (m.g1 === 'a' ? aDisplay : bDisplay) + ' won Games 1 &amp; 2 &mdash; Game 3 auto-awarded!</div>';
@@ -1581,8 +1584,14 @@ function calcWeekTotals(w) {
     getMatchups(w - 1, s).forEach(function(mu, mi) {
       var m = getMatch(w, s, mi);
       var forfeitState = getMatchForfeitState(w, s, mi, mu);
+      if (forfeitState.both) {
+        tot[mu.a].ftl += 3;
+        tot[mu.b].ftl += 3;
+        tot[mu.a].played += 3;
+        tot[mu.b].played += 3;
+        return;
+      }
       [m.g1, m.g2, m.g3].forEach(function(winner) {
-        if (forfeitState.both) return;
         if (winner === 'a') {
           if (forfeitState.bForfeit) { tot[mu.a].ftw++; tot[mu.b].ftl++; }
           else { tot[mu.a].wins++; tot[mu.b].losses++; }
@@ -1805,6 +1814,10 @@ function getTeamSchedule(team){
           if (winner === side) wins++;
           else if (winner === 'a' || winner === 'b') losses++;
         });
+        if (bothForfeit) {
+          wins = 0;
+          losses = 3;
+        }
         var played = wins + losses, complete = played === 3;
         schedule.push({week:w,date:getWeekDate(w),round:s+1,opponent:opponent,opponentDisplay:opponentDisplay,opponentDisplayHtml:opponentDisplayHtml,teamDisplay:teamDisplay,teamDisplayHtml:teamDisplayHtml,opponentSubNoteHtml:opponentSubNoteHtml,teamSubNoteHtml:teamSubNoteHtml,board:mu.board,wins:wins,losses:losses,played:played,complete:complete,teamForfeit:teamForfeit,opponentForfeit:opponentForfeit,bothForfeit:bothForfeit,forfeitMakeupDate:forfeitMakeupDate,subNote:subNote});
         if (!opponents[opponent]) opponents[opponent] = {scheduled:0,completed:0,wins:0,losses:0,matchWins:0,matchLosses:0};
@@ -1865,7 +1878,7 @@ function renderTeamPage(){
     html += '<div class="team-week-block"><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong>' + (weekDate ? '<span class="team-week-date">' + weekDate + '</span>' : '') + '</div><div class="team-week-rounds">';
     html += weekGames.map(function(game){
       var resultText = 'Upcoming', resultClass = '';
-      if (game.bothForfeit && game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
+      if (game.bothForfeit) { resultText = 'DOUBLE FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
       else if (game.teamForfeit) { resultText = 'FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
       else if (game.opponentForfeit) { resultText = 'FORFEIT W 3-0'; resultClass = ' win forfeit'; }
       else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
@@ -1886,7 +1899,7 @@ function renderTeamPage(){
   var forfeitMakeupsActive = detail.schedule.filter(function(game){ return game.teamForfeit || game.opponentForfeit; });
   html += '<details class="team-collapse" data-team-section="forfeits"><summary><span>FORFEIT WIN / LOSS MAKE-UPS</span><small>' + forfeitMakeupsActive.length + ' forfeited rounds</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content forfeit-makeup-list">';
   html += forfeitMakeupsActive.length ? forfeitMakeupsActive.map(function(game){
-    var won = !!game.opponentForfeit;
+    var won = !!game.opponentForfeit && !game.bothForfeit;
     var resultText = won ? 'WON 3' : 'LOST 3';
     var resultClass = won ? ' win forfeit' : ' loss forfeit';
     return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week <strong>' + game.week + '</strong><small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
@@ -1954,7 +1967,7 @@ function renderTeamPage(){
         var makeupHtml = '<div class="team-week-block makeup-week"><div class="team-week-label"><span>Make-Up</span><span>Week</span><strong>' + weekNumber + '</strong><span class="team-week-date">' + makeupDateText + '</span>' + (originalDateText ? '<span class="makeup-week-badge">' + originalDateText + '</span>' : '') + '</div><div class="team-week-rounds">';
         makeupHtml += weekGames.map(function(game){
           var resultText = 'Upcoming', resultClass = '';
-          if (game.bothForfeit && game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
+          if (game.bothForfeit) { resultText = 'DOUBLE FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
           else if (game.teamForfeit) { resultText = 'FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
           else if (game.opponentForfeit) { resultText = 'FORFEIT W 3-0'; resultClass = ' win forfeit'; }
           else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
@@ -1971,7 +1984,7 @@ function renderTeamPage(){
     var weekHtml = '<div class="team-week-block"><div class="team-week-label"><span>Week</span><strong>' + weekNumber + '</strong>' + (weekDate ? '<span class="team-week-date">' + weekDate + '</span>' : '') + '</div><div class="team-week-rounds">';
     weekHtml += weekGames.map(function(game){
       var resultText = 'Upcoming', resultClass = '';
-      if (game.bothForfeit && game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
+      if (game.bothForfeit) { resultText = 'DOUBLE FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
       else if (game.teamForfeit) { resultText = 'FORFEIT L 0-3'; resultClass = ' loss forfeit'; }
       else if (game.opponentForfeit) { resultText = 'FORFEIT W 3-0'; resultClass = ' win forfeit'; }
       else if (game.complete) { resultText = (game.wins > game.losses ? 'W ' : 'L ') + game.wins + '-' + game.losses; resultClass = game.wins > game.losses ? ' win' : ' loss'; }
@@ -1992,7 +2005,7 @@ function renderTeamPage(){
   var forfeitMakeupsFinal = detail.schedule.filter(function(game){ return game.teamForfeit || game.opponentForfeit; });
   html += '<details class="team-collapse" data-team-section="forfeits"><summary><span>FORFEIT WIN / LOSS MAKE-UPS</span><small>' + forfeitMakeupsFinal.length + ' forfeited rounds</small><b class="team-collapse-arrow">⌄</b></summary><div class="team-collapse-content forfeit-makeup-list">';
   html += forfeitMakeupsFinal.length ? forfeitMakeupsFinal.map(function(game){
-    var won = !!game.opponentForfeit;
+    var won = !!game.opponentForfeit && !game.bothForfeit;
     var resultText = won ? 'WON 3' : 'LOST 3';
     var resultClass = won ? ' win forfeit' : ' loss forfeit';
     return '<div class="forfeit-makeup-card"><div class="forfeit-makeup-week">Week <strong>' + game.week + '</strong><small>Round ' + game.round + '</small></div><div class="forfeit-makeup-opponent">' + escapeHtml(game.opponent) + '<small>Team ' + tnum(game.opponent) + '</small></div><span class="team-result' + resultClass + '">' + resultText + '</span></div>';
@@ -2800,22 +2813,22 @@ function markTeamForfeit(){
   if (!team) { alert('Select the team that did not show up.'); return; }
   leagueSettings.forfeits = leagueSettings.forfeits || [];
   if (leagueSettings.forfeits.some(function(item){ return Number(item.week) === Number(curWeek) && item.team === team; })) { alert(team + ' is already marked as a forfeit for Week ' + curWeek + '.'); return; }
-  if (!confirm('Mark ' + team + ' as a Week ' + curWeek + ' forfeit and award every scheduled game to their opponents?')) return;
+  if (!confirm('Mark ' + team + ' as a Week ' + curWeek + ' forfeit? If their opponent also forfeited, that matchup becomes a double forfeit loss for both teams.')) return;
   var previousMatches = [];
   for (var s=0; s<GPW; s++) {
     getMatchups(curWeek-1,s).forEach(function(mu,mi){
       if (mu.a !== team && mu.b !== team) return;
       var opponent = mu.a === team ? mu.b : mu.a;
       var opponentForfeit = leagueSettings.forfeits.some(function(item){ return Number(item.week) === Number(curWeek) && item.team === opponent; });
-      if (opponentForfeit) return;
       var match = getMatch(curWeek,s,mi);
       previousMatches.push({slot:s,match:mi,data:{g1:match.g1,g2:match.g2,g3:match.g3,swept:match.swept}});
+      if (opponentForfeit) return;
       var winner = mu.a === team ? 'b' : 'a';
       match.g1 = winner; match.g2 = winner; match.g3 = winner; match.swept = true;
     });
   }
   leagueSettings.forfeits.push({week:curWeek,team:team,previousMatches:previousMatches});
-  updateForfeitControl(); renderMatchups(); renderWeekStandings(); save();
+  updateForfeitControl(); renderMatchups(); renderWeekStandings(); renderSeasonStandings(); renderTeamPage(); save();
 }
 function disableForfeitMatch(team, slot, matchIndex){
   if (!ADMIN_MODE || !curWeek || !team || isNaN(slot) || isNaN(matchIndex)) return;
