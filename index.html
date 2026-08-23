@@ -3517,22 +3517,38 @@ function fixedGamePosition(def){
   return pos && Number.isFinite(pos.x) && Number.isFinite(pos.y) ? pos : {x:def.x,y:def.y};
 }
 function getFixedGameDef(id){ return FIXED_10_GAMES.find(function(g){ return g.id === Number(id); }); }
-function createDivision(title, teams){
+function createSeedRanks(teams, startRank){
+  var ranks = {};
+  (teams || []).forEach(function(team,index){ if (team) ranks[team] = (startRank || 1) + index; });
+  return ranks;
+}
+function createDivision(title, teams, startRank){
   var games = {};
   FIXED_10_GAMES.forEach(function(g){ games[g.id] = {winner:''}; });
-  return {format:'fixed-10-v1', title:title, teams:teams.slice(0,10), games:games, champion:'', runnerUp:'', thirdPlace:''};
+  var selectedTeams = (teams || []).slice(0,10);
+  return {format:'fixed-10-v1', title:title, teams:selectedTeams, seedRanks:createSeedRanks(selectedTeams,startRank || 1), games:games, champion:'', runnerUp:'', thirdPlace:''};
 }
 function fixedTeamNames(div){
   return (div && div.teams || []).map(function(t){ return typeof t === 'string' ? t : t.name; }).filter(Boolean).slice(0,10);
 }
-function normalizeFixedDivision(div, title, fallbackTeams){
-  if (div && div.format === 'fixed-10-v1') return div;
+function normalizeFixedDivision(div, title, fallbackTeams, startRank){
+  if (div && div.format === 'fixed-10-v1') {
+    div.teams = fixedTeamNames(div);
+    div.seedRanks = div.seedRanks || createSeedRanks(div.teams,startRank || 1);
+    return div;
+  }
   var names = fixedTeamNames(div);
-  return createDivision(title, names.length === 10 ? names : fallbackTeams);
+  return createDivision(title, names.length === 10 ? names : fallbackTeams, startRank || 1);
+}
+function fixedTeamRank(div, team){
+  if (!div || !team) return 0;
+  if (div.seedRanks && div.seedRanks[team]) return Number(div.seedRanks[team]) || 0;
+  var idx = fixedTeamNames(div).indexOf(team);
+  return idx >= 0 ? idx + 1 : 0;
 }
 function resolveFixedSource(div, source){
   if (!div || !source) return '';
-  if (source.type === 'seed') return div.teams[source.seed - 1] || '';
+  if (source.type === 'seed') return fixedTeamNames(div)[source.seed - 1] || '';
   var game = div.games && div.games[source.game];
   if (!game || !game.winner) return '';
   if (source.type === 'winner') return game.winner;
@@ -3652,7 +3668,7 @@ function renderFixedTeamSlot(divKey, div, def, source, team, winner){
   var cls = 'fixed-team-slot' + (!team ? ' pending' : '') + (isWinner ? ' win' : (complete && team ? ' lose' : '')) + (winnerDrop ? ' winner-drop' : '') + (eliminated ? ' eliminated' : '');
   var label = team || (source.type === 'seed' ? fixedSourceName(div,source) : 'TBD');
   var sourceText = source.type === 'seed' ? '' : (source.type === 'winner' ? 'Winner of Game ' : 'Loser of Game ') + source.game;
-  var seed = team ? div.teams.indexOf(team) + 1 : 0;
+  var seed = team ? fixedTeamRank(div,team) : 0;
   var nameLine = '<span class="fixed-team-name-line">' + (seed > 0 ? '<b class="seed-place">' + ordinalPlace(seed) + '</b>' : '') + '<span>' + label + '</span></span>';
   var content = (sourceText ? '<small class="fixed-source-label">' + sourceText + '</small>' : '') + nameLine + (winnerDrop ? '<small class="winner-drop-label">To loser bracket</small>' : '') + (eliminated ? '<small class="eliminated-label">Eliminated</small>' : '');
   if (ADMIN_MODE && ready && !BRACKET_DESIGN_MODE) return '<button type="button" class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '" onclick="setFixedGameWinner(\'' + divKey + '\',' + def.id + ',decodeURIComponent(\'' + encodeURIComponent(team) + '\'))">' + content + '</button>';
@@ -3769,8 +3785,7 @@ function renderPlayoffSeedRows(divKey, div, startRank){
   var teams = (div && div.teams) || [];
   var html = '';
   for (var i = 0; i < 10; i++) {
-    var rank = startRank + i;
-    html += '<div class="playoff-seed-row"><div class="playoff-seed-label">' + ordinalPlace(rank) + '</div>'
+    html += '<div class="playoff-seed-row"><div class="playoff-seed-label">Spot ' + (i + 1) + '</div>'
       + '<select class="playoff-seed-select" data-seed-div="' + divKey + '" data-seed-index="' + i + '">' + playoffTeamOptionHtml(teams[i] || '') + '</select></div>';
   }
   return html;
@@ -3794,6 +3809,26 @@ function collectCustomSeedTeams(divKey){
     return Number(a.getAttribute('data-seed-index')) - Number(b.getAttribute('data-seed-index'));
   }).map(function(sel){ return sel.value; });
 }
+function currentStandingsRankMap(){
+  var tot = calcSeasonTotals(null);
+  var sorted = TEAMS.slice().sort(function(a,b){ return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
+  var ranks = {};
+  sorted.forEach(function(team,index){ ranks[team] = index + 1; });
+  return ranks;
+}
+function mergedPlayoffRankMap(){
+  var ranks = currentStandingsRankMap();
+  [playoffState && playoffState.top, playoffState && playoffState.bottom].forEach(function(div){
+    if (!div || !div.seedRanks) return;
+    Object.keys(div.seedRanks).forEach(function(team){ ranks[team] = Number(div.seedRanks[team]) || ranks[team]; });
+  });
+  return ranks;
+}
+function rankMapForTeams(teams, rankMap){
+  var ranks = {};
+  (teams || []).forEach(function(team){ if (team) ranks[team] = rankMap[team] || 0; });
+  return ranks;
+}
 function saveCustomPlayoffSeeds(){
   if (!ADMIN_MODE || !playoffState || !playoffState.generated) return;
   var topTeams = collectCustomSeedTeams('top');
@@ -3803,18 +3838,21 @@ function saveCustomPlayoffSeeds(){
   var seen = {};
   var duplicate = allTeams.find(function(team){ if (seen[team]) return true; seen[team] = true; return false; });
   if (duplicate) { alert(duplicate + ' is selected more than once. Each team can only be in one playoff seed spot.'); return; }
-  if (!confirm('Save these custom playoff seeds? This clears playoff winners so the bracket starts clean with the new team spots.')) return;
-  playoffState.top = normalizeFixedDivision(playoffState.top, playoffState.topTitle || 'Tier 1 Championship', topTeams);
-  playoffState.bottom = normalizeFixedDivision(playoffState.bottom, playoffState.bottomTitle || 'Tier 2 Championship', bottomTeams);
+  if (!confirm('Save these custom playoff matchup spots? Rankings stay with each team, but playoff winners will clear so the bracket starts clean.')) return;
+  var rankMap = mergedPlayoffRankMap();
+  playoffState.top = normalizeFixedDivision(playoffState.top, playoffState.topTitle || 'Tier 1 Championship', topTeams, 1);
+  playoffState.bottom = normalizeFixedDivision(playoffState.bottom, playoffState.bottomTitle || 'Tier 2 Championship', bottomTeams, 11);
   playoffState.top.teams = topTeams;
   playoffState.bottom.teams = bottomTeams;
+  playoffState.top.seedRanks = rankMapForTeams(topTeams,rankMap);
+  playoffState.bottom.seedRanks = rankMapForTeams(bottomTeams,rankMap);
   clearDivisionWinners(playoffState.top);
   clearDivisionWinners(playoffState.bottom);
   playoffState.final = {teamA:'',teamB:'',winner:''};
   renderPlayoffs();
   fillPlayoffAdminForm();
   save();
-  alert('Custom playoff seeds saved.');
+  alert('Custom playoff matchup spots saved.');
 }
 function resetPlayoffSeedsFromStandings(){
   if (!ADMIN_MODE || !playoffState || !playoffState.generated) return;
@@ -3822,8 +3860,8 @@ function resetPlayoffSeedsFromStandings(){
   var tot = calcSeasonTotals(null);
   var sorted = TEAMS.slice().sort(function(a,b){ return (tot[b].points - tot[a].points) || (tot[b].wins - tot[a].wins) || (tot[a].losses - tot[b].losses) || (tnum(a)-tnum(b)); });
   if (sorted.length < 20) { alert('This playoff setup needs 20 teams.'); return; }
-  playoffState.top = createDivision(playoffState.topTitle || 'Tier 1 Championship', sorted.slice(0,10));
-  playoffState.bottom = createDivision(playoffState.bottomTitle || 'Tier 2 Championship', sorted.slice(10,20));
+  playoffState.top = createDivision(playoffState.topTitle || 'Tier 1 Championship', sorted.slice(0,10), 1);
+  playoffState.bottom = createDivision(playoffState.bottomTitle || 'Tier 2 Championship', sorted.slice(10,20), 11);
   playoffState.final = {teamA:'',teamB:'',winner:''};
   renderPlayoffs();
   fillPlayoffAdminForm();
@@ -3891,8 +3929,8 @@ function renderPlayoffs(){
   }
   if (!playoffState.topTitle || playoffState.topTitle === 'Championship Bracket') playoffState.topTitle = 'Tier 1 Championship';
   if (!playoffState.bottomTitle || playoffState.bottomTitle === 'Bottom Bracket') playoffState.bottomTitle = 'Tier 2 Championship';
-  playoffState.top = normalizeFixedDivision(playoffState.top, playoffState.topTitle, TEAMS.slice(0,10));
-  playoffState.bottom = normalizeFixedDivision(playoffState.bottom, playoffState.bottomTitle, TEAMS.slice(10,20));
+  playoffState.top = normalizeFixedDivision(playoffState.top, playoffState.topTitle, TEAMS.slice(0,10), 1);
+  playoffState.bottom = normalizeFixedDivision(playoffState.bottom, playoffState.bottomTitle, TEAMS.slice(10,20), 11);
   updateFixedChampion(playoffState.top);
   updateFixedChampion(playoffState.bottom);
   var tier1Champion = playoffState.top && playoffState.top.champion;
@@ -3939,8 +3977,8 @@ function generatePlayoffsFromStandings(){
   if (sorted.length < 20) { alert('This playoff setup needs 20 teams.'); return; }
   playoffState.generated = true;
   playoffState.locked = true;
-  playoffState.top = createDivision(playoffState.topTitle, sorted.slice(0,10));
-  playoffState.bottom = createDivision(playoffState.bottomTitle, sorted.slice(10,20));
+  playoffState.top = createDivision(playoffState.topTitle, sorted.slice(0,10), 1);
+  playoffState.bottom = createDivision(playoffState.bottomTitle, sorted.slice(10,20), 11);
   playoffState.final = {teamA:'',teamB:'',winner:''};
   fillPlayoffAdminForm();
   renderPlayoffs();
