@@ -3645,7 +3645,7 @@ function moveBracketTeam(fromDivKey, fromIndex, toDivKey, toIndex){
   if (!Number.isFinite(fromIndex) || !Number.isFinite(toIndex) || fromIndex < 0 || toIndex < 0 || fromIndex > 9 || toIndex > 9) return;
   if (fromDivKey === toDivKey && fromIndex === toIndex) return;
   var fromTeams = fixedTeamSlots(playoffState[fromDivKey]);
-  var toTeams = fixedTeamSlots(playoffState[toDivKey]);
+  var toTeams = fromDivKey === toDivKey ? fromTeams : fixedTeamSlots(playoffState[toDivKey]);
   var moving = fromTeams[fromIndex] || '';
   var displaced = toTeams[toIndex] || '';
   if (!moving) return;
@@ -3653,9 +3653,9 @@ function moveBracketTeam(fromDivKey, fromIndex, toDivKey, toIndex){
   toTeams[toIndex] = moving;
   var rankMap = mergedFixedRankMap();
   playoffState[fromDivKey].teams = fromTeams;
-  playoffState[toDivKey].teams = toTeams;
+  if (fromDivKey !== toDivKey) playoffState[toDivKey].teams = toTeams;
   playoffState[fromDivKey].seedRanks = fixedRankMapForTeams(fromTeams,rankMap);
-  playoffState[toDivKey].seedRanks = fixedRankMapForTeams(toTeams,rankMap);
+  if (fromDivKey !== toDivKey) playoffState[toDivKey].seedRanks = fixedRankMapForTeams(toTeams,rankMap);
   clearAllFixedWinners();
   bracketTeamMoveSelection = null;
   captureBracketScrollPositions();
@@ -3792,7 +3792,7 @@ function renderFixedTeamSlot(divKey, div, def, source, team, winner){
   var nameLine = '<span class="fixed-team-name-line">' + (seed > 0 ? '<b class="seed-place">' + ordinalPlace(seed) + '</b>' : '') + '<span>' + label + '</span></span>';
   var content = (sourceText ? '<small class="fixed-source-label">' + sourceText + '</small>' : '') + nameLine + (winnerDrop ? '<small class="winner-drop-label">To loser bracket</small>' : '') + (eliminated ? '<small class="eliminated-label">Eliminated</small>' : '');
   var moveAttrs = isSeedSlot ? ' data-seed-slot-div="' + divKey + '" data-seed-slot-index="' + seedIndex + '" data-seed-team="' + playoffAttr(team || '') + '"' : '';
-  if (ADMIN_MODE && BRACKET_TEAM_MOVE_MODE && isSeedSlot) return '<button type="button" class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '"' + moveAttrs + ' onclick="selectBracketTeamSlot(\'' + divKey + '\',' + seedIndex + ')">' + content + '</button>';
+  if (ADMIN_MODE && BRACKET_TEAM_MOVE_MODE && isSeedSlot) return '<button type="button" class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '"' + moveAttrs + '>' + content + '</button>';
   if (ADMIN_MODE && ready && !BRACKET_DESIGN_MODE && !BRACKET_TEAM_MOVE_MODE) return '<button type="button" class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '" onclick="setFixedGameWinner(\'' + divKey + '\',' + def.id + ',decodeURIComponent(\'' + encodeURIComponent(team) + '\'))">' + content + '</button>';
   return '<div class="' + cls + '" data-source-game="' + (source.game || '') + '" data-source-type="' + source.type + '"' + moveAttrs + '>' + content + '</div>';
 }
