@@ -345,6 +345,10 @@ button.fixed-team-slot{cursor:pointer}.fixed-team-slot:disabled{cursor:default;o
 .fixed-bracket-board.team-move-mode .seed-move-slot.selected-team-move{outline:3px solid #facc15;background:#fef9c3;color:#713f12}
 .fixed-bracket-board.team-move-mode .seed-move-slot.team-drop-target{outline:3px solid #22c55e;background:#dcfce7;color:#166534}
 .bracket-team-move-note{width:100%;font-size:10px;color:#1e40af;text-align:center;font-weight:900}
+.bracket-team-tray{border:2px dashed #93c5fd;border-radius:16px;background:linear-gradient(180deg,#eff6ff,#fff);padding:10px;margin-bottom:10px;box-shadow:0 5px 14px rgba(37,99,235,.12)}
+.bracket-team-tray h4{margin:0 0 7px;color:#1e3a8a;font-size:12px;font-weight:1000;text-align:center;text-transform:uppercase;letter-spacing:.06em}.bracket-team-tray p{margin:0 0 8px;color:#475569;font-size:10px;font-weight:800;text-align:center}
+.bracket-team-tray-list{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.bracket-tray-team{display:flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 10px;background:#1F3864;color:#fff;font-size:11px;font-weight:1000;cursor:grab;box-shadow:0 4px 10px rgba(31,56,100,.18);touch-action:none}.bracket-tray-team.selected-team-move{background:#facc15;color:#713f12}.bracket-tray-team.dragging-team{opacity:.65;transform:scale(1.04)}.bracket-tray-team .seed-place{background:rgba(255,255,255,.2);color:inherit}
+.bracket-drag-ghost{position:fixed;left:0;top:0;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);padding:9px 12px;border-radius:999px;background:#1F3864;color:#fff;font-size:12px;font-weight:1000;box-shadow:0 12px 28px rgba(15,23,42,.28);opacity:.96}
 .playoff-seed-editor{border:1.5px solid #bfdbfe;border-radius:16px;background:linear-gradient(180deg,#eff6ff,#fff);overflow:hidden;box-shadow:0 5px 15px rgba(37,99,235,.14)}.playoff-seed-editor>summary{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 42px;background:linear-gradient(135deg,#1F3864,#2563eb 55%,#7c3aed);color:#fff;font-size:13px;font-weight:1000;cursor:pointer;list-style:none;text-align:center;text-transform:uppercase;letter-spacing:.06em}.playoff-seed-editor>summary::-webkit-details-marker{display:none}.playoff-seed-editor>summary span:first-child{flex:1;text-align:center}.playoff-seed-editor>summary span:last-child{position:absolute;right:16px;font-size:15px}.playoff-seed-body{display:grid;gap:10px;padding:10px}.playoff-seed-note{font-size:11px;font-weight:800;color:#475569;line-height:1.35;text-align:center}.playoff-seed-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.playoff-seed-tier{border:1px solid #dbeafe;border-radius:14px;background:#fff;overflow:hidden}.playoff-seed-tier h4{margin:0;padding:9px 10px;background:#dbeafe;color:#1e3a8a;font-size:11px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em;text-align:center}.playoff-seed-row{display:grid;grid-template-columns:74px 1fr;align-items:center;gap:7px;padding:7px 9px;border-top:1px solid #eff6ff}.playoff-seed-label{border-radius:999px;background:#fef3c7;color:#92400e;padding:5px 7px;font-size:10px;font-weight:1000;text-align:center;text-transform:uppercase}.playoff-seed-row select{margin:0;font-size:12px;padding:8px 28px 8px 9px;border-radius:10px;background-color:#f8fafc}.playoff-seed-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.playoff-seed-actions button{border:0;border-radius:11px;padding:11px 10px;font-size:12px;font-weight:1000;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}.playoff-seed-actions .save{background:#16a34a;color:#fff}.playoff-seed-actions .reset{background:#ffedd5;color:#9a3412}@media(max-width:650px){.playoff-seed-grid{grid-template-columns:1fr}.playoff-seed-actions{grid-template-columns:1fr}}
 .fixed-bracket-board.design-mode{background-color:#faf5ff;background-image:linear-gradient(#ddd6fe 1px,transparent 1px),linear-gradient(90deg,#ddd6fe 1px,transparent 1px);background-size:20px 20px}
 .fixed-bracket-board.design-mode .fixed-game{cursor:grab;touch-action:none;outline:2px dashed #8b5cf6;outline-offset:2px;user-select:none}
@@ -512,7 +516,9 @@ body.admin-authenticated:not(.admin-tools-page) #slot-sel{
 }
 .cloud-status:before{width:6px!important;height:6px!important}
 body:not(.week-selected) #scoring-page-content .nav{display:none!important}
+body.playoffs-active:not(.week-selected) #scoring-page-content .nav{display:grid!important}
 body:not(.week-selected) #tab-score{display:block!important}
+body.playoffs-active:not(.week-selected) #tab-score{display:none!important}
 body:not(.week-selected) #tab-score #week-sel{
   margin-top:6px!important;
   margin-bottom:12px!important;
@@ -525,6 +531,7 @@ body:not(.week-selected) #tab-playoffs,
 body:not(.week-selected) #tab-share{
   display:none!important;
 }
+body.playoffs-active:not(.week-selected) #tab-playoffs.active{display:block!important}
 /* Public menu cleanup */
 [data-nav="share"]{display:none!important}
 body:not(.admin-authenticated) [data-nav="score"]{display:none!important}
@@ -588,6 +595,9 @@ body:not(.admin-authenticated):not(.team-selected) #tab-playoffs,
 body:not(.admin-authenticated):not(.team-selected) #tab-share{
   display:none!important;
 }
+body.playoffs-active:not(.admin-authenticated):not(.team-selected) #scoring-page-content .nav{display:grid!important}
+body.playoffs-active:not(.admin-authenticated):not(.team-selected) #tab-playoffs.active{display:block!important}
+body.playoffs-active:not(.admin-authenticated):not(.team-selected) #tab-teams:not(.active){display:none!important}
 body:not(.admin-authenticated) #team-page-select{
   margin-top:6px!important;
   text-align:center!important;
@@ -1332,18 +1342,21 @@ function showNavTab(id) {
 }
 function updateTeamSelectedView() {
   var selected = !!((document.getElementById('team-page-select') || {}).value || '');
+  var playoffsActive = !!(playoffState && (playoffState.locked || playoffState.generated));
   document.body.classList.toggle('team-selected', selected);
   if (!ADMIN_MODE) {
     var active = document.querySelector('.tab.active');
-    if (!selected || !active || active.id === 'tab-score' || active.id === 'tab-week') showNavTab('teams');
+    if (playoffsActive && (!active || active.id === 'tab-score' || active.id === 'tab-week' || (!selected && active.id === 'tab-teams'))) showNavTab('playoffs');
+    else if (!selected || !active || active.id === 'tab-score' || active.id === 'tab-week') showNavTab('teams');
   }
 }
 function updateWeekSelectedView() {
   var selected = !!parseInt((document.getElementById('week-sel') || {}).value || '');
+  var playoffsActive = !!(playoffState && (playoffState.locked || playoffState.generated));
   document.body.classList.toggle('week-selected', selected);
-  document.body.classList.toggle('playoffs-active', !!(playoffState && (playoffState.locked || playoffState.generated)));
+  document.body.classList.toggle('playoffs-active', playoffsActive);
   if (!selected) {
-    showNavTab(ADMIN_MODE ? 'score' : 'teams');
+    showNavTab(playoffsActive ? 'playoffs' : (ADMIN_MODE ? 'score' : 'teams'));
   }
   try { updateTeamSelectedView(); } catch(e) {}
 }
@@ -3535,6 +3548,7 @@ var bracketDragState = null;
 var bracketTeamMoveSnapshot = null;
 var bracketTeamMoveSelection = null;
 var bracketTeamPointerDrag = null;
+var bracketTeamMoveTray = [];
 var bracketScrollPositions = {top:0,bottom:0};
 function captureBracketScrollPositions(){
   ['top','bottom'].forEach(function(key){
@@ -3614,12 +3628,14 @@ function mergedFixedRankMap(){
     var div = playoffState && playoffState[key];
     Object.keys((div && div.seedRanks) || {}).forEach(function(team){ ranks[team] = Number(div.seedRanks[team]) || ranks[team]; });
   });
+  (bracketTeamMoveTray || []).forEach(function(item){ if (item && item.team) ranks[item.team] = Number(item.rank) || ranks[item.team]; });
   return ranks;
 }
 function snapshotBracketTeams(){
   return {
     top:{teams:fixedTeamSlots(playoffState.top),seedRanks:Object.assign({},(playoffState.top && playoffState.top.seedRanks) || {})},
-    bottom:{teams:fixedTeamSlots(playoffState.bottom),seedRanks:Object.assign({},(playoffState.bottom && playoffState.bottom.seedRanks) || {})}
+    bottom:{teams:fixedTeamSlots(playoffState.bottom),seedRanks:Object.assign({},(playoffState.bottom && playoffState.bottom.seedRanks) || {})},
+    tray:(bracketTeamMoveTray || []).map(function(item){ return Object.assign({},item); })
   };
 }
 function restoreBracketTeams(snapshot){
@@ -3629,6 +3645,7 @@ function restoreBracketTeams(snapshot){
     playoffState[key].teams = (snapshot[key].teams || []).slice(0,10);
     playoffState[key].seedRanks = Object.assign({},snapshot[key].seedRanks || {});
   });
+  bracketTeamMoveTray = (snapshot.tray || []).map(function(item){ return Object.assign({},item); });
 }
 function clearAllFixedWinners(){
   ['top','bottom'].forEach(function(key){
@@ -3639,23 +3656,56 @@ function clearAllFixedWinners(){
   });
   if (playoffState && playoffState.final) playoffState.final.winner = '';
 }
-function moveBracketTeam(fromDivKey, fromIndex, toDivKey, toIndex){
-  if (!ADMIN_MODE || !playoffState || !playoffState[fromDivKey] || !playoffState[toDivKey]) return;
-  fromIndex = Number(fromIndex); toIndex = Number(toIndex);
-  if (!Number.isFinite(fromIndex) || !Number.isFinite(toIndex) || fromIndex < 0 || toIndex < 0 || fromIndex > 9 || toIndex > 9) return;
-  if (fromDivKey === toDivKey && fromIndex === toIndex) return;
-  var fromTeams = fixedTeamSlots(playoffState[fromDivKey]);
-  var toTeams = fromDivKey === toDivKey ? fromTeams : fixedTeamSlots(playoffState[toDivKey]);
-  var moving = fromTeams[fromIndex] || '';
-  var displaced = toTeams[toIndex] || '';
-  if (!moving) return;
-  fromTeams[fromIndex] = displaced;
-  toTeams[toIndex] = moving;
+function pushBracketTrayTeam(team, rank, divKey){
+  if (!team) return;
+  bracketTeamMoveTray = (bracketTeamMoveTray || []).filter(function(item){ return item && item.team !== team; });
+  bracketTeamMoveTray.push({team:team,rank:Number(rank) || 0,divKey:divKey || ''});
+}
+function removeTeamFromBracketSlots(team, keepDivKey, keepIndex){
+  if (!team) return;
+  ['top','bottom'].forEach(function(key){
+    var div = playoffState && playoffState[key]; if (!div) return;
+    var teams = fixedTeamSlots(div);
+    var changed = false;
+    teams = teams.map(function(slotTeam,index){
+      if (slotTeam === team && !(key === keepDivKey && index === keepIndex)) { changed = true; return ''; }
+      return slotTeam;
+    });
+    if (changed) div.teams = teams;
+  });
+}
+function placeBracketTeamFromSelection(selection, toDivKey, toIndex){
+  if (!ADMIN_MODE || !selection || !playoffState || !playoffState[toDivKey]) return;
+  toIndex = Number(toIndex);
+  if (!Number.isFinite(toIndex) || toIndex < 0 || toIndex > 9) return;
   var rankMap = mergedFixedRankMap();
-  playoffState[fromDivKey].teams = fromTeams;
-  if (fromDivKey !== toDivKey) playoffState[toDivKey].teams = toTeams;
-  playoffState[fromDivKey].seedRanks = fixedRankMapForTeams(fromTeams,rankMap);
-  if (fromDivKey !== toDivKey) playoffState[toDivKey].seedRanks = fixedRankMapForTeams(toTeams,rankMap);
+  var moving = '', movingRank = 0, fromTeams = null;
+  if (selection.type === 'tray') {
+    var trayItem = (bracketTeamMoveTray || [])[selection.index];
+    if (!trayItem || !trayItem.team) return;
+    moving = trayItem.team;
+    movingRank = Number(trayItem.rank) || rankMap[moving] || 0;
+    bracketTeamMoveTray.splice(selection.index,1);
+  } else {
+    if (!playoffState[selection.divKey]) return;
+    if (selection.divKey === toDivKey && Number(selection.index) === toIndex) { bracketTeamMoveSelection = null; renderPlayoffs(); restoreBracketScrollPositions(); return; }
+    fromTeams = fixedTeamSlots(playoffState[selection.divKey]);
+    moving = fromTeams[selection.index] || '';
+    movingRank = rankMap[moving] || fixedTeamRank(playoffState[selection.divKey],moving);
+    if (!moving) return;
+    fromTeams[selection.index] = '';
+    playoffState[selection.divKey].teams = fromTeams;
+  }
+  var toTeams = fixedTeamSlots(playoffState[toDivKey]);
+  var displaced = toTeams[toIndex] || '';
+  if (displaced && displaced !== moving) pushBracketTrayTeam(displaced,rankMap[displaced] || fixedTeamRank(playoffState[toDivKey],displaced),toDivKey);
+  toTeams[toIndex] = moving;
+  playoffState[toDivKey].teams = toTeams;
+  removeTeamFromBracketSlots(moving,toDivKey,toIndex);
+  rankMap[moving] = movingRank || rankMap[moving] || fixedTeamRank(playoffState[toDivKey],moving);
+  ['top','bottom'].forEach(function(key){
+    if (playoffState && playoffState[key]) playoffState[key].seedRanks = Object.assign({},rankMap);
+  });
   clearAllFixedWinners();
   bracketTeamMoveSelection = null;
   captureBracketScrollPositions();
@@ -3784,7 +3834,7 @@ function renderFixedTeamSlot(divKey, div, def, source, team, winner){
   var teams = getFixedParticipants(div, def), ready = teams[0] && teams[1] && isFixedGameNeeded(div, def);
   var isSeedSlot = source && source.type === 'seed';
   var seedIndex = isSeedSlot ? Number(source.seed) - 1 : -1;
-  var moveSelected = bracketTeamMoveSelection && bracketTeamMoveSelection.divKey === divKey && bracketTeamMoveSelection.index === seedIndex;
+  var moveSelected = bracketTeamMoveSelection && bracketTeamMoveSelection.type === 'slot' && bracketTeamMoveSelection.divKey === divKey && bracketTeamMoveSelection.index === seedIndex;
   var cls = 'fixed-team-slot' + (!team ? ' pending' : '') + (isWinner ? ' win' : (complete && team ? ' lose' : '')) + (winnerDrop ? ' winner-drop' : '') + (eliminated ? ' eliminated' : '') + (BRACKET_TEAM_MOVE_MODE && isSeedSlot ? ' seed-move-slot' : '') + (moveSelected ? ' selected-team-move' : '');
   var label = team || (source.type === 'seed' ? fixedSourceName(div,source) : 'TBD');
   var sourceText = source.type === 'seed' ? '' : (source.type === 'winner' ? 'Winner of Game ' : 'Loser of Game ') + source.game;
@@ -3874,6 +3924,7 @@ function startBracketTeamMove(){
   if (!ADMIN_MODE || BRACKET_DESIGN_MODE) return;
   bracketTeamMoveSnapshot = snapshotBracketTeams();
   bracketTeamMoveSelection = null;
+  bracketTeamMoveTray = [];
   BRACKET_TEAM_MOVE_MODE = true;
   renderPlayoffs();
 }
@@ -3881,6 +3932,7 @@ function stopBracketTeamMove(){
   BRACKET_TEAM_MOVE_MODE = false;
   bracketTeamMoveSnapshot = null;
   bracketTeamMoveSelection = null;
+  bracketTeamMoveTray = [];
   renderPlayoffs();
   save();
 }
@@ -3889,6 +3941,7 @@ function cancelBracketTeamMove(){
   BRACKET_TEAM_MOVE_MODE = false;
   bracketTeamMoveSnapshot = null;
   bracketTeamMoveSelection = null;
+  bracketTeamMoveTray = [];
   clearAllFixedWinners();
   renderPlayoffs();
   save();
@@ -3896,14 +3949,60 @@ function cancelBracketTeamMove(){
 function selectBracketTeamSlot(divKey,index){
   if (!ADMIN_MODE || !BRACKET_TEAM_MOVE_MODE) return;
   index = Number(index);
-  if (!bracketTeamMoveSelection) {
-    bracketTeamMoveSelection = {divKey:divKey,index:index};
+  if (bracketTeamMoveSelection && bracketTeamMoveSelection.type === 'slot' && bracketTeamMoveSelection.divKey === divKey && Number(bracketTeamMoveSelection.index) === index) {
+    bracketTeamMoveSelection = null;
     captureBracketScrollPositions();
     renderPlayoffs();
     restoreBracketScrollPositions();
     return;
   }
-  moveBracketTeam(bracketTeamMoveSelection.divKey,bracketTeamMoveSelection.index,divKey,index);
+  if (!bracketTeamMoveSelection) {
+    bracketTeamMoveSelection = {type:'slot',divKey:divKey,index:index};
+    captureBracketScrollPositions();
+    renderPlayoffs();
+    restoreBracketScrollPositions();
+    return;
+  }
+  placeBracketTeamFromSelection(bracketTeamMoveSelection,divKey,index);
+}
+function selectBracketTrayTeam(index){
+  if (!ADMIN_MODE || !BRACKET_TEAM_MOVE_MODE) return;
+  index = Number(index);
+  if (bracketTeamMoveSelection && bracketTeamMoveSelection.type === 'tray' && Number(bracketTeamMoveSelection.index) === index) {
+    bracketTeamMoveSelection = null;
+    renderPlayoffs();
+    restoreBracketScrollPositions();
+    return;
+  }
+  bracketTeamMoveSelection = {type:'tray',index:index};
+  captureBracketScrollPositions();
+  renderPlayoffs();
+  restoreBracketScrollPositions();
+}
+function getBracketDragLabel(selection){
+  if (!selection) return '';
+  if (selection.type === 'tray') {
+    var item = (bracketTeamMoveTray || [])[selection.index];
+    return item && item.team ? item.team : '';
+  }
+  var div = playoffState && playoffState[selection.divKey];
+  return fixedTeamSlots(div)[selection.index] || '';
+}
+function createBracketDragGhost(label,x,y){
+  removeBracketDragGhost();
+  if (!label) return;
+  var ghost = document.createElement('div');
+  ghost.className = 'bracket-drag-ghost';
+  ghost.textContent = label;
+  document.body.appendChild(ghost);
+  moveBracketDragGhost(x,y);
+}
+function moveBracketDragGhost(x,y){
+  var ghost = document.querySelector('.bracket-drag-ghost');
+  if (ghost) { ghost.style.left = x + 'px'; ghost.style.top = y + 'px'; }
+}
+function removeBracketDragGhost(){
+  document.querySelectorAll('.bracket-drag-ghost').forEach(function(el){ el.remove(); });
 }
 window.startBracketDesign = startBracketDesign;
 window.saveBracketDesign = saveBracketDesign;
@@ -3913,20 +4012,23 @@ window.startBracketTeamMove = startBracketTeamMove;
 window.stopBracketTeamMove = stopBracketTeamMove;
 window.cancelBracketTeamMove = cancelBracketTeamMove;
 window.selectBracketTeamSlot = selectBracketTeamSlot;
+window.selectBracketTrayTeam = selectBracketTrayTeam;
 var playoffBodyForDrag = document.getElementById('playoff-body');
 if (playoffBodyForDrag) playoffBodyForDrag.addEventListener('pointerdown',function(event){
   if (BRACKET_TEAM_MOVE_MODE && ADMIN_MODE) {
+    var trayTeam = event.target.closest('[data-bracket-tray-index]');
     var slot = event.target.closest('[data-seed-slot-div]');
-    if (!slot) return;
+    if (!slot && !trayTeam) return;
     event.preventDefault();
-    bracketTeamPointerDrag = {
-      divKey:slot.getAttribute('data-seed-slot-div'),
-      index:Number(slot.getAttribute('data-seed-slot-index')),
-      pointerId:event.pointerId,
-      slot:slot
-    };
-    slot.classList.add('dragging-team');
-    try { slot.setPointerCapture(event.pointerId); } catch(e) {}
+    bracketTeamPointerDrag = trayTeam
+      ? {type:'tray',index:Number(trayTeam.getAttribute('data-bracket-tray-index')),pointerId:event.pointerId,el:trayTeam}
+      : {type:'slot',divKey:slot.getAttribute('data-seed-slot-div'),index:Number(slot.getAttribute('data-seed-slot-index')),pointerId:event.pointerId,el:slot};
+    bracketTeamPointerDrag.startX = event.clientX;
+    bracketTeamPointerDrag.startY = event.clientY;
+    bracketTeamPointerDrag.moved = false;
+    if (bracketTeamPointerDrag.el) bracketTeamPointerDrag.el.classList.add('dragging-team');
+    createBracketDragGhost(getBracketDragLabel(bracketTeamPointerDrag),event.clientX,event.clientY);
+    try { (bracketTeamPointerDrag.el || slot || trayTeam).setPointerCapture(event.pointerId); } catch(e) {}
     return;
   }
   if (!BRACKET_DESIGN_MODE || !ADMIN_MODE) return;
@@ -3940,6 +4042,8 @@ if (playoffBodyForDrag) playoffBodyForDrag.addEventListener('pointerdown',functi
 });
 window.addEventListener('pointermove',function(event){
   if (!bracketTeamPointerDrag || !BRACKET_TEAM_MOVE_MODE) return;
+  bracketTeamPointerDrag.moved = bracketTeamPointerDrag.moved || Math.abs(event.clientX - bracketTeamPointerDrag.startX) > 5 || Math.abs(event.clientY - bracketTeamPointerDrag.startY) > 5;
+  moveBracketDragGhost(event.clientX,event.clientY);
   var el = document.elementFromPoint(event.clientX,event.clientY);
   document.querySelectorAll('.seed-move-slot.team-drop-target').forEach(function(slot){ slot.classList.remove('team-drop-target'); });
   var target = el && el.closest ? el.closest('[data-seed-slot-div]') : null;
@@ -3957,7 +4061,8 @@ window.addEventListener('pointermove',function(event){
 window.addEventListener('pointerup',function(event){
   if (bracketTeamPointerDrag) {
     var from = bracketTeamPointerDrag;
-    if (from.slot) from.slot.classList.remove('dragging-team');
+    if (from.el) from.el.classList.remove('dragging-team');
+    removeBracketDragGhost();
     document.querySelectorAll('.seed-move-slot.team-drop-target').forEach(function(slot){ slot.classList.remove('team-drop-target'); });
     var el = document.elementFromPoint(event.clientX,event.clientY);
     var target = el && el.closest ? el.closest('[data-seed-slot-div]') : null;
@@ -3965,15 +4070,20 @@ window.addEventListener('pointerup',function(event){
     if (target) {
       var toDivKey = target.getAttribute('data-seed-slot-div');
       var toIndex = Number(target.getAttribute('data-seed-slot-index'));
-      if (from.divKey === toDivKey && from.index === toIndex) selectBracketTeamSlot(from.divKey,from.index);
-      else moveBracketTeam(from.divKey,from.index,toDivKey,toIndex);
+      if (from.type === 'slot' && from.divKey === toDivKey && from.index === toIndex) selectBracketTeamSlot(from.divKey,from.index);
+      else placeBracketTeamFromSelection(from,toDivKey,toIndex);
+    } else if (from.type === 'tray') {
+      selectBracketTrayTeam(from.index);
+    } else if (from.type === 'slot') {
+      selectBracketTeamSlot(from.divKey,from.index);
     }
     return;
   }
   bracketDragState = null;
 });
 window.addEventListener('pointercancel',function(){
-  if (bracketTeamPointerDrag && bracketTeamPointerDrag.slot) bracketTeamPointerDrag.slot.classList.remove('dragging-team');
+  if (bracketTeamPointerDrag && bracketTeamPointerDrag.el) bracketTeamPointerDrag.el.classList.remove('dragging-team');
+  removeBracketDragGhost();
   document.querySelectorAll('.seed-move-slot.team-drop-target').forEach(function(slot){ slot.classList.remove('team-drop-target'); });
   bracketTeamPointerDrag = null;
   bracketDragState = null;
@@ -4074,6 +4184,18 @@ function resetPlayoffSeedsFromStandings(){
 }
 window.saveCustomPlayoffSeeds = saveCustomPlayoffSeeds;
 window.resetPlayoffSeedsFromStandings = resetPlayoffSeedsFromStandings;
+function renderBracketTeamMoveTray(){
+  if (!ADMIN_MODE || !BRACKET_TEAM_MOVE_MODE) return '';
+  var items = (bracketTeamMoveTray || []).map(function(item,index){
+    var selected = bracketTeamMoveSelection && bracketTeamMoveSelection.type === 'tray' && Number(bracketTeamMoveSelection.index) === index;
+    var rank = Number(item.rank) || 0;
+    return '<button type="button" class="bracket-tray-team' + (selected ? ' selected-team-move' : '') + '" data-bracket-tray-index="' + index + '">'
+      + (rank > 0 ? '<b class="seed-place">' + ordinalPlace(rank) + '</b>' : '') + '<span>' + escapeHtml(item.team) + '</span></button>';
+  }).join('');
+  return '<div class="bracket-team-tray"><h4>Teams Waiting To Be Placed</h4>'
+    + '<p>When you replace a team on the bracket, that team lands here. Drag it or tap it, then tap the bracket spot where it belongs.</p>'
+    + '<div class="bracket-team-tray-list">' + (items || '<p>No displaced teams right now.</p>') + '</div></div>';
+}
 function renderDivision(divKey, div){
   if (!div) return '';
   var gamesHtml = FIXED_10_GAMES.map(function(def){ return renderFixedGame(divKey,div,def); }).join('');
@@ -4144,7 +4266,7 @@ function renderPlayoffs(){
   var tier1Champion = playoffState.top && playoffState.top.champion;
   var tier2Champion = playoffState.bottom && playoffState.bottom.champion;
   var f = playoffState.final || {teamA:'',teamB:'',winner:''};
-  var html = '<div class="playoff-grid">' + renderPlayoffSeedEditor() + renderDivision('top', playoffState.top) + renderDivision('bottom', playoffState.bottom);
+  var html = '<div class="playoff-grid">' + renderPlayoffSeedEditor() + renderBracketTeamMoveTray() + renderDivision('top', playoffState.top) + renderDivision('bottom', playoffState.bottom);
   html += '<div class="tier-champions-summary"><h3>🏆 Tier Champions</h3>'
     + '<div class="tier-champion-row"><strong>Tier 1 Champion</strong><span>' + (tier1Champion || 'To be determined') + '</span></div>'
     + '<div class="tier-champion-row"><strong>Tier 2 Champion</strong><span>' + (tier2Champion || 'To be determined') + '</span></div>';
